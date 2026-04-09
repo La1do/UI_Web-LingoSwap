@@ -1,13 +1,14 @@
 import "./App.css";
+import { RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import { ThemeToggle } from "./page/component/ThemeToggle";
-import RegisterPage from "./page/login/RegisterPage";
+import { router } from "./router/routes";
 
 export default function App() {
   return (
     <ThemeProvider>
       <ThemeToggle />
-      <RegisterPage />
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }
