@@ -1,12 +1,14 @@
 // MeetingPage.tsx — Layout chính của màn hình video call
 import { useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
+import { useI18n } from "../../context/I18nContext";
 import RemoteVideo from "./RemoteVideo";
 import LocalVideo from "./LocalVideo";
 import ChatPanel from "./ChatPanel";
 
 export default function MeetingPage() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [isMuted, setIsMuted] = useState(false);
   const [isCameraOff, setIsCameraOff] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(true);
@@ -23,7 +25,7 @@ export default function MeetingPage() {
         <div className="flex-1 flex flex-col gap-3 min-w-0">
           {/* Remote video — full area */}
           <div className="flex-1 relative" style={{ minHeight: 0 }}>
-            <RemoteVideo isConnected={false} participantName="Người dùng" />
+            <RemoteVideo isConnected={false} participantName={t.meeting.waitingForConnection} />
 
             {/* Local video — picture-in-picture */}
             <div className="absolute bottom-4 right-4">
@@ -40,13 +42,8 @@ export default function MeetingPage() {
             }}
           >
             {/* Mute */}
-            <ControlBtn
-              active={isMuted}
-              activeColor={theme.text.error}
-              inactiveColor={theme.button.bg}
-              onClick={() => setIsMuted((v) => !v)}
-              label={isMuted ? "Bật mic" : "Tắt mic"}
-            >
+            <ControlBtn active={isMuted} activeColor={theme.text.error} inactiveColor={theme.button.bg}
+              onClick={() => setIsMuted((v) => !v)} label={isMuted ? t.meeting.unmuteMic : t.meeting.muteMic}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
                 {isMuted ? (
                   <>
@@ -73,7 +70,7 @@ export default function MeetingPage() {
               activeColor={theme.text.error}
               inactiveColor={theme.button.bg}
               onClick={() => setIsCameraOff((v) => !v)}
-              label={isCameraOff ? "Bật camera" : "Tắt camera"}
+              label={isCameraOff ? t.meeting.turnOnCamera : t.meeting.turnOffCamera}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
                 {isCameraOff ? (
@@ -97,7 +94,7 @@ export default function MeetingPage() {
               activeColor={theme.button.bg}
               inactiveColor={theme.background.input}
               onClick={() => setIsChatOpen((v) => !v)}
-              label="Chat"
+              label={t.meeting.chat}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
                 <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
@@ -107,14 +104,12 @@ export default function MeetingPage() {
             {/* End call */}
             <button
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
-              style={{ background: theme.text.error, color: "#fff" }}
-              aria-label="Kết thúc cuộc gọi"
-            >
+              style={{ background: theme.text.error, color: "#fff" }} aria-label={t.meeting.endCall}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5">
                 <path d="M10.68 13.31a16 16 0 003.41 2.6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7 2 2 0 012 2v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.42 19.42 0 013.43 9.19 19.79 19.79 0 01.36 .54 2 2 0 012.35 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.33 7.91" />
                 <line x1="23" y1="1" x2="1" y2="23" />
               </svg>
-              Kết thúc
+              {t.meeting.endCall}
             </button>
           </div>
         </div>

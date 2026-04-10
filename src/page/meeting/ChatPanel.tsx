@@ -1,6 +1,7 @@
 // ChatPanel.tsx — Khung chat trong cuộc gọi
 import { useState, useRef, useEffect } from "react";
 import { useTheme } from "../../context/ThemeContext";
+import { useI18n } from "../../context/I18nContext";
 
 interface Message {
   id: number;
@@ -14,6 +15,7 @@ const now = () =>
 
 export default function ChatPanel() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, sender: "them", text: "Xin chào! Bạn có nghe thấy tôi không?", time: "08:00" },
     { id: 2, sender: "me",   text: "Có, nghe rõ rồi!", time: "08:01" },
@@ -59,9 +61,8 @@ export default function ChatPanel() {
           style={{ color: theme.text.accent }}>
           <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
         </svg>
-        Chat
+        {t.meeting.chatHeader}
       </div>
-
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-3 py-3 flex flex-col gap-2" style={{ minHeight: 0 }}>
         {messages.map((msg) => (
@@ -96,7 +97,7 @@ export default function ChatPanel() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKey}
-          placeholder="Nhập tin nhắn..."
+          placeholder={t.meeting.messagePlaceholder}
           className="flex-1 rounded-xl px-3 py-2 text-sm outline-none"
           style={{
             background: theme.background.input,

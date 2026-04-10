@@ -4,6 +4,7 @@
 
 import React, { useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
+import { useI18n } from "../../context/I18nContext";
 import { AuthInput } from "./AuthInput";
 import {
   validateForm,
@@ -41,15 +42,17 @@ const ShieldIcon = () => (
 
 function PasswordStrength({ password }: { password: string }) {
   const { theme } = useTheme();
+  const { t } = useI18n();
+  const s = t.auth.passwordStrength;
   const checks = [
-    { label: "8+ ký tự",        pass: password.length >= 8 },
-    { label: "Chữ hoa",         pass: /[A-Z]/.test(password) },
-    { label: "Số",              pass: /[0-9]/.test(password) },
-    { label: "Ký tự đặc biệt", pass: /[^A-Za-z0-9]/.test(password) },
+    { label: s.checks.length,    pass: password.length >= 8 },
+    { label: s.checks.uppercase, pass: /[A-Z]/.test(password) },
+    { label: s.checks.number,    pass: /[0-9]/.test(password) },
+    { label: s.checks.special,   pass: /[^A-Za-z0-9]/.test(password) },
   ];
   const score = checks.filter((c) => c.pass).length;
   const colors = [theme.border.default, theme.text.error, "#F5A623", theme.text.success, theme.text.success];
-  const labels = ["", "Yếu", "Trung bình", "Tốt", "Mạnh"];
+  const labels = ["", s.weak, s.medium, s.good, s.strong];
 
   if (!password) return null;
 
@@ -82,6 +85,7 @@ function PasswordStrength({ password }: { password: string }) {
 
 export default function RegisterPage() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [values, setValues] = useState<RegisterFields>({ email: "", password: "", confirmPassword: "" });
   const [errors, setErrors] = useState<FormErrors<RegisterFields>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -176,23 +180,23 @@ export default function RegisterPage() {
               ✓
             </div>
             <h2 className="text-2xl font-semibold" style={{ color: theme.text.primary }}>
-              Đăng ký thành công!
+              {t.auth.registerSuccess}
             </h2>
             <p className="text-sm" style={{ color: theme.text.secondary }}>
-              Tài khoản của bạn đã được tạo. Hãy kiểm tra email để xác minh.
+              {t.auth.registerSuccessDesc}
             </p>
             <a href="/login" className="mt-2 text-sm font-medium hover:opacity-80 transition-opacity" style={{ color: theme.text.accent }}>
-              Đến trang đăng nhập →
+              {t.auth.goToLogin}
             </a>
           </div>
         ) : (
           <>
             <div className="mb-8 fade-up fade-up-1">
               <p className="text-xs tracking-[0.2em] uppercase mb-2" style={{ color: theme.text.accent }}>
-                Tạo tài khoản
+                {t.auth.createAccount}
               </p>
               <h1 className="text-3xl font-semibold" style={{ color: theme.text.primary }}>
-                Đăng ký
+                {t.auth.register}
               </h1>
             </div>
 
@@ -201,7 +205,7 @@ export default function RegisterPage() {
                 <AuthInput
                   label="Email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder={t.auth.emailPlaceholder}
                   autoComplete="email"
                   leftIcon={<MailIcon />}
                   value={values.email}
@@ -212,24 +216,24 @@ export default function RegisterPage() {
 
               <div className="fade-up fade-up-3">
                 <AuthInput
-                  label="Mật khẩu"
+                  label={t.auth.register}
                   type="password"
-                  placeholder="••••••••"
+                  placeholder={t.auth.passwordPlaceholder}
                   autoComplete="new-password"
                   leftIcon={<LockIcon />}
                   value={values.password}
                   onChange={handleChange("password")}
                   error={errors.password}
-                  hint={!errors.password && !values.password ? "Ít nhất 8 ký tự, 1 chữ hoa, 1 số" : undefined}
+                  hint={!errors.password && !values.password ? t.auth.passwordHint : undefined}
                 />
                 <PasswordStrength password={values.password} />
               </div>
 
               <div className="fade-up fade-up-4">
                 <AuthInput
-                  label="Xác nhận mật khẩu"
+                  label={t.auth.confirmPasswordLabel}
                   type="password"
-                  placeholder="••••••••"
+                  placeholder={t.auth.passwordPlaceholder}
                   autoComplete="new-password"
                   leftIcon={<ShieldIcon />}
                   value={values.confirmPassword}
@@ -239,10 +243,10 @@ export default function RegisterPage() {
               </div>
 
               <p className="text-xs fade-up fade-up-5" style={{ color: theme.text.placeholder }}>
-                Bằng cách đăng ký, bạn đồng ý với{" "}
-                <a href="/terms" className="hover:opacity-80" style={{ color: theme.text.accent }}>Điều khoản dịch vụ</a>{" "}
+                {t.auth.termsText}{" "}
+                <a href="/terms" className="hover:opacity-80" style={{ color: theme.text.accent }}>{t.auth.termsLink}</a>{" "}
                 và{" "}
-                <a href="/privacy" className="hover:opacity-80" style={{ color: theme.text.accent }}>Chính sách bảo mật</a>.
+                <a href="/privacy" className="hover:opacity-80" style={{ color: theme.text.accent }}>{t.auth.privacyLink}</a>.
               </p>
 
               <button
@@ -255,20 +259,20 @@ export default function RegisterPage() {
                   borderRadius: "0.5rem",
                 }}
               >
-                {loading ? "Đang tạo tài khoản…" : "Tạo tài khoản"}
+                {loading ? t.auth.registering : t.auth.register}
               </button>
             </form>
 
             <div className="flex items-center gap-3 my-6 fade-up fade-up-6">
               <div className="flex-1 h-px" style={{ background: theme.border.default }} />
-              <span className="text-xs" style={{ color: theme.text.placeholder }}>hoặc</span>
+              <span className="text-xs" style={{ color: theme.text.placeholder }}>{t.common.or}</span>
               <div className="flex-1 h-px" style={{ background: theme.border.default }} />
             </div>
 
             <p className="text-center text-sm fade-up fade-up-6" style={{ color: theme.text.secondary }}>
-              Đã có tài khoản?{" "}
+              {t.auth.alreadyHaveAccount}{" "}
               <a href="/login" className="font-medium hover:opacity-80 transition-opacity" style={{ color: theme.text.accent }}>
-                Đăng nhập
+                {t.auth.loginLink}
               </a>
             </p>
           </>

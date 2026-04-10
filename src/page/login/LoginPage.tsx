@@ -4,6 +4,7 @@
 
 import React, { useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
+import { useI18n } from "../../context/I18nContext";
 import { AuthInput } from "./AuthInput";
 import {
   validateForm,
@@ -33,6 +34,7 @@ const LockIcon = () => (
 
 export default function LoginPage() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [values, setValues] = useState<LoginFields>({ email: "", password: "" });
   const [errors, setErrors] = useState<FormErrors<LoginFields>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -58,7 +60,7 @@ export default function LoginPage() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 1200));
     setLoading(false);
-    alert("Đăng nhập thành công!");
+    alert(t.auth.loginSuccess);
   };
 
   return (
@@ -110,10 +112,10 @@ export default function LoginPage() {
         {/* Header */}
         <div className="mb-8 fade-up fade-up-1">
           <p className="text-xs tracking-[0.2em] uppercase mb-2" style={{ color: theme.text.accent }}>
-            Chào mừng trở lại
+            {t.auth.welcomeBack}
           </p>
           <h1 className="text-3xl font-semibold" style={{ color: theme.text.primary }}>
-            Đăng nhập
+            {t.auth.login}
           </h1>
         </div>
 
@@ -122,7 +124,7 @@ export default function LoginPage() {
             <AuthInput
               label="Email"
               type="email"
-              placeholder="you@example.com"
+              placeholder={t.auth.emailPlaceholder}
               autoComplete="email"
               leftIcon={<MailIcon />}
               value={values.email}
@@ -133,9 +135,9 @@ export default function LoginPage() {
 
           <div className="fade-up fade-up-3">
             <AuthInput
-              label="Mật khẩu"
+              label={t.auth.login}
               type="password"
-              placeholder="••••••••"
+              placeholder={t.auth.passwordPlaceholder}
               autoComplete="current-password"
               leftIcon={<LockIcon />}
               value={values.password}
@@ -150,7 +152,7 @@ export default function LoginPage() {
               className="text-xs hover:opacity-80 transition-opacity"
               style={{ color: theme.text.accent }}
             >
-              Quên mật khẩu?
+              {t.auth.forgotPassword}
             </button>
           </div>
 
@@ -164,20 +166,20 @@ export default function LoginPage() {
               borderRadius: "0.5rem",
             }}
           >
-            {loading ? "Đang xử lý…" : "Đăng nhập"}
+          {loading ? t.auth.loggingIn : t.auth.login}
           </button>
         </form>
 
         <div className="flex items-center gap-3 my-6 fade-up fade-up-4">
           <div className="flex-1 h-px" style={{ background: theme.border.default }} />
-          <span className="text-xs" style={{ color: theme.text.placeholder }}>hoặc</span>
+          <span className="text-xs" style={{ color: theme.text.placeholder }}>{t.common.or}</span>
           <div className="flex-1 h-px" style={{ background: theme.border.default }} />
         </div>
 
         <p className="text-center text-sm fade-up fade-up-5" style={{ color: theme.text.secondary }}>
-          Chưa có tài khoản?{" "}
+          {t.auth.noAccount}{" "}
           <a href="/register" className="font-medium hover:opacity-80 transition-opacity" style={{ color: theme.text.accent }}>
-            Đăng ký ngay
+            {t.auth.registerNow}
           </a>
         </p>
       </div>
