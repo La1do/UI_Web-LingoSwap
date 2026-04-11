@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
 import { AuthInput } from "./AuthInput";
+import PageShell from "../../layout/PageShell";
 import {
   validateForm,
   emailRules,
@@ -120,6 +121,7 @@ export default function RegisterPage() {
   };
 
   return (
+    <PageShell controlsPosition="top-right">
     <div
       className="min-h-screen flex items-center justify-center px-4 py-10"
       style={{ background: theme.background.page, fontFamily: "'DM Sans', sans-serif", transition: "background 0.3s" }}
@@ -279,5 +281,6 @@ export default function RegisterPage() {
         )}
       </div>
     </div>
+    </PageShell>
   );
 }

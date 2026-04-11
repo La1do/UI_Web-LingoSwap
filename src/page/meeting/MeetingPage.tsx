@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
+import PageShell from "../../layout/PageShell";
 import RemoteVideo from "./RemoteVideo";
 import LocalVideo from "./LocalVideo";
 import ChatPanel from "./ChatPanel";
@@ -14,6 +15,7 @@ export default function MeetingPage() {
   const [isChatOpen, setIsChatOpen] = useState(true);
 
   return (
+    <PageShell controlsPosition="top-right" hideLanguage>
     <div
       className="min-h-screen flex flex-col"
       style={{ background: theme.background.page, fontFamily: "'DM Sans', sans-serif" }}
@@ -124,6 +126,7 @@ export default function MeetingPage() {
         )}
       </div>
     </div>
+    </PageShell>
   );
 }
 
