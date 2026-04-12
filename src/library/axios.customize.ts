@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from "axios";
 
-// ─── Types ───────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────
 
 interface QueueItem {
   resolve: (token: string) => void;
@@ -16,7 +16,7 @@ interface RefreshTokenResponse {
 
 const instance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL as string,
-  withCredentials: true, // gửi cookie chứa refresh token
+  withCredentials: true,
 });
 
 // ─── Refresh state ───────────────────────────────────────────

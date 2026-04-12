@@ -3,10 +3,13 @@
 // ============================================================
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
 import { AuthInput } from "./AuthInput";
 import PageShell from "../../layout/PageShell";
+import { useApi } from "../../hook/useApi";
+import { authService, type LoginResponse } from "../../services/auth.service";
 import {
   validateForm,
   emailRules,
@@ -36,10 +39,12 @@ const LockIcon = () => (
 export default function LoginPage() {
   const { theme } = useTheme();
   const { t } = useI18n();
+  const navigate = useNavigate();
+  const { execute, isLoading, isError, error: apiError } = useApi<LoginResponse>();
+
   const [values, setValues] = useState<LoginFields>({ email: "", password: "" });
   const [errors, setErrors] = useState<FormErrors<LoginFields>>({});
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const fieldRules = { email: emailRules(), password: passwordRules() };
 
@@ -55,13 +60,16 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+
     const { errors: newErrors, isValid } = validateForm(values, fieldRules);
     setErrors(newErrors);
     if (!isValid) return;
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 1200));
-    setLoading(false);
-    alert(t.auth.loginSuccess);
+
+    const result = await execute(authService.login({ email: values.email, password: values.password }));
+    if (result) {
+      localStorage.setItem("access_token", result.token);
+      navigate("/home");
+    }
   };
 
   return (
@@ -160,16 +168,23 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             className="primary-btn w-full py-3 rounded-lg text-sm font-semibold tracking-wider fade-up fade-up-4"
             style={{
-              background: loading ? theme.button.bgDisabled : theme.button.bg,
+              background: isLoading ? theme.button.bgDisabled : theme.button.bg,
               color: theme.button.text,
               borderRadius: "0.5rem",
             }}
           >
-          {loading ? t.auth.loggingIn : t.auth.login}
+          {isLoading ? t.auth.loggingIn : t.auth.login}
           </button>
+
+          {/* API error */}
+          {isError && apiError && (
+            <p className="text-xs text-center -mt-2" style={{ color: theme.text.error }}>
+              {apiError}
+            </p>
+          )}
         </form>
 
         <div className="flex items-center gap-3 my-6 fade-up fade-up-4">
