@@ -1,9 +1,11 @@
 // ============================================================
-//  validation.ts  —  Shared form validation rules
-//  Dùng chung cho LoginPage, RegisterPage và bất kỳ form nào
+//  validation.ts — Shared form validation rules
+//  Messages được inject từ i18n — không hardcode ngôn ngữ
 // ============================================================
 
-// ---------- Types ----------
+import type { Translation } from "../i18n/types";
+
+// ─── Types ───────────────────────────────────────────────────
 
 export type ValidationRule<T = string> = (value: T) => string | null;
 
@@ -13,60 +15,73 @@ export type FieldRules<T extends Record<string, string>> = {
 
 export type FormErrors<T extends Record<string, string>> = Partial<Record<keyof T, string>>;
 
-// ---------- Primitive rules (reusable building blocks) ----------
+export type ValidationMessages = Translation["validation"];
 
-/** Bắt buộc nhập */
+// ─── Default messages (fallback tiếng Việt) ──────────────────
+
+const DEFAULT_MESSAGES: ValidationMessages = {
+  required:            "{label} không được để trống.",
+  minLength:           "{label} phải có ít nhất {min} ký tự.",
+  maxLength:           "{label} không được vượt quá {max} ký tự.",
+  invalidEmail:        "Email không đúng định dạng.",
+  mustMatch:           "{label} không khớp.",
+  passwordNoUppercase: "Mật khẩu phải có ít nhất 1 chữ hoa.",
+  passwordNoNumber:    "Mật khẩu phải có ít nhất 1 chữ số.",
+};
+
+// ─── Primitive rules ─────────────────────────────────────────
+
 export const required =
-  (label = "Trường này"): ValidationRule =>
+  (label = "Trường này", msg = DEFAULT_MESSAGES): ValidationRule =>
   (value) =>
-    value.trim() === "" ? `${label} không được để trống.` : null;
-
-/** Độ dài tối thiểu */
-export const minLength =
-  (min: number, label = "Giá trị"): ValidationRule =>
-  (value) =>
-    value.length > 0 && value.length < min
-      ? `${label} phải có ít nhất ${min} ký tự.`
+    value.trim() === ""
+      ? msg.required.replace("{label}", label)
       : null;
 
-/** Độ dài tối đa */
+export const minLength =
+  (min: number, label = "Giá trị", msg = DEFAULT_MESSAGES): ValidationRule =>
+  (value) =>
+    value.length > 0 && value.length < min
+      ? msg.minLength.replace("{label}", label).replace("{min}", String(min))
+      : null;
+
 export const maxLength =
-  (max: number, label = "Giá trị"): ValidationRule =>
+  (max: number, label = "Giá trị", msg = DEFAULT_MESSAGES): ValidationRule =>
   (value) =>
-    value.length > max ? `${label} không được vượt quá ${max} ký tự.` : null;
+    value.length > max
+      ? msg.maxLength.replace("{label}", label).replace("{max}", String(max))
+      : null;
 
-/** Định dạng email hợp lệ */
-export const isEmail = (): ValidationRule => (value) => {
-  if (value.trim() === "") return null; // required handles empty
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(value) ? null : "Email không đúng định dạng.";
-};
+export const isEmail =
+  (msg = DEFAULT_MESSAGES): ValidationRule =>
+  (value) => {
+    if (value.trim() === "") return null;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? null : msg.invalidEmail;
+  };
 
-/** Mật khẩu phải có ít nhất 1 chữ hoa, 1 số */
-export const isStrongPassword = (): ValidationRule => (value) => {
-  if (value.length === 0) return null;
-  if (!/[A-Z]/.test(value)) return "Mật khẩu phải có ít nhất 1 chữ hoa.";
-  if (!/[0-9]/.test(value)) return "Mật khẩu phải có ít nhất 1 chữ số.";
-  return null;
-};
+export const isStrongPassword =
+  (msg = DEFAULT_MESSAGES): ValidationRule =>
+  (value) => {
+    if (value.length === 0) return null;
+    if (!/[A-Z]/.test(value)) return msg.passwordNoUppercase;
+    if (!/[0-9]/.test(value)) return msg.passwordNoNumber;
+    return null;
+  };
 
-/** Phải trùng với giá trị của field khác (dùng cho confirm password) */
 export const mustMatch =
-  (getOther: () => string, label = "Giá trị"): ValidationRule =>
+  (getOther: () => string, label = "Giá trị", msg = DEFAULT_MESSAGES): ValidationRule =>
   (value) =>
-    value !== getOther() ? `${label} không khớp.` : null;
+    value !== getOther()
+      ? msg.mustMatch.replace("{label}", label)
+      : null;
 
-/** Regex tùy chỉnh */
 export const matchesPattern =
   (pattern: RegExp, message: string): ValidationRule =>
   (value) =>
     value.length > 0 && !pattern.test(value) ? message : null;
 
-// ---------- Core validator ----------
+// ─── Core validator ──────────────────────────────────────────
 
-/**
- * Chạy tất cả các rule cho một field và trả về lỗi đầu tiên (nếu có).
- */
 export function validateField(value: string, rules: ValidationRule[]): string | null {
   for (const rule of rules) {
     const error = rule(value);
@@ -75,49 +90,52 @@ export function validateField(value: string, rules: ValidationRule[]): string | 
   return null;
 }
 
-/**
- * Validate toàn bộ form.
- * Trả về object errors và boolean isValid.
- */
 export function validateForm<T extends Record<string, string>>(
   values: T,
   fieldRules: FieldRules<T>
 ): { errors: FormErrors<T>; isValid: boolean } {
   const errors: FormErrors<T> = {};
-
   for (const key in fieldRules) {
     const rules = fieldRules[key];
     if (!rules) continue;
     const error = validateField(values[key] ?? "", rules);
     if (error) errors[key] = error;
   }
-
   return { errors, isValid: Object.keys(errors).length === 0 };
 }
 
-// ---------- Pre-built rule sets ----------
+// ─── Pre-built rule sets (nhận msg từ i18n) ──────────────────
 
-/** Rules cho field Email */
-export const emailRules = (label = "Email"): ValidationRule[] => [
-  required(label),
-  isEmail(),
+export const emailRules = (
+  label = "Email",
+  msg = DEFAULT_MESSAGES
+): ValidationRule[] => [
+  required(label, msg),
+  isEmail(msg),
 ];
 
-/** Rules cho field Password (đăng nhập – chỉ required + minLength) */
-export const passwordRules = (label = "Mật khẩu"): ValidationRule[] => [
-  required(label),
-  minLength(8, label),
+export const passwordRules = (
+  label = "Mật khẩu",
+  msg = DEFAULT_MESSAGES
+): ValidationRule[] => [
+  required(label, msg),
+  minLength(8, label, msg),
 ];
 
-/** Rules cho field Password khi đăng ký (strict) */
-export const strongPasswordRules = (label = "Mật khẩu"): ValidationRule[] => [
-  required(label),
-  minLength(8, label),
-  isStrongPassword(),
+export const strongPasswordRules = (
+  label = "Mật khẩu",
+  msg = DEFAULT_MESSAGES
+): ValidationRule[] => [
+  required(label, msg),
+  minLength(8, label, msg),
+  isStrongPassword(msg),
 ];
 
-/** Rules cho confirm password */
 export const confirmPasswordRules = (
   getPassword: () => string,
-  label = "Xác nhận mật khẩu"
-): ValidationRule[] => [required(label), mustMatch(getPassword, label)];
+  label = "Xác nhận mật khẩu",
+  msg = DEFAULT_MESSAGES
+): ValidationRule[] => [
+  required(label, msg),
+  mustMatch(getPassword, label, msg),
+];

@@ -1,10 +1,24 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
+import { useI18n } from "../../context/I18nContext";
 import Header from "./component/Header";
 import FriendList from "./component/FriendList";
 import RecentMatches from "./component/RecentMatches";
+import MatchModal from "./component/MatchModal";
 
 export default function HomePage() {
   const { theme } = useTheme();
+  const { locale } = useI18n();
+  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleStartMatch = (language: string) => {
+    setModalOpen(false);
+    navigate(`/waiting?lang=${language}`);
+  };
+
+  const findLabel = locale === "vi" ? "Tìm người luyện tập" : "Find a partner";
 
   return (
     <div
@@ -35,17 +49,24 @@ export default function HomePage() {
           />
         </aside>
 
-        {/* Center — main content slot */}
-        <main className="flex-1 overflow-y-auto p-6">
-          {/* Slot for future content (e.g. feed, find match, etc.) */}
-          <div
-            className="h-full rounded-2xl flex items-center justify-center"
-            style={{ border: `2px dashed ${theme.border.default}` }}
+        {/* Center — main content */}
+        <main className="flex-1 overflow-y-auto p-6 flex flex-col items-center justify-center gap-6">
+          {/* Find match button */}
+          <button
+            onClick={() => setModalOpen(true)}
+            className="flex items-center gap-3 px-8 py-4 rounded-2xl text-base font-semibold shadow-lg hover:opacity-90 active:scale-95 transition-all"
+            style={{ background: theme.button.bg, color: theme.button.text, boxShadow: theme.shadow.glow }}
           >
-            <p className="text-sm" style={{ color: theme.text.placeholder }}>
-              Main content area
-            </p>
-          </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            {findLabel}
+          </button>
+
+          <p className="text-xs" style={{ color: theme.text.placeholder }}>
+            {locale === "vi" ? "Chọn ngôn ngữ và bắt đầu luyện tập ngay" : "Choose a language and start practicing"}
+          </p>
         </main>
 
         {/* Right sidebar — Recent matches */}
@@ -54,11 +75,18 @@ export default function HomePage() {
           style={{ borderLeft: `1px solid ${theme.border.default}` }}
         >
           <RecentMatches
-            onRematch={(m) => console.log("rematch", m.name)}
+            onRematch={(m) => navigate(`/waiting?lang=${m.language.toLowerCase().slice(0, 2)}`)}
             onViewProfile={(m) => console.log("profile", m.name)}
           />
         </aside>
       </div>
+
+      {/* ── Match Modal ── */}
+      <MatchModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onStart={handleStartMatch}
+      />
     </div>
   );
 }

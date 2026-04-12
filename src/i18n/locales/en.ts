@@ -6,6 +6,16 @@ export const en: Translation = {
     loading: "Processing…",
   },
 
+  validation: {
+    required: "{label} is required.",
+    minLength: "{label} must be at least {min} characters.",
+    maxLength: "{label} must not exceed {max} characters.",
+    invalidEmail: "Invalid email format.",
+    mustMatch: "{label} does not match.",
+    passwordNoUppercase: "Password must contain at least 1 uppercase letter.",
+    passwordNoNumber: "Password must contain at least 1 number.",
+  },
+
   auth: {
     welcomeBack: "Welcome back",
     login: "Sign in",
@@ -31,6 +41,8 @@ export const en: Translation = {
     passwordPlaceholder: "••••••••",
     passwordHint: "At least 8 characters, 1 uppercase, 1 number",
     confirmPasswordLabel: "Confirm password",
+    googleSignIn: "Continue with Google",
+    googleSignUp: "Sign up with Google",
 
     passwordStrength: {
       weak: "Weak",

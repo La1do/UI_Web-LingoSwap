@@ -8,6 +8,17 @@ export interface Translation {
     loading: string;
   };
 
+  // Validation messages
+  validation: {
+    required: string;          // "{label} không được để trống."
+    minLength: string;         // "{label} phải có ít nhất {min} ký tự."
+    maxLength: string;         // "{label} không được vượt quá {max} ký tự."
+    invalidEmail: string;      // "Email không đúng định dạng."
+    mustMatch: string;         // "{label} không khớp."
+    passwordNoUppercase: string;
+    passwordNoNumber: string;
+  };
+
   // Auth
   auth: {
     welcomeBack: string;
@@ -34,6 +45,8 @@ export interface Translation {
     passwordPlaceholder: string;
     passwordHint: string;
     confirmPasswordLabel: string;
+    googleSignIn: string;
+    googleSignUp: string;
 
     passwordStrength: {
       weak: string;

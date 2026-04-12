@@ -6,6 +6,16 @@ export const vi: Translation = {
     loading: "Đang xử lý…",
   },
 
+  validation: {
+    required: "{label} không được để trống.",
+    minLength: "{label} phải có ít nhất {min} ký tự.",
+    maxLength: "{label} không được vượt quá {max} ký tự.",
+    invalidEmail: "Email không đúng định dạng.",
+    mustMatch: "{label} không khớp.",
+    passwordNoUppercase: "Mật khẩu phải có ít nhất 1 chữ hoa.",
+    passwordNoNumber: "Mật khẩu phải có ít nhất 1 chữ số.",
+  },
+
   auth: {
     welcomeBack: "Chào mừng trở lại",
     login: "Đăng nhập",
@@ -31,6 +41,8 @@ export const vi: Translation = {
     passwordPlaceholder: "••••••••",
     passwordHint: "Ít nhất 8 ký tự, 1 chữ hoa, 1 số",
     confirmPasswordLabel: "Xác nhận mật khẩu",
+    googleSignIn: "Đăng nhập bằng Google",
+    googleSignUp: "Đăng ký bằng Google",
 
     passwordStrength: {
       weak: "Yếu",

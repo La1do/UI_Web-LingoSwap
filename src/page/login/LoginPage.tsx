@@ -2,12 +2,13 @@
 //  LoginPage.tsx
 // ============================================================
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
 import { AuthInput } from "./AuthInput";
 import PageShell from "../../layout/PageShell";
+import GoogleSignInButton from "../component/GoogleSignInButton";
 import { useApi } from "../../hook/useApi";
 import { authService, type LoginResponse } from "../../services/auth.service";
 import {
@@ -38,7 +39,7 @@ const LockIcon = () => (
 
 export default function LoginPage() {
   const { theme } = useTheme();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const navigate = useNavigate();
   const { execute, isLoading, isError, error: apiError } = useApi<LoginResponse>();
 
@@ -46,7 +47,21 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<FormErrors<LoginFields>>({});
   const [submitted, setSubmitted] = useState(false);
 
-  const fieldRules = { email: emailRules(), password: passwordRules() };
+  const fieldRules = {
+    email: emailRules("Email", t.validation),
+    password: passwordRules(t.auth.login, t.validation),
+  };
+
+  // Re-run validation khi đổi ngôn ngữ để cập nhật error messages
+  useEffect(() => {
+    if (submitted) {
+      const { errors: newErrors } = validateForm(values, {
+        email: emailRules("Email", t.validation),
+        password: passwordRules(t.auth.login, t.validation),
+      });
+      setErrors(newErrors);
+    }
+  }, [locale]);
 
   const handleChange = (field: keyof LoginFields) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const next = { ...values, [field]: e.target.value };
@@ -191,6 +206,13 @@ export default function LoginPage() {
           <div className="flex-1 h-px" style={{ background: theme.border.default }} />
           <span className="text-xs" style={{ color: theme.text.placeholder }}>{t.common.or}</span>
           <div className="flex-1 h-px" style={{ background: theme.border.default }} />
+        </div>
+
+        <div className="fade-up fade-up-5 mb-5">
+          <GoogleSignInButton
+            label={t.auth.googleSignIn}
+            onClick={() => authService.googleLogin()}
+          />
         </div>
 
         <p className="text-center text-sm fade-up fade-up-5" style={{ color: theme.text.secondary }}>
