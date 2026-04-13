@@ -209,10 +209,7 @@ export default function LoginPage() {
         </div>
 
         <div className="fade-up fade-up-5 mb-5">
-          <GoogleSignInButton
-            label={t.auth.googleSignIn}
-            onClick={() => authService.googleLogin()}
-          />
+          <GoogleSignInButton label={t.auth.googleSignIn} />
         </div>
 
         <p className="text-center text-sm fade-up fade-up-5" style={{ color: theme.text.secondary }}>

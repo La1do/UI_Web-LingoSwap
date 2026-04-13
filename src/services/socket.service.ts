@@ -64,6 +64,7 @@ export const socketService = {
   // ── Matching events ──────────────────────────────────────
 
   joinQueue(language: string): void {
+    console.log("[Socket] emit join_queue:", { language }, "| connected:", socket?.connected, "| id:", socket?.id);
     socket?.emit("join_queue", { language });
   },
 
@@ -72,23 +73,38 @@ export const socketService = {
   },
 
   onWaitingStatus(cb: (payload: WaitingStatusPayload) => void): void {
-    socket?.on("waiting_status", cb);
+    socket?.on("waiting_status", (data) => {
+      console.log("[Socket] waiting_status:", data);
+      cb(data);
+    });
   },
 
   onMatchFound(cb: (payload: MatchFoundPayload) => void): void {
-    socket?.on("match_found", cb);
+    socket?.on("match_found", (data) => {
+      console.log("[Socket] match_found:", data);
+      cb(data);
+    });
   },
 
   onQueueTimeout(cb: (payload: QueueTimeoutPayload) => void): void {
-    socket?.on("queue_timeout", cb);
+    socket?.on("queue_timeout", (data) => {
+      console.log("[Socket] queue_timeout:", data);
+      cb(data);
+    });
   },
 
   onPartnerDisconnected(cb: (payload: PartnerDisconnectedPayload) => void): void {
-    socket?.on("partner_disconnected", cb);
+    socket?.on("partner_disconnected", (data) => {
+      console.log("[Socket] partner_disconnected:", data);
+      cb(data);
+    });
   },
 
   onError(cb: (message: string) => void): void {
-    socket?.on("error", cb);
+    socket?.on("error", (data) => {
+      console.log("[Socket] error:", data);
+      cb(data);
+    });
   },
 
   // Remove all matching listeners (cleanup)

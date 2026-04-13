@@ -33,38 +33,37 @@ export function useMatching(): UseMatchingReturn {
 
     const socket = socketService.connect();
 
-    const init = () => {
-      setStatus("waiting");
-      socketService.joinQueue(language);
-    };
-
-    // Nếu đã connected thì join ngay, không thì chờ connect event
-    if (socket.connected) {
-      init();
-    } else {
-      socket.once("connect", init);
-    }
-
-    // ── Listeners ──────────────────────────────────────────
-
-    socketService.onWaitingStatus(() => {
+    // Đăng ký listeners trực tiếp trên socket instance — tránh race condition
+    socket.off("waiting_status").on("waiting_status", () => {
       setStatus("waiting");
     });
 
-    socketService.onMatchFound((payload) => {
+    socket.off("match_found").on("match_found", (payload: MatchFoundPayload) => {
+      console.log("[useMatching] match_found:", payload);
       setStatus("matched");
       setMatchData(payload);
     });
 
-    socketService.onQueueTimeout((payload) => {
+    socket.off("queue_timeout").on("queue_timeout", (payload: { message: string }) => {
       setStatus("timeout");
       setErrorMessage(payload.message);
     });
 
-    socketService.onError((message) => {
+    socket.off("error").on("error", (message: string) => {
       setStatus("error");
       setErrorMessage(message);
     });
+
+    const join = () => {
+      setStatus("waiting");
+      socketService.joinQueue(language);
+    };
+
+    if (socket.connected) {
+      join();
+    } else {
+      socket.once("connect", join);
+    }
   }, []);
 
   const cancelMatching = useCallback(() => {

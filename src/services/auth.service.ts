@@ -58,17 +58,10 @@ export const authService = {
     data,
   }),
 
-  // Redirect browser sang Google OAuth — không dùng axios
-  // Backend sẽ redirect sang Google, sau đó callback về frontend
-  googleLogin: (): void => {
-    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/auth/google`;
-  },
-
-  // Sau khi Google callback, frontend gọi endpoint này để lấy token
-  // (dùng khi backend redirect về kèm ?code=... hoặc ?token=...)
-  googleCallback: (code: string): AxiosRequestConfig => ({
-    method: "GET",
-    url: "/api/auth/google/callback",
-    params: { code },
+  // Gửi idToken lấy từ Google Identity Services lên backend
+  googleLogin: (idToken: string): AxiosRequestConfig => ({
+    method: "POST",
+    url: "/api/auth/google",
+    data: { idToken },
   }),
 };
