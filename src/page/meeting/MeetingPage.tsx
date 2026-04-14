@@ -1,5 +1,5 @@
 // MeetingPage.tsx — Layout chính của màn hình video call
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
@@ -18,13 +18,22 @@ export default function MeetingPage() {
   const [isCameraOff, setIsCameraOff] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(true);
 
-  const _sessionId = searchParams.get("session"); // reserved for WebRTC signaling
+  const sessionId = searchParams.get("session");
   const partnerId = searchParams.get("partner");
+  const startTimeRef = useRef(Date.now());
 
-  // Nếu partner disconnect thì về home
+  const endCall = (replace = false) => {
+    console.log("[endCall] triggered | sessionId:", sessionId, "| partnerId:", partnerId);
+    socketService.leaveQueue();
+    const duration = Math.floor((Date.now() - startTimeRef.current) / 1000);
+    console.log("[endCall] navigating to review | duration:", duration);
+    navigate(`/review?session=${sessionId}&partner=${partnerId}&duration=${duration}`, { replace });
+  };
+
+  // Lắng nghe partner disconnect / leave
   useEffect(() => {
     socketService.onPartnerDisconnected(() => {
-      navigate("/home", { replace: true });
+      endCall(true);
     });
     return () => {
       socketService.offMatchingEvents();
@@ -124,7 +133,7 @@ export default function MeetingPage() {
             <button
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
               style={{ background: theme.text.error, color: "#fff" }} aria-label={t.meeting.endCall}
-              onClick={() => { socketService.leaveQueue(); navigate("/home"); }}>
+              onClick={() => endCall()}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5">
                 <path d="M10.68 13.31a16 16 0 003.41 2.6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7 2 2 0 012 2v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.42 19.42 0 013.43 9.19 19.79 19.79 0 01.36 .54 2 2 0 012.35 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.33 7.91" />
                 <line x1="23" y1="1" x2="1" y2="23" />

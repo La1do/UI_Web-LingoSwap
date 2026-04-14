@@ -3,6 +3,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { useApi } from "../../hook/useApi";
 import { authService, type LoginResponse } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 interface GoogleSignInButtonProps {
   label?: string;
@@ -14,6 +15,7 @@ export default function GoogleSignInButton({
   const { theme } = useTheme();
   const navigate = useNavigate();
   const { execute, isLoading } = useApi<LoginResponse>();
+  const { setUserFromResponse } = useAuth();
 
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
@@ -24,7 +26,7 @@ export default function GoogleSignInButton({
         authService.googleLogin(tokenResponse.access_token)
       );
       if (result?.token) {
-        localStorage.setItem("access_token", result.token);
+        setUserFromResponse(result);
         navigate("/home");
       }
     },

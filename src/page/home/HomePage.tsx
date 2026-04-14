@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
+import { useAuth } from "../../context/AuthContext";
 import Header from "./component/Header";
 import FriendList from "./component/FriendList";
 import RecentMatches from "./component/RecentMatches";
@@ -10,6 +11,7 @@ import MatchModal from "./component/MatchModal";
 export default function HomePage() {
   const { theme } = useTheme();
   const { locale } = useI18n();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -27,12 +29,9 @@ export default function HomePage() {
     >
       {/* ── Header ── */}
       <Header
-        username="Minh Anh"
         notificationCount={3}
         onSearch={(q) => console.log("search:", q)}
-        onSettingsClick={() => console.log("settings")}
         onNotificationsClick={() => console.log("notifications")}
-        onProfileClick={() => console.log("profile")}
       />
 
       {/* ── Main layout ── */}

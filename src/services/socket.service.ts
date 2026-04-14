@@ -69,6 +69,7 @@ export const socketService = {
   },
 
   leaveQueue(): void {
+    console.log("[Socket] emit leave_queue | connected:", socket?.connected, "| id:", socket?.id);
     socket?.emit("leave_queue");
   },
 
@@ -94,6 +95,7 @@ export const socketService = {
   },
 
   onPartnerDisconnected(cb: (payload: PartnerDisconnectedPayload) => void): void {
+    socket?.off("partner_disconnected");
     socket?.on("partner_disconnected", (data) => {
       console.log("[Socket] partner_disconnected:", data);
       cb(data);

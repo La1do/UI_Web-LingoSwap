@@ -154,7 +154,6 @@ export const handleMatchProvider = (io, socket) => {
                 }
             }
             await User.findByIdAndUpdate(userId, { status: 'online' });
-            currentUserId = null;
 
         } catch (error) {
             console.error('Cleanup Error:', error);

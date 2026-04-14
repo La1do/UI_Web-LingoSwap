@@ -1,6 +1,7 @@
 // LocalVideo.tsx — Camera của người dùng hiện tại
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext";
 
 interface LocalVideoProps {
   stream?: MediaStream | null;
@@ -14,6 +15,7 @@ export default function LocalVideo({
   isCameraOff = false,
 }: LocalVideoProps) {
   const { theme } = useTheme();
+  const { user } = useAuth();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasStream, setHasStream] = useState(false);
 
@@ -77,7 +79,7 @@ export default function LocalVideo({
         className="absolute bottom-1.5 left-2 text-[10px] font-medium"
         style={{ color: "#fff", textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}
       >
-        Bạn
+        {user?.fullName ?? "Bạn"}
       </div>
     </div>
   );

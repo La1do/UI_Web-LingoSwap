@@ -5,6 +5,7 @@ import GoogleCallbackPage from "../page/login/GoogleCallbackPage";
 import HomePage from "../page/home/HomePage";
 import WaitingPage from "../page/waiting/WaitingPage";
 import MeetingPage from "../page/meeting/MeetingPage";
+import ReviewPage from "../page/review/ReviewPage";
 
 export const router = createBrowserRouter([
   { path: "/",              element: <LoginPage /> },
@@ -13,4 +14,5 @@ export const router = createBrowserRouter([
   { path: "/home",          element: <HomePage /> },
   { path: "/waiting",       element: <WaitingPage /> },
   { path: "/meeting",       element: <MeetingPage /> },
+  { path: "/review",        element: <ReviewPage /> },
 ]);

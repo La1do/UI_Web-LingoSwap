@@ -10,6 +10,7 @@ import { AuthInput } from "./AuthInput";
 import PageShell from "../../layout/PageShell";
 import GoogleSignInButton from "../component/GoogleSignInButton";
 import { useApi } from "../../hook/useApi";
+import { useAuth } from "../../context/AuthContext";
 import { authService, type LoginResponse } from "../../services/auth.service";
 import {
   validateForm,
@@ -42,6 +43,7 @@ export default function LoginPage() {
   const { t, locale } = useI18n();
   const navigate = useNavigate();
   const { execute, isLoading, isError, error: apiError } = useApi<LoginResponse>();
+  const { setUserFromResponse } = useAuth();
 
   const [values, setValues] = useState<LoginFields>({ email: "", password: "" });
   const [errors, setErrors] = useState<FormErrors<LoginFields>>({});
@@ -82,7 +84,7 @@ export default function LoginPage() {
 
     const result = await execute(authService.login({ email: values.email, password: values.password }));
     if (result) {
-      localStorage.setItem("access_token", result.token);
+      setUserFromResponse(result);
       navigate("/home");
     }
   };
