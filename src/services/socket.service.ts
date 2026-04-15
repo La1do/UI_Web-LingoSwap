@@ -109,6 +109,35 @@ export const socketService = {
     });
   },
 
+  // ── Chat events ──────────────────────────────────────────
+
+  sendMessage(payload: { partnerId: string; content: string; matchSessionId: string }): void {
+    console.log("[Socket] emit send_message:", payload);
+    socket?.emit("send_message", payload);
+  },
+
+  onReceiveMessage(cb: (msg: {
+    _id: string;
+    senderId: string;
+    content: string;
+    type: string;
+    createdAt: string;
+    conversationId: string;
+  }) => void): void {
+    socket?.off("receive_message");
+    socket?.on("receive_message", cb);
+  },
+
+  onMessageSentSuccess(cb: (msg: { _id: string; content: string; createdAt: string }) => void): void {
+    socket?.off("message_sent_success");
+    socket?.on("message_sent_success", cb);
+  },
+
+  offChatEvents(): void {
+    socket?.off("receive_message");
+    socket?.off("message_sent_success");
+  },
+
   // Remove all matching listeners (cleanup)
   offMatchingEvents(): void {
     socket?.off("waiting_status");

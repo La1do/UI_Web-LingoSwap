@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { socketService, type MatchFoundPayload } from "../services/socket.service";
 
 // ─── Types ───────────────────────────────────────────────────
@@ -74,10 +74,19 @@ export function useMatching(): UseMatchingReturn {
     setErrorMessage(null);
   }, []);
 
-  // Cleanup khi unmount
+  // Cleanup khi unmount — chỉ leave nếu chưa matched
+  const statusRef = useRef<MatchStatus>("idle");
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
+
   useEffect(() => {
     return () => {
       socketService.offMatchingEvents();
+      // Không emit leave_queue nếu đã match thành công
+      if (statusRef.current !== "matched") {
+        socketService.leaveQueue();
+      }
     };
   }, []);
 

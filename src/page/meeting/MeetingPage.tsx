@@ -147,7 +147,7 @@ export default function MeetingPage() {
         {isChatOpen && (
           <div className="w-72 shrink-0" style={{ minHeight: 0 }}>
             <div className="h-full" style={{ minHeight: "500px" }}>
-              <ChatPanel />
+              <ChatPanel partnerId={partnerId ?? ""} sessionId={sessionId ?? ""} />
             </div>
           </div>
         )}

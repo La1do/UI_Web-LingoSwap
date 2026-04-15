@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
@@ -26,6 +26,11 @@ export default function WaitingPage() {
   const langInfo = LANGUAGE_LABELS[lang] ?? { label: lang, flag: "🌍" };
 
   const { status, matchData, errorMessage, startMatching, cancelMatching } = useMatching();
+  const statusRef = useRef(status);
+
+useEffect(() => {
+  statusRef.current = status;
+}, [status]);
 
   const t = locale === "vi"
     ? {
@@ -52,17 +57,23 @@ export default function WaitingPage() {
   // Start matching on mount
   useEffect(() => {
     startMatching(lang);
-    return () => cancelMatching();
+    return () => {
+      // cancelMatching chỉ emit leave_queue khi chưa matched (xử lý trong hook)
+      if( statusRef.current !== "matched"){
+
+        cancelMatching();
+      }
+    };
   }, [lang]);
 
   // Navigate to meeting when matched
   useEffect(() => {
-    if (status === "matched" && matchData) {
+    if (statusRef.current === "matched" && matchData) {
       navigate(`/meeting?session=${matchData.sessionId}&partner=${matchData.partnerId}`, {
         replace: true,
       });
     }
-  }, [status, matchData]);
+  }, [statusRef, matchData]);
 
   // Timer — only tick while waiting
   useEffect(() => {
