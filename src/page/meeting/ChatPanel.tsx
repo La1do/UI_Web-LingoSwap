@@ -77,7 +77,6 @@ export default function ChatPanel({ partnerId, sessionId }: ChatPanelProps) {
       partnerId,
       content: text,
       matchSessionId: sessionId,
-      type: "text",
     });
 
     setInput("");

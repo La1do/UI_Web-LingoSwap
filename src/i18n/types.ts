@@ -62,6 +62,33 @@ export interface Translation {
     };
   };
 
+  // Profile
+  profile: {
+    title: string;
+    editProfile: string;
+    saveChanges: string;
+    saving: string;
+    saveSuccess: string;
+    fullName: string;
+    bio: string;
+    bioPlaceholder: string;
+    country: string;
+    email: string;
+    language: string;
+    proficiencyLevel: string;
+    changePassword: string;
+    currentPassword: string;
+    newPassword: string;
+    confirmNewPassword: string;
+    updatePassword: string;
+    updatingPassword: string;
+    passwordUpdateSuccess: string;
+    backToHome: string;
+    uploadAvatar: string;
+    uploadAvatarHint: string;
+    uploading: string;
+  };
+
   // Meeting
   meeting: {
     waitingForConnection: string;
