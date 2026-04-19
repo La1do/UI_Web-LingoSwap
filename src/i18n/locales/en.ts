@@ -58,6 +58,27 @@ export const en: Translation = {
     },
   },
 
+  forgotPassword: {
+    title: "Forgot password",
+    subtitle: "Enter your email to receive an OTP",
+    emailLabel: "Email",
+    sendOtp: "Send OTP",
+    sendingOtp: "Sending…",
+    otpSent: "OTP has been sent to your email",
+    otpLabel: "OTP code",
+    otpPlaceholder: "Enter 6 digits",
+    newPasswordLabel: "New password",
+    confirmPasswordLabel: "Confirm new password",
+    submit: "Reset password",
+    submitting: "Processing…",
+    success: "Password reset successfully!",
+    successDesc: "You can now sign in with your new password.",
+    backToLogin: "← Back to sign in",
+    resendOtp: "Resend code",
+    resendIn: "Resend in",
+    expired: "OTP has expired. Please request a new one.",
+  },
+
   profile: {
     title: "My Profile",
     editProfile: "Edit Profile",

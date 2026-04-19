@@ -62,6 +62,28 @@ export interface Translation {
     };
   };
 
+  // Forgot password
+  forgotPassword: {
+    title: string;
+    subtitle: string;
+    emailLabel: string;
+    sendOtp: string;
+    sendingOtp: string;
+    otpSent: string;
+    otpLabel: string;
+    otpPlaceholder: string;
+    newPasswordLabel: string;
+    confirmPasswordLabel: string;
+    submit: string;
+    submitting: string;
+    success: string;
+    successDesc: string;
+    backToLogin: string;
+    resendOtp: string;
+    resendIn: string;
+    expired: string;
+  };
+
   // Profile
   profile: {
     title: string;

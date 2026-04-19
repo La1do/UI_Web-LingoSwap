@@ -3,8 +3,7 @@
 // ============================================================
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useTheme } from "../../context/ThemeContext";
+import { useNavigate } from "react-router-dom";import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
 import { AuthInput } from "./AuthInput";
 import PageShell from "../../layout/PageShell";
@@ -176,6 +175,7 @@ export default function LoginPage() {
           <div className="flex justify-end fade-up fade-up-3" style={{ marginTop: "-0.75rem" }}>
             <button
               type="button"
+              onClick={() => navigate("/forgot-password")}
               className="text-xs hover:opacity-80 transition-opacity"
               style={{ color: theme.text.accent }}
             >

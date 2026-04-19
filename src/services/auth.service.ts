@@ -66,4 +66,16 @@ export const authService = {
     url: "/api/auth/google",
     data: { idToken },
   }),
+
+  sendForgotPasswordOtp: (email: string): AxiosRequestConfig => ({
+    method: "POST",
+    url: "/api/auth/password/forgot",
+    data: { email },
+  }),
+
+  resetPassword: (data: { email: string; otp: string; newPassword: string }): AxiosRequestConfig => ({
+    method: "POST",
+    url: "/api/auth/password/forgot",
+    data,
+  }),
 };

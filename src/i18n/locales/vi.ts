@@ -58,6 +58,27 @@ export const vi: Translation = {
     },
   },
 
+  forgotPassword: {
+    title: "Quên mật khẩu",
+    subtitle: "Nhập email để nhận mã OTP",
+    emailLabel: "Email",
+    sendOtp: "Gửi mã OTP",
+    sendingOtp: "Đang gửi…",
+    otpSent: "Mã OTP đã được gửi đến email của bạn",
+    otpLabel: "Mã OTP",
+    otpPlaceholder: "Nhập 6 chữ số",
+    newPasswordLabel: "Mật khẩu mới",
+    confirmPasswordLabel: "Xác nhận mật khẩu mới",
+    submit: "Đặt lại mật khẩu",
+    submitting: "Đang xử lý…",
+    success: "Đặt lại mật khẩu thành công!",
+    successDesc: "Bạn có thể đăng nhập bằng mật khẩu mới.",
+    backToLogin: "← Về đăng nhập",
+    resendOtp: "Gửi lại mã",
+    resendIn: "Gửi lại sau",
+    expired: "Mã OTP đã hết hạn. Vui lòng gửi lại.",
+  },
+
   profile: {
     title: "Hồ sơ cá nhân",
     editProfile: "Chỉnh sửa hồ sơ",
