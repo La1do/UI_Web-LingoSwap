@@ -10,6 +10,7 @@ export interface AuthUser {
   language: string;
   proficiencyLevel: string;
   bio: string;
+  country: string;
   role: string;
 }
 
@@ -25,10 +26,12 @@ interface AuthContextValue {
       proficiencyLevel: string;
       avatar: string;
       bio: string;
+      country: string;
     };
     role: string;
     token: string;
   }) => void;
+  updateUser: (partial: Partial<AuthUser>) => void;
   logout: () => void;
 }
 
@@ -38,6 +41,7 @@ const AuthContext = createContext<AuthContextValue>({
   user: null,
   isAuthenticated: false,
   setUserFromResponse: () => {},
+  updateUser: () => {},
   logout: () => {},
 });
 
@@ -60,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const setUserFromResponse = useCallback((data: {
     id: string;
     email: string;
-    profile: { fullName: string; language: string; proficiencyLevel: string; avatar: string; bio: string };
+    profile: { fullName: string; language: string; proficiencyLevel: string; avatar: string; bio: string; country: string };
     role: string;
     token: string;
   }) => {
@@ -72,11 +76,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       language: data.profile.language,
       proficiencyLevel: data.profile.proficiencyLevel,
       bio: data.profile.bio,
+      country: data.profile.country ?? "",
       role: data.role,
     };
     localStorage.setItem("access_token", data.token);
     localStorage.setItem("user", JSON.stringify(authUser));
     setUser(authUser);
+  }, []);
+
+  const updateUser = useCallback((partial: Partial<AuthUser>) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...partial };
+      localStorage.setItem("user", JSON.stringify(updated));
+      return updated;
+    });
   }, []);
 
   const logout = useCallback(() => {
@@ -86,7 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, setUserFromResponse, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, setUserFromResponse, updateUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

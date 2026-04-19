@@ -16,6 +16,7 @@ export interface LoginResponse {
     proficiencyLevel: string;
     avatar: string;
     bio: string;
+    country: string;
   };
   role: string;
   token: string;
@@ -38,6 +39,7 @@ export interface RegisterResponse {
     proficiencyLevel: string;
     avatar: string;
     bio: string;
+    country: string;
   };
   role: string;
   token: string;

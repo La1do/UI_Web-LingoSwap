@@ -61,7 +61,15 @@
 
 ---
 
-## Naming
+## Quy trình làm việc — BẮT BUỘC
+
+Trước khi tạo hoặc sửa bất kỳ file nào, **phải** show toàn bộ code ra chat để người dùng review.
+
+1. Viết code đầy đủ ra chat (dạng code block)
+2. Chờ người dùng confirm ("ok", "được", "làm đi",confirm...)
+3. Sau khi được confirm mới thực sự tạo/sửa file
+
+**Không được tự ý tạo hoặc sửa file mà không có sự đồng ý của người dùng.**
 
 | Loại | Convention | Ví dụ |
 |---|---|---|

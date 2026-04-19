@@ -3,20 +3,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useAuth } from "../../../context/AuthContext";
 import { useApi } from "../../../hook/useApi";
-
-interface UpdateProfileResponse {
-  id: string;
-  email: string;
-  profile: {
-    fullName: string;
-    language: string;
-    proficiencyLevel: string;
-    avatar: string;
-    bio: string;
-  };
-  role: string;
-  token: string;
-}
+import { userService } from "../../../services/user.service";
 
 const COUNTRIES = [
   { code: "VN", label: "🇻🇳 Vietnam" }, { code: "US", label: "🇺🇸 United States" },
@@ -31,24 +18,24 @@ const COUNTRIES = [
 export default function ProfileForm() {
   const { theme } = useTheme();
   const { t } = useI18n();
-  const { user, setUserFromResponse } = useAuth();
-  const { execute, isLoading } = useApi<UpdateProfileResponse>();
+  const { user, updateUser } = useAuth();
+  const { execute, isLoading } = useApi<{ message: string; user: { profile: { fullName: string; bio: string; country: string } } }>();
 
   const [fullName, setFullName] = useState(user?.fullName ?? "");
   const [bio, setBio] = useState(user?.bio ?? "");
-  const [country, setCountry] = useState("");
+  const [country, setCountry] = useState(user?.country ?? "");
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSuccess(false);
-    const result = await execute({
-      method: "PUT",
-      url: "/api/user/profile",
-      data: { fullName, bio, country },
-    });
-    if (result) {
-      setUserFromResponse(result);
+    const result = await execute(userService.updateProfile({ fullName, bio, country }));
+    if (result !== null) {
+      updateUser({
+        fullName: result.user.profile.fullName,
+        bio: result.user.profile.bio,
+        country: result.user.profile.country,
+      });
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     }
