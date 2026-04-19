@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
+import { authService } from "../../../services/auth.service";
 import { validateForm, required, minLength, mustMatch } from "../../../library/validation";
 
 interface ChangePasswordFields extends Record<string, string> {
@@ -51,11 +52,10 @@ export default function ChangePasswordForm() {
     setErrors(newErrors);
     if (!isValid) return;
 
-    const result = await execute({
-      method: "PUT",
-      url: "/api/user/change-password",
-      data: { currentPassword: values.currentPassword, newPassword: values.newPassword },
-    });
+    const result = await execute(authService.changePassword({
+      currentPassword: values.currentPassword,
+      newPassword: values.newPassword,
+    }));
 
     if (result !== null) {
       setSuccess(true);

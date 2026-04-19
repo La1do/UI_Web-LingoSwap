@@ -78,4 +78,10 @@ export const authService = {
     url: "/api/auth/password/forgot",
     data,
   }),
+
+  changePassword: (data: { currentPassword: string; newPassword: string }): AxiosRequestConfig => ({
+    method: "Patch",
+    url: "/api/auth/password/change",
+    data,
+  }),
 };
