@@ -75,7 +75,7 @@ export const authService = {
 
   resetPassword: (data: { email: string; otp: string; newPassword: string }): AxiosRequestConfig => ({
     method: "POST",
-    url: "/api/auth/password/forgot",
+    url: "/api/auth/password/reset",
     data,
   }),
 
