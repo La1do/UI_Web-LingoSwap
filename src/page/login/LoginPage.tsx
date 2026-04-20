@@ -11,6 +11,8 @@ import GoogleSignInButton from "../component/GoogleSignInButton";
 import { useApi } from "../../hook/useApi";
 import { useAuth } from "../../context/AuthContext";
 import { authService, type LoginResponse } from "../../services/auth.service";
+import { userService } from "../../services/user.service";
+import type { MeResponse } from "../../context/AuthContext";
 import {
   validateForm,
   emailRules,
@@ -38,11 +40,12 @@ const LockIcon = () => (
 );
 
 export default function LoginPage() {
-  const { theme } = useTheme();
+  const { theme, setMode } = useTheme();
   const { t, locale } = useI18n();
   const navigate = useNavigate();
   const { execute, isLoading, isError, error: apiError } = useApi<LoginResponse>();
-  const { setUserFromResponse } = useAuth();
+  const { execute: executeMe } = useApi<MeResponse>();
+  const { setUserFromResponse, setUserFromMe } = useAuth();
 
   const [values, setValues] = useState<LoginFields>({ email: "", password: "" });
   const [errors, setErrors] = useState<FormErrors<LoginFields>>({});
@@ -84,6 +87,14 @@ export default function LoginPage() {
     const result = await execute(authService.login({ email: values.email, password: values.password }));
     if (result) {
       setUserFromResponse(result);
+      // Fetch full profile từ /api/users/me
+      const me = await executeMe(userService.getMe());
+      if (me) {
+        setUserFromMe(me);
+        if (me.settings?.theme === "light" || me.settings?.theme === "dark") {
+          setMode(me.settings.theme);
+        }
+      }
       navigate("/home");
     }
   };

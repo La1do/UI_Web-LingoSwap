@@ -2,6 +2,8 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { useTheme } from "../../context/ThemeContext";
 import { useApi } from "../../hook/useApi";
 import { authService, type LoginResponse } from "../../services/auth.service";
+import { userService } from "../../services/user.service";
+import type { MeResponse } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -12,10 +14,11 @@ interface GoogleSignInButtonProps {
 export default function GoogleSignInButton({
   label = "Continue with Google",
 }: GoogleSignInButtonProps) {
-  const { theme } = useTheme();
+  const { theme, setMode } = useTheme();
   const navigate = useNavigate();
   const { execute, isLoading } = useApi<LoginResponse>();
-  const { setUserFromResponse } = useAuth();
+  const { execute: executeMe } = useApi<MeResponse>();
+  const { setUserFromResponse, setUserFromMe } = useAuth();
 
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
@@ -27,6 +30,13 @@ export default function GoogleSignInButton({
       );
       if (result?.token) {
         setUserFromResponse(result);
+        const me = await executeMe(userService.getMe());
+        if (me) {
+          setUserFromMe(me);
+          if (me.settings?.theme === "light" || me.settings?.theme === "dark") {
+            setMode(me.settings.theme);
+          }
+        }
         navigate("/home");
       }
     },

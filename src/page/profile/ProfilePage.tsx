@@ -4,11 +4,12 @@ import { useI18n } from "../../context/I18nContext";
 import PageShell from "../../layout/PageShell";
 import ProfileCard from "./component/ProfileCard";
 import ProfileForm from "./component/ProfileForm";
+import SettingsForm from "./component/SettingsForm";
 import ChangePasswordForm from "./component/ChangePasswordForm";
 
 export default function ProfilePage() {
   const { theme } = useTheme();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const navigate = useNavigate();
 
   return (
@@ -45,6 +46,17 @@ export default function ProfilePage() {
               {t.profile.editProfile}
             </h2>
             <ProfileForm />
+          </section>
+
+          {/* Settings */}
+          <section
+            className="rounded-2xl p-6 flex flex-col gap-5"
+            style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}
+          >
+            <h2 className="text-base font-semibold" style={{ color: theme.text.primary }}>
+              {locale === "vi" ? "Cài đặt chung" : "General settings"}
+            </h2>
+            <SettingsForm />
           </section>
 
           {/* Change password */}

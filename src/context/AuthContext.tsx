@@ -12,6 +12,30 @@ export interface AuthUser {
   bio: string;
   country: string;
   role: string;
+  settings: {
+    theme: string;
+    uiLanguage: string;
+  };
+}
+
+// Response shape từ GET /api/users/me
+export interface MeResponse {
+  _id: string;
+  email: string;
+  profile: {
+    fullName: string;
+    bio: string;
+    avatar: string;
+    language?: string;
+    proficiencyLevel?: string;
+    country?: string;
+  };
+  settings: {
+    theme: string;
+    uiLanguage: string;
+  };
+  role: string;
+  statusAccount: string;
 }
 
 interface AuthContextValue {
@@ -31,6 +55,7 @@ interface AuthContextValue {
     role: string;
     token: string;
   }) => void;
+  setUserFromMe: (data: MeResponse) => void;
   updateUser: (partial: Partial<AuthUser>) => void;
   logout: () => void;
 }
@@ -41,6 +66,7 @@ const AuthContext = createContext<AuthContextValue>({
   user: null,
   isAuthenticated: false,
   setUserFromResponse: () => {},
+  setUserFromMe: () => {},
   updateUser: () => {},
   logout: () => {},
 });
@@ -78,8 +104,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       bio: data.profile.bio,
       country: data.profile.country ?? "",
       role: data.role,
+      settings: { theme: "light", uiLanguage: "vi" },
     };
     localStorage.setItem("access_token", data.token);
+    localStorage.setItem("user", JSON.stringify(authUser));
+    setUser(authUser);
+  }, []);
+
+  const setUserFromMe = useCallback((data: MeResponse) => {
+    const authUser: AuthUser = {
+      id: data._id,
+      email: data.email,
+      fullName: data.profile.fullName,
+      avatar: data.profile.avatar,
+      language: data.profile.language ?? "",
+      proficiencyLevel: data.profile.proficiencyLevel ?? "",
+      bio: data.profile.bio,
+      country: data.profile.country ?? "",
+      role: data.role,
+      settings: data.settings,
+    };
+    // Đồng bộ theme từ server vào localStorage để ThemeContext đọc đúng
+    if (data.settings?.theme) {
+      localStorage.setItem("theme", data.settings.theme);
+    }
     localStorage.setItem("user", JSON.stringify(authUser));
     setUser(authUser);
   }, []);
@@ -100,7 +148,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, setUserFromResponse, updateUser, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, setUserFromResponse, setUserFromMe, updateUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

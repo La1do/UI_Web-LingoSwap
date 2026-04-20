@@ -28,11 +28,22 @@ export interface UpdateProfileRequest {
 // ─── Service ─────────────────────────────────────────────────
 
 export const userService = {
+  getMe: (): AxiosRequestConfig => ({
+    method: "GET",
+    url: "/api/users/me",
+  }),
+
   uploadAvatar: (formData: FormData): AxiosRequestConfig => ({
     method: "POST",
     url: "/api/users/avatar",
     data: formData,
     headers: { "Content-Type": "multipart/form-data" },
+  }),
+
+  updateSettings: (data: { theme: string; uiLanguage: string }): AxiosRequestConfig => ({
+    method: "PUT",
+    url: "/api/users/me",
+    data: { settings: data },
   }),
 
   updateProfile: (data: UpdateProfileRequest): AxiosRequestConfig => ({
