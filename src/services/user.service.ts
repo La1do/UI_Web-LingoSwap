@@ -33,6 +33,16 @@ export const userService = {
     url: "/api/users/me",
   }),
 
+  getPublicProfile: (userId: string): AxiosRequestConfig => ({
+    method: "GET",
+    url: `/api/users/${userId}`,
+  }),
+
+  sendFriendRequest: (recipientId: string): AxiosRequestConfig => ({
+    method: "POST",
+    url: `/api/user/friends/friends/${recipientId}/request`,
+  }),
+
   uploadAvatar: (formData: FormData): AxiosRequestConfig => ({
     method: "POST",
     url: "/api/users/avatar",
