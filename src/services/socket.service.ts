@@ -138,6 +138,41 @@ export const socketService = {
     socket?.off("message_sent_success");
   },
 
+  // ── WebRTC signaling ─────────────────────────────────────
+
+  emitOffer(sessionId: string, offer: RTCSessionDescriptionInit): void {
+    socket?.emit("webrtc_offer", { sessionId, offer });
+  },
+
+  emitAnswer(sessionId: string, answer: RTCSessionDescriptionInit): void {
+    socket?.emit("webrtc_answer", { sessionId, answer });
+  },
+
+  emitIceCandidate(sessionId: string, candidate: RTCIceCandidateInit): void {
+    socket?.emit("webrtc_ice_candidate", { sessionId, candidate });
+  },
+
+  onOffer(cb: (payload: { sessionId: string; offer: RTCSessionDescriptionInit }) => void): void {
+    socket?.off("webrtc_offer");
+    socket?.on("webrtc_offer", cb);
+  },
+
+  onAnswer(cb: (payload: { sessionId: string; answer: RTCSessionDescriptionInit }) => void): void {
+    socket?.off("webrtc_answer");
+    socket?.on("webrtc_answer", cb);
+  },
+
+  onIceCandidate(cb: (payload: { sessionId: string; candidate: RTCIceCandidateInit }) => void): void {
+    socket?.off("webrtc_ice_candidate");
+    socket?.on("webrtc_ice_candidate", cb);
+  },
+
+  offWebRTCEvents(): void {
+    socket?.off("webrtc_offer");
+    socket?.off("webrtc_answer");
+    socket?.off("webrtc_ice_candidate");
+  },
+
   // Remove all matching listeners (cleanup)
   offMatchingEvents(): void {
     socket?.off("waiting_status");

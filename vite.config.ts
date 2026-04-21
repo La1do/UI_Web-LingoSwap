@@ -8,11 +8,13 @@ export default defineConfig({
   },
   plugins: [react(), tailwindcss()],
   server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-      },
-    },
+    host: true, // lắng nghe 0.0.0.0 — cho phép truy cập từ IP thật
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://localhost:5000',
+    //     changeOrigin: true,
+    //   },
+    // },
+    allowedHosts: true,
   },
 })

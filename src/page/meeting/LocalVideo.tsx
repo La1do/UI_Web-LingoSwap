@@ -1,5 +1,5 @@
 // LocalVideo.tsx — Camera của người dùng hiện tại
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import { useAuth } from "../../context/AuthContext";
 
@@ -17,14 +17,19 @@ export default function LocalVideo({
   const { theme } = useTheme();
   const { user } = useAuth();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [hasStream, setHasStream] = useState(false);
 
   useEffect(() => {
-    if (videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
-      setHasStream(true);
+    const video = videoRef.current;
+    if (!video) return;
+    if (stream) {
+      video.srcObject = stream;
+      video.play().catch(() => {});
+    } else {
+      video.srcObject = null;
     }
   }, [stream]);
+
+  const hasVideo = !!stream && !isCameraOff;
 
   return (
     <div
@@ -36,16 +41,19 @@ export default function LocalVideo({
         height: "120px",
       }}
     >
-      {hasStream && !isCameraOff ? (
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          className="w-full h-full object-cover scale-x-[-1]"
-        />
-      ) : (
-        <div className="flex flex-col items-center gap-1">
+      {/* Video luôn mount để srcObject hoạt động, ẩn khi không cần */}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        className="w-full h-full object-cover scale-x-[-1]"
+        style={{ display: hasVideo ? "block" : "none" }}
+      />
+
+      {/* Placeholder khi không có stream hoặc camera tắt */}
+      {!hasVideo && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}
             className="w-8 h-8" style={{ color: theme.text.placeholder }}>
             <path d="M23 7l-7 5 7 5V7z" />

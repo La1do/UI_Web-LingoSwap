@@ -1,36 +1,55 @@
 // MeetingPage.tsx — Layout chính của màn hình video call
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
+import { useAuth } from "../../context/AuthContext";
 import PageShell from "../../layout/PageShell";
 import RemoteVideo from "./RemoteVideo";
 import LocalVideo from "./LocalVideo";
 import ChatPanel from "./ChatPanel";
 import { socketService } from "../../services/socket.service";
+import { useWebRTC } from "../../hook/useWebRTC";
 
 export default function MeetingPage() {
   const { theme } = useTheme();
   const { t } = useI18n();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [isMuted, setIsMuted] = useState(false);
-  const [isCameraOff, setIsCameraOff] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(true);
 
   const sessionId = searchParams.get("session");
   const partnerId = searchParams.get("partner");
   const startTimeRef = useRef(Date.now());
 
+  // Caller = user có id xuất hiện đầu tiên trong sessionId (deterministic)
+  // sessionId là MongoDB ObjectId — dùng hash đơn giản để tránh cả 2 cùng là callee
+  const isCaller = !!user && !!sessionId && !!partnerId &&
+    (sessionId + user.id) > (sessionId + partnerId);
+
+  console.log(`[Meeting] userId=${user?.id} | partnerId=${partnerId} | isCaller=${isCaller}`);
+
+  const {
+    localStream,
+    remoteStream,
+    isConnected,
+    isMuted,
+    isCameraOff,
+    permission,
+    toggleMute,
+    toggleCamera,
+    cleanup,
+  } = useWebRTC(sessionId, isCaller);
+
   const endCall = (replace = false) => {
     console.log("[endCall] triggered | sessionId:", sessionId, "| partnerId:", partnerId);
+    cleanup();
     socketService.leaveQueue();
     const duration = Math.floor((Date.now() - startTimeRef.current) / 1000);
-    console.log("[endCall] navigating to review | duration:", duration);
     navigate(`/review?session=${sessionId}&partner=${partnerId}&duration=${duration}`, { replace });
   };
 
-  // Lắng nghe partner disconnect / leave
   useEffect(() => {
     socketService.onPartnerDisconnected(() => {
       endCall(true);
@@ -46,6 +65,18 @@ export default function MeetingPage() {
       className="min-h-screen flex flex-col"
       style={{ background: theme.background.page, fontFamily: "'DM Sans', sans-serif" }}
     >
+      {/* Permission banner */}
+      {(permission === "denied" || permission === "unavailable") && (
+        <div className="px-4 py-3 text-sm flex items-center gap-3"
+          style={{ background: `${theme.text.error}18`, borderBottom: `1px solid ${theme.text.error}40`, color: theme.text.error }}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5 shrink-0">
+            <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          {permission === "unavailable"
+            ? "Camera/mic không khả dụng. Trang cần chạy trên HTTPS hoặc localhost."
+            : "Quyền truy cập camera/mic bị từ chối. Vui lòng cấp quyền trong cài đặt trình duyệt và tải lại trang."}
+        </div>
+      )}
       {/* Main content */}
       <div className="flex flex-1 gap-3 p-4 overflow-hidden" style={{ minHeight: 0 }}>
 
@@ -53,11 +84,11 @@ export default function MeetingPage() {
         <div className="flex-1 flex flex-col gap-3 min-w-0">
           {/* Remote video — full area */}
           <div className="flex-1 relative" style={{ minHeight: 0 }}>
-            <RemoteVideo isConnected={!!partnerId} participantName={partnerId ?? t.meeting.waitingForConnection} />
+            <RemoteVideo isConnected={isConnected} participantName={partnerId ?? t.meeting.waitingForConnection} stream={remoteStream} />
 
             {/* Local video — picture-in-picture */}
             <div className="absolute bottom-4 right-4">
-              <LocalVideo isMuted={isMuted} isCameraOff={isCameraOff} />
+              <LocalVideo isMuted={isMuted} isCameraOff={isCameraOff} stream={localStream} />
             </div>
           </div>
 
@@ -71,7 +102,7 @@ export default function MeetingPage() {
           >
             {/* Mute */}
             <ControlBtn active={isMuted} activeColor={theme.text.error} inactiveColor={theme.button.bg}
-              onClick={() => setIsMuted((v) => !v)} label={isMuted ? t.meeting.unmuteMic : t.meeting.muteMic}>
+              onClick={toggleMute} label={isMuted ? t.meeting.unmuteMic : t.meeting.muteMic}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
                 {isMuted ? (
                   <>
@@ -97,7 +128,7 @@ export default function MeetingPage() {
               active={isCameraOff}
               activeColor={theme.text.error}
               inactiveColor={theme.button.bg}
-              onClick={() => setIsCameraOff((v) => !v)}
+              onClick={toggleCamera}
               label={isCameraOff ? t.meeting.turnOnCamera : t.meeting.turnOffCamera}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">

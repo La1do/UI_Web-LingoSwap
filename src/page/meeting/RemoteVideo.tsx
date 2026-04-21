@@ -1,4 +1,5 @@
 // RemoteVideo.tsx — Màn hình hiển thị video của đối phương
+import { useEffect, useRef } from "react";
 import { useTheme } from "../../context/ThemeContext";
 
 interface RemoteVideoProps {
@@ -13,6 +14,20 @@ export default function RemoteVideo({
   isConnected = false,
 }: RemoteVideoProps) {
   const { theme } = useTheme();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (stream) {
+      video.srcObject = stream;
+      video.play().catch(() => {});
+    } else {
+      video.srcObject = null;
+    }
+  }, [stream]);
+
+  const hasVideo = !!stream;
 
   return (
     <div
@@ -23,16 +38,18 @@ export default function RemoteVideo({
         minHeight: "360px",
       }}
     >
-      {stream ? (
-        <video
-          autoPlay
-          playsInline
-          ref={(el) => { if (el) el.srcObject = stream; }}
-          className="w-full h-full object-cover"
-        />
-      ) : (
-        <div className="flex flex-col items-center gap-3">
-          {/* Avatar placeholder */}
+      {/* Video luôn mount */}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        className="w-full h-full object-cover"
+        style={{ display: hasVideo ? "block" : "none" }}
+      />
+
+      {/* Placeholder */}
+      {!hasVideo && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
           <div
             className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-semibold"
             style={{ background: theme.button.bg, color: theme.button.text }}
@@ -53,12 +70,10 @@ export default function RemoteVideo({
         {participantName}
       </div>
 
-      {/* Connection status dot */}
+      {/* Connection status */}
       <div className="absolute top-3 right-3 flex items-center gap-1.5">
-        <div
-          className="w-2 h-2 rounded-full"
-          style={{ background: isConnected ? theme.text.success : theme.text.error }}
-        />
+        <div className="w-2 h-2 rounded-full"
+          style={{ background: isConnected ? theme.text.success : theme.text.error }} />
         <span className="text-xs" style={{ color: "#fff", textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>
           {isConnected ? "Đã kết nối" : "Chưa kết nối"}
         </span>
