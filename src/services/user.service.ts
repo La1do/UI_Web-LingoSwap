@@ -43,6 +43,22 @@ export const userService = {
     url: `/api/user/friends/friends/${recipientId}/request`,
   }),
 
+  getFriends: (): AxiosRequestConfig => ({
+    method: "GET",
+    url: "/api/user/friends/friends",
+  }),
+
+  getFriendRequests: (): AxiosRequestConfig => ({
+    method: "GET",
+    url: "/api/user/friends/friends/requests",
+  }),
+
+  respondFriendRequest: (requestId: string, status: "accept" | "reject"): AxiosRequestConfig => ({
+    method: "PATCH",
+    url: `/api/user/friends/friends/${requestId}/response`,
+    data: { status },
+  }),
+
   uploadAvatar: (formData: FormData): AxiosRequestConfig => ({
     method: "POST",
     url: "/api/users/avatar",

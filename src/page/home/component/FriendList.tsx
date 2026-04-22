@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "../../../context/ThemeContext";
+import { useI18n } from "../../../context/I18nContext";
+import { useApi } from "../../../hook/useApi";
+import { userService } from "../../../services/user.service";
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -7,82 +10,78 @@ export type FriendStatus = "online" | "offline" | "busy" | "away";
 
 export interface Friend {
   id: string;
-  name: string;
+  fullName: string;
   avatarUrl?: string;
   status: FriendStatus;
-  language?: string;   // ngôn ngữ đang học
-  lastSeen?: string;   // chỉ hiện khi offline
+  language?: string;
+  lastSeen?: string;
+}
+
+// API response shape
+interface ApiFriend {
+  _id: string;
+  email: string;
+  profile: { fullName: string; avatar: string; language?: string };
+  status?: string;
+  lastSeen?: { friendly: string };
 }
 
 interface FriendListProps {
-  friends?: Friend[];
   onStartCall?: (friend: Friend) => void;
   onViewProfile?: (friend: Friend) => void;
 }
 
-// ─── Mock data ───────────────────────────────────────────────
-
-const MOCK_FRIENDS: Friend[] = [
-  { id: "1", name: "Minh Anh",   status: "online",  language: "English" },
-  { id: "2", name: "Hana Sato",  status: "online",  language: "Vietnamese" },
-  { id: "3", name: "Carlos R.",  status: "busy",    language: "English" },
-  { id: "4", name: "Emma Liu",   status: "away",    language: "French" },
-  { id: "5", name: "Trung Kiên", status: "offline", language: "Japanese", lastSeen: "2h ago" },
-  { id: "6", name: "Yuki T.",    status: "offline", language: "Korean",   lastSeen: "5h ago" },
-];
-
 // ─── Status config ───────────────────────────────────────────
 
-const STATUS_COLOR: Record<FriendStatus, string> = {
-  online:  "#22c55e",
-  busy:    "#ef4444",
-  away:    "#f59e0b",
-  offline: "#6b7280",
-};
+function normalizeStatus(s?: string): FriendStatus {
+  if (s === "online" || s === "busy" || s === "away") return s;
+  return "offline";
+}
 
-const STATUS_LABEL: Record<FriendStatus, string> = {
-  online:  "Online",
-  busy:    "Busy",
-  away:    "Away",
-  offline: "Offline",
-};
+// ─── Avatar ──────────────────────────────────────────────────
 
-// ─── Sub-components ──────────────────────────────────────────
-
-function Avatar({ name, avatarUrl, status, size = 10 }: {
-  name: string; avatarUrl?: string; status: FriendStatus; size?: number;
-}) {
+function Avatar({ name, avatarUrl, status }: { name: string; avatarUrl?: string; status: FriendStatus }) {
   const { theme } = useTheme();
+  const validAvatar = avatarUrl && avatarUrl !== "default_avatar.png" ? avatarUrl : undefined;
   return (
     <div className="relative shrink-0">
-      {avatarUrl ? (
-        <img src={avatarUrl} alt={name}
-          className={`w-${size} h-${size} rounded-full object-cover`} />
+      {validAvatar ? (
+        <img src={validAvatar} alt={name} className="w-10 h-10 rounded-full object-cover" />
       ) : (
-        <div
-          className={`w-${size} h-${size} rounded-full flex items-center justify-center text-sm font-semibold`}
-          style={{ background: theme.button.bg, color: theme.button.text }}
-        >
+        <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold"
+          style={{ background: theme.button.bg, color: theme.button.text }}>
           {name.charAt(0).toUpperCase()}
         </div>
       )}
-      <span
-        className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2"
-        style={{ background: STATUS_COLOR[status], borderColor: theme.background.card }}
-      />
+      <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2"
+        style={{ background: theme.status[status], borderColor: theme.background.card }} />
     </div>
   );
 }
 
 // ─── Main component ──────────────────────────────────────────
 
-export default function FriendList({
-  friends = MOCK_FRIENDS,
-  onStartCall,
-  onViewProfile,
-}: FriendListProps) {
+export default function FriendList({ onStartCall, onViewProfile }: FriendListProps) {
   const { theme } = useTheme();
+  const { t } = useI18n();
+  const { execute, isLoading } = useApi<ApiFriend[]>();
+  const [friends, setFriends] = useState<Friend[]>([]);
   const [filter, setFilter] = useState<"all" | "online">("all");
+
+  useEffect(() => {
+    execute(userService.getFriends()).then((data) => {
+      if (!data) return;
+      const mapped: Friend[] = data.map((f) => ({
+        id: f._id,
+        fullName: f.profile.fullName,
+        avatarUrl: f.profile.avatar,
+        status: normalizeStatus(f.status),
+        language: f.profile.language,
+        lastSeen: f.lastSeen?.friendly,
+      }));
+      setFriends(mapped);
+    });
+  }, []);
 
   const displayed = filter === "online"
     ? friends.filter((f) => f.status !== "offline")
@@ -95,16 +94,12 @@ export default function FriendList({
       {/* Header */}
       <div className="px-4 pt-4 pb-3">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold" style={{ color: theme.text.primary }}>
-            Friends
-          </h2>
+          <h2 className="text-sm font-semibold" style={{ color: theme.text.primary }}>{t.home.friends}</h2>
           <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-            style={{ background: `${STATUS_COLOR.online}20`, color: STATUS_COLOR.online }}>
-            {onlineCount} online
+            style={{ background: `${theme.status.online}20`, color: theme.status.online }}>
+            {t.home.onlineCount.replace("{n}", String(onlineCount))}
           </span>
         </div>
-
-        {/* Filter tabs */}
         <div className="flex gap-1 p-1 rounded-xl" style={{ background: theme.background.input }}>
           {(["all", "online"] as const).map((tab) => (
             <button key={tab} onClick={() => setFilter(tab)}
@@ -114,7 +109,7 @@ export default function FriendList({
                 color: filter === tab ? theme.text.primary : theme.text.placeholder,
                 boxShadow: filter === tab ? theme.shadow.card : "none",
               }}>
-              {tab === "all" ? "All" : "Online"}
+              {tab === "all" ? t.home.allFilter : t.home.onlineFilter}
             </button>
           ))}
         </div>
@@ -122,40 +117,40 @@ export default function FriendList({
 
       {/* List */}
       <div className="flex-1 overflow-y-auto px-3 pb-3 flex flex-col gap-1">
-        {displayed.length === 0 ? (
+        {isLoading ? (
+          <p className="text-xs text-center py-6" style={{ color: theme.text.placeholder }}>{t.home.loading}</p>
+        ) : displayed.length === 0 ? (
           <p className="text-xs text-center py-6" style={{ color: theme.text.placeholder }}>
-            No friends online
+            {filter === "online" ? t.home.noFriendsOnline : t.home.noFriendsYet}
           </p>
         ) : (
           displayed.map((friend) => (
             <div key={friend.id}
               className="flex items-center gap-3 px-2 py-2.5 rounded-xl cursor-pointer group"
-              style={{ transition: "background 0.15s" }}
               onMouseEnter={(e) => (e.currentTarget.style.background = theme.background.input)}
               onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
               onClick={() => onViewProfile?.(friend)}
             >
-              <Avatar name={friend.name} avatarUrl={friend.avatarUrl} status={friend.status} />
+              <Avatar name={friend.fullName} avatarUrl={friend.avatarUrl} status={friend.status} />
 
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate" style={{ color: theme.text.primary }}>
-                  {friend.name}
+                  {friend.fullName}
                 </p>
                 <p className="text-[11px] truncate" style={{ color: theme.text.placeholder }}>
                   {friend.status === "offline" && friend.lastSeen
                     ? `Last seen ${friend.lastSeen}`
-                    : STATUS_LABEL[friend.status]}
+                    : t.friendStatus[friend.status]}
                   {friend.language && ` · ${friend.language}`}
                 </p>
               </div>
 
-              {/* Call button — show on hover when online */}
               {friend.status !== "offline" && (
                 <button
                   onClick={(e) => { e.stopPropagation(); onStartCall?.(friend); }}
                   className="opacity-0 group-hover:opacity-100 w-7 h-7 rounded-lg flex items-center justify-center transition-opacity shrink-0"
                   style={{ background: theme.button.bg, color: theme.button.text }}
-                  aria-label={`Call ${friend.name}`}
+                  aria-label={`Call ${friend.fullName}`}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
                     <path d="M23 7l-7 5 7 5V7z" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" />

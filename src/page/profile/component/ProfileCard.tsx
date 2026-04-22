@@ -23,8 +23,8 @@ export default function ProfileCard() {
   const avatarUrl = preview ?? (user.avatar !== "default_avatar.png" ? user.avatar : undefined);
 
   const handleSelect = (file: File) => {
-    if (!file.type.startsWith("image/")) { setError("Chỉ chấp nhận file ảnh."); return; }
-    if (file.size > 2 * 1024 * 1024) { setError("File không được vượt quá 2MB."); return; }
+    if (!file.type.startsWith("image/")) { setError(t.profile.errorImageOnly); return; }
+    if (file.size > 2 * 1024 * 1024) { setError(t.profile.errorFileTooLarge); return; }
     setError(null);
     setPreview(URL.createObjectURL(file));
     setPendingFile(file);
@@ -41,7 +41,7 @@ export default function ProfileCard() {
       setPreview(null);
       setPendingFile(null);
     } else {
-      setError("Tải lên thất bại. Vui lòng thử lại.");
+      setError(t.profile.errorUploadFailed);
     }
     setUploading(false);
   };
@@ -100,8 +100,8 @@ export default function ProfileCard() {
         {/* Hover overlay — chỉ hiện khi chưa có pending */}
         {!pendingFile && (
           <div className="absolute inset-0 rounded-full flex flex-col items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
-            style={{ background: "rgba(0,0,0,0.55)" }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2} className="w-5 h-5">
+            style={{ background: theme.overlay.default }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke={theme.button.text} strokeWidth={2} className="w-5 h-5">
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
               <polyline points="17 8 12 3 7 8" />
               <line x1="12" y1="3" x2="12" y2="15" />
@@ -128,7 +128,7 @@ export default function ProfileCard() {
             className="px-4 py-1.5 rounded-xl text-xs font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
             style={{ background: theme.button.bg, color: theme.button.text }}
           >
-            {uploading ? t.profile.uploading : "Cập nhật ảnh"}
+            {uploading ? t.profile.uploading : t.profile.updateAvatar}
           </button>
           <button
             onClick={handleCancel}
@@ -136,7 +136,7 @@ export default function ProfileCard() {
             className="px-4 py-1.5 rounded-xl text-xs font-medium hover:opacity-80 transition-opacity"
             style={{ background: theme.background.input, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}
           >
-            Huỷ
+            {t.profile.cancel}
           </button>
         </div>
       )}

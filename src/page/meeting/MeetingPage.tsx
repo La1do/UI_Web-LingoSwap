@@ -73,8 +73,8 @@ export default function MeetingPage() {
             <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
           {permission === "unavailable"
-            ? "Camera/mic không khả dụng. Trang cần chạy trên HTTPS hoặc localhost."
-            : "Quyền truy cập camera/mic bị từ chối. Vui lòng cấp quyền trong cài đặt trình duyệt và tải lại trang."}
+            ? t.meeting.permissionUnavailable
+            : t.meeting.permissionDenied}
         </div>
       )}
       {/* Main content */}
@@ -163,7 +163,7 @@ export default function MeetingPage() {
             {/* End call */}
             <button
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
-              style={{ background: theme.text.error, color: "#fff" }} aria-label={t.meeting.endCall}
+              style={{ background: theme.text.error, color: theme.button.text }} aria-label={t.meeting.endCall}
               onClick={() => endCall()}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5">
                 <path d="M10.68 13.31a16 16 0 003.41 2.6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7 2 2 0 012 2v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.42 19.42 0 013.43 9.19 19.79 19.79 0 01.36 .54 2 2 0 012.35 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.33 7.91" />
@@ -204,13 +204,14 @@ function ControlBtn({
   onClick: () => void;
   label: string;
 }) {
+  const { theme } = useTheme();
   return (
     <button
       onClick={onClick}
       title={label}
       aria-label={label}
       className="flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all hover:opacity-80"
-      style={{ background: active ? activeColor : inactiveColor, color: "#fff" }}
+      style={{ background: active ? activeColor : inactiveColor, color: theme.button.text }}
     >
       {children}
       <span className="text-[10px] font-medium">{label}</span>

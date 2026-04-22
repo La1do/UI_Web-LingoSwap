@@ -31,10 +31,11 @@
 
 ---
 
-## Theme & Styling
+## Theme & Styling — BẮT BUỘC
 
-- Không hardcode màu sắc — luôn dùng `useTheme()` để lấy token từ theme
-- Không dùng Tailwind class màu cụ thể (vd: `text-blue-500`) — dùng `style={{ color: theme.text.primary }}`
+- **KHÔNG BAO GIỜ** hardcode màu sắc — luôn dùng `useTheme()` để lấy token từ theme
+- **KHÔNG BAO GIỜ** dùng Tailwind class màu cụ thể (vd: `text-blue-500`) — dùng `style={{ color: theme.text.primary }}`
+- **KHÔNG BAO GIỜ** viết literal color (`#rrggbb`, `rgba(...)`) trực tiếp trong JSX/style — nếu cần màu mới thì thêm vào `src/theme/theme.ts` trước
 - Mọi page mới phải wrap bằng `<PageShell>` và chỉ định `controlsPosition` phù hợp
 
 ---
@@ -54,10 +55,12 @@
 
 ---
 
-## i18n
+## i18n — BẮT BUỘC
 
+- **KHÔNG BAO GIỜ** hardcode text tiếng Việt hoặc tiếng Anh trực tiếp trong JSX
 - Thêm text mới → thêm key vào `src/i18n/types.ts` trước, sau đó thêm value vào cả `vi.ts` và `en.ts`
-- Không bao giờ hardcode text tiếng Việt hoặc tiếng Anh trực tiếp trong JSX
+- Dùng `useI18n()` để lấy `t` object, truy cập key theo path: `t.section.key`
+- Template strings dùng `{placeholder}` — thay bằng `.replace("{placeholder}", value)` trong component
 
 ---
 

@@ -103,6 +103,20 @@ export const en: Translation = {
     uploadAvatar: "Change photo",
     uploadAvatarHint: "Drag & drop or click to select (JPG, PNG, max 2MB)",
     uploading: "Uploading…",
+    updateAvatar: "Update photo",
+    cancel: "Cancel",
+    errorImageOnly: "Only image files are accepted.",
+    errorFileTooLarge: "File must not exceed 2MB.",
+    errorUploadFailed: "Upload failed. Please try again.",
+    settings: {
+      appearance: "Appearance",
+      light: "Light",
+      dark: "Dark",
+      defaultLanguage: "Default language",
+      save: "Save settings",
+      saving: "Saving…",
+      saved: "Saved!",
+    },
   },
 
   meeting: {
@@ -122,5 +136,39 @@ export const en: Translation = {
 
     chatHeader: "Chat",
     messagePlaceholder: "Type a message...",
+    cameraOffLocal: "Camera off",
+    permissionDenied: "Camera/mic access denied. Please grant permission in browser settings and reload.",
+    permissionUnavailable: "Camera/mic unavailable. The page must run on HTTPS or localhost.",
+  },
+
+  home: {
+    friends: "Friends",
+    allFilter: "All",
+    onlineFilter: "Online",
+    onlineCount: "{n} online",
+    loading: "Loading...",
+    noFriendsOnline: "No friends online",
+    noFriendsYet: "No friends yet",
+    notifications: "Notifications",
+    newBadge: "{n} new",
+    loadingNotifications: "Loading...",
+    noNotifications: "No new notifications",
+    accept: "Accept",
+    reject: "Reject",
+    accepted: "Accepted",
+    rejected: "Rejected",
+    matchModal: {
+      title: "Choose a language",
+      subtitle: "Which language do you want to practice today?",
+      start: "Start matching",
+      cancel: "Cancel",
+    },
+  },
+
+  friendStatus: {
+    online: "Online",
+    busy: "Busy",
+    away: "Away",
+    offline: "Offline",
   },
 };

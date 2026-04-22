@@ -103,6 +103,20 @@ export const vi: Translation = {
     uploadAvatar: "Thay đổi ảnh",
     uploadAvatarHint: "Kéo thả hoặc click để chọn ảnh (JPG, PNG, tối đa 2MB)",
     uploading: "Đang tải lên…",
+    updateAvatar: "Cập nhật ảnh",
+    cancel: "Huỷ",
+    errorImageOnly: "Chỉ chấp nhận file ảnh.",
+    errorFileTooLarge: "File không được vượt quá 2MB.",
+    errorUploadFailed: "Tải lên thất bại. Vui lòng thử lại.",
+    settings: {
+      appearance: "Giao diện",
+      light: "Sáng",
+      dark: "Tối",
+      defaultLanguage: "Ngôn ngữ mặc định",
+      save: "Lưu cài đặt",
+      saving: "Đang lưu…",
+      saved: "Đã lưu!",
+    },
   },
 
   meeting: {
@@ -122,5 +136,39 @@ export const vi: Translation = {
 
     chatHeader: "Chat",
     messagePlaceholder: "Nhập tin nhắn...",
+    cameraOffLocal: "Camera tắt",
+    permissionDenied: "Quyền truy cập camera/mic bị từ chối. Vui lòng cấp quyền trong cài đặt trình duyệt và tải lại trang.",
+    permissionUnavailable: "Camera/mic không khả dụng. Trang cần chạy trên HTTPS hoặc localhost.",
+  },
+
+  home: {
+    friends: "Bạn bè",
+    allFilter: "Tất cả",
+    onlineFilter: "Trực tuyến",
+    onlineCount: "{n} trực tuyến",
+    loading: "Đang tải...",
+    noFriendsOnline: "Không có bạn bè trực tuyến",
+    noFriendsYet: "Chưa có bạn bè",
+    notifications: "Thông báo",
+    newBadge: "{n} mới",
+    loadingNotifications: "Đang tải...",
+    noNotifications: "Không có thông báo mới",
+    accept: "Đồng ý",
+    reject: "Từ chối",
+    accepted: "Đã chấp nhận",
+    rejected: "Đã từ chối",
+    matchModal: {
+      title: "Chọn ngôn ngữ luyện tập",
+      subtitle: "Bạn muốn luyện ngôn ngữ nào hôm nay?",
+      start: "Bắt đầu tìm kiếm",
+      cancel: "Huỷ",
+    },
+  },
+
+  friendStatus: {
+    online: "Trực tuyến",
+    busy: "Bận",
+    away: "Vắng mặt",
+    offline: "Ngoại tuyến",
   },
 };

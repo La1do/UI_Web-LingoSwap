@@ -1,6 +1,7 @@
 // RemoteVideo.tsx — Màn hình hiển thị video của đối phương
 import { useEffect, useRef } from "react";
 import { useTheme } from "../../context/ThemeContext";
+import { useI18n } from "../../context/I18nContext";
 
 interface RemoteVideoProps {
   stream?: MediaStream | null;
@@ -14,6 +15,7 @@ export default function RemoteVideo({
   isConnected = false,
 }: RemoteVideoProps) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -57,7 +59,7 @@ export default function RemoteVideo({
             {participantName.charAt(0).toUpperCase()}
           </div>
           <p className="text-sm" style={{ color: theme.text.secondary }}>
-            {isConnected ? `${participantName} đã tắt camera` : "Đang chờ kết nối..."}
+            {isConnected ? `${participantName} ${t.meeting.cameraOff}` : t.meeting.waitingForConnection}
           </p>
         </div>
       )}
@@ -65,7 +67,7 @@ export default function RemoteVideo({
       {/* Name tag */}
       <div
         className="absolute bottom-3 left-3 px-3 py-1 rounded-full text-xs font-medium"
-        style={{ background: "rgba(0,0,0,0.5)", color: "#fff" }}
+        style={{ background: theme.overlay.default, color: theme.button.text }}
       >
         {participantName}
       </div>
@@ -74,8 +76,8 @@ export default function RemoteVideo({
       <div className="absolute top-3 right-3 flex items-center gap-1.5">
         <div className="w-2 h-2 rounded-full"
           style={{ background: isConnected ? theme.text.success : theme.text.error }} />
-        <span className="text-xs" style={{ color: "#fff", textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}>
-          {isConnected ? "Đã kết nối" : "Chưa kết nối"}
+        <span className="text-xs" style={{ color: theme.button.text, textShadow: `0 1px 3px ${theme.overlay.default}` }}>
+          {isConnected ? t.meeting.connected : t.meeting.notConnected}
         </span>
       </div>
     </div>

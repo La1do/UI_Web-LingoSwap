@@ -109,6 +109,20 @@ export interface Translation {
     uploadAvatar: string;
     uploadAvatarHint: string;
     uploading: string;
+    updateAvatar: string;
+    cancel: string;
+    errorImageOnly: string;
+    errorFileTooLarge: string;
+    errorUploadFailed: string;
+    settings: {
+      appearance: string;
+      light: string;
+      dark: string;
+      defaultLanguage: string;
+      save: string;
+      saving: string;
+      saved: string;
+    };
   };
 
   // Meeting
@@ -129,5 +143,41 @@ export interface Translation {
 
     chatHeader: string;
     messagePlaceholder: string;
+    cameraOffLocal: string;
+    permissionDenied: string;
+    permissionUnavailable: string;
+  };
+
+  // Home
+  home: {
+    friends: string;
+    allFilter: string;
+    onlineFilter: string;
+    onlineCount: string;
+    loading: string;
+    noFriendsOnline: string;
+    noFriendsYet: string;
+    notifications: string;
+    newBadge: string;
+    loadingNotifications: string;
+    noNotifications: string;
+    accept: string;
+    reject: string;
+    accepted: string;
+    rejected: string;
+    matchModal: {
+      title: string;
+      subtitle: string;
+      start: string;
+      cancel: string;
+    };
+  };
+
+  // Friend status labels
+  friendStatus: {
+    online: string;
+    busy: string;
+    away: string;
+    offline: string;
   };
 }

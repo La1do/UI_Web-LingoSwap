@@ -32,6 +32,18 @@ export const lightTheme = {
     glow:  "0 0 24px rgba(26,111,212,0.08)",
     input: "0 0 0 3px rgba(26,111,212,0.15)",
   },
+  status: {
+    online:  "#22c55e",
+    busy:    "#ef4444",
+    away:    "#f59e0b",
+    offline: "#6b7280",
+  },
+  star:      "#f59e0b",
+  starEmpty: "#9ca3af",
+  overlay: {
+    default: "rgba(0,0,0,0.5)",
+    strong:  "rgba(0,0,0,0.7)",
+  },
 } as const;
 
 export const darkTheme = {
@@ -64,6 +76,18 @@ export const darkTheme = {
     glow:  "0 0 32px rgba(77,159,255,0.10)",
     input: "0 0 0 3px rgba(77,159,255,0.18)",
   },
+  status: {
+    online:  "#22c55e",
+    busy:    "#ef4444",
+    away:    "#f59e0b",
+    offline: "#6b7280",
+  },
+  star:      "#f59e0b",
+  starEmpty: "#9ca3af",
+  overlay: {
+    default: "rgba(0,0,0,0.5)",
+    strong:  "rgba(0,0,0,0.7)",
+  },
 } as const;
 
 // Use a structural type with string values so both themes are assignable
@@ -73,4 +97,8 @@ export interface AppTheme {
   border: { default: string; focused: string; error: string };
   button: { bg: string; bgHover: string; bgDisabled: string; text: string };
   shadow: { card: string; glow: string; input: string };
+  status: { online: string; busy: string; away: string; offline: string };
+  star: string;
+  starEmpty: string;
+  overlay: { default: string; strong: string };
 }

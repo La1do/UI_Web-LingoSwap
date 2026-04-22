@@ -5,6 +5,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { useApi } from "../../../hook/useApi";
 import { userService } from "../../../services/user.service";
 import { localeLabels, type Locale } from "../../../context/I18nContext";
+import { lightTheme, darkTheme } from "../../../theme/theme";
 
 const SunIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
@@ -24,7 +25,7 @@ const MoonIcon = () => (
 
 export default function SettingsForm() {
   const { theme, mode, setMode } = useTheme();
-  const { locale, setLocale } = useI18n();
+  const { locale, setLocale, t } = useI18n();
   const { user, updateUser } = useAuth();
   const { execute, isLoading } = useApi();
 
@@ -37,9 +38,7 @@ export default function SettingsForm() {
   );
   const [success, setSuccess] = useState(false);
 
-  const label = locale === "vi"
-    ? { theme: "Giao diện", language: "Ngôn ngữ mặc định", save: "Lưu cài đặt", saving: "Đang lưu…", saved: "Đã lưu!" }
-    : { theme: "Appearance", language: "Default language", save: "Save settings", saving: "Saving…", saved: "Saved!" };
+  const label = t.profile.settings;
 
   const handleSave = async () => {
     setSuccess(false);
@@ -62,19 +61,19 @@ export default function SettingsForm() {
   const themeOptions: { value: "light" | "dark"; label: string; icon: React.ReactNode; previewBg: string; previewLine1: string; previewLine2: string }[] = [
     {
       value: "light",
-      label: locale === "vi" ? "Sáng" : "Light",
+      label: t.profile.settings.light,
       icon: <SunIcon />,
-      previewBg: "#FFFFFF",
-      previewLine1: "#C8DDEF",
-      previewLine2: "#1A6FD4",
+      previewBg: lightTheme.background.card,
+      previewLine1: lightTheme.border.default,
+      previewLine2: lightTheme.button.bg,
     },
     {
       value: "dark",
-      label: locale === "vi" ? "Tối" : "Dark",
+      label: t.profile.settings.dark,
       icon: <MoonIcon />,
-      previewBg: "#0F1E38",
-      previewLine1: "#1E3A5F",
-      previewLine2: "#4D9FFF",
+      previewBg: darkTheme.background.card,
+      previewLine1: darkTheme.border.default,
+      previewLine2: darkTheme.button.bg,
     },
   ];
 
@@ -85,7 +84,7 @@ export default function SettingsForm() {
       {/* Theme */}
       <div className="flex flex-col gap-3">
         <p className="text-xs font-medium uppercase tracking-wider" style={{ color: theme.text.secondary }}>
-          {label.theme}
+          {label.appearance}
         </p>
         <div className="grid grid-cols-2 gap-3">
           {themeOptions.map((opt) => {
@@ -132,7 +131,7 @@ export default function SettingsForm() {
       {/* Language */}
       <div className="flex flex-col gap-3">
         <p className="text-xs font-medium uppercase tracking-wider" style={{ color: theme.text.secondary }}>
-          {label.language}
+          {label.defaultLanguage}
         </p>
         <div className="flex gap-2">
           {langOptions.map(([code, name]) => {

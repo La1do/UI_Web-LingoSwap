@@ -17,6 +17,7 @@ interface PublicProfile {
 function StarRating({ value, onChange, size = "lg" }: {
   value: number; onChange: (v: number) => void; size?: "sm" | "lg";
 }) {
+  const { theme } = useTheme();
   const [hovered, setHovered] = useState(0);
   const dim = size === "lg" ? "w-10 h-10" : "w-6 h-6";
   return (
@@ -26,8 +27,8 @@ function StarRating({ value, onChange, size = "lg" }: {
           onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(0)}
           className={`${dim} transition-transform hover:scale-110`} aria-label={`${i} star`}>
           <svg viewBox="0 0 24 24" className="w-full h-full"
-            fill={(hovered || value) >= i ? "#f59e0b" : "none"}
-            stroke={(hovered || value) >= i ? "#f59e0b" : "#9ca3af"} strokeWidth={1.5}>
+            fill={(hovered || value) >= i ? theme.star : "none"}
+            stroke={(hovered || value) >= i ? theme.star : theme.starEmpty} strokeWidth={1.5}>
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
           </svg>
         </button>

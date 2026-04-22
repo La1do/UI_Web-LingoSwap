@@ -22,7 +22,7 @@ interface MatchModalProps {
 
 export default function MatchModal({ open, onClose, onStart }: MatchModalProps) {
   const { theme } = useTheme();
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const [selected, setSelected] = useState<string | null>(null);
 
   if (!open) return null;
@@ -32,15 +32,13 @@ export default function MatchModal({ open, onClose, onStart }: MatchModalProps) 
     onStart(selected);
   };
 
-  const label = locale === "vi"
-    ? { title: "Chọn ngôn ngữ luyện tập", subtitle: "Bạn muốn luyện ngôn ngữ nào hôm nay?", start: "Bắt đầu tìm kiếm", cancel: "Huỷ" }
-    : { title: "Choose a language", subtitle: "Which language do you want to practice today?", start: "Start matching", cancel: "Cancel" };
+  const label = t.home.matchModal;
 
   return (
     /* Backdrop */
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
+      style={{ background: theme.overlay.default, backdropFilter: "blur(4px)" }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div

@@ -6,11 +6,11 @@ import { useI18n } from "../../../context/I18nContext";
 import { useAuth } from "../../../context/AuthContext";
 import { ThemeToggle } from "../../component/ThemeToggle";
 import { LanguageToggle } from "../../component/LanguageToggle";
+import NotificationDropdown from "./NotificationDropdown";
 
 interface HeaderProps {
   notificationCount?: number;
   onSearch?: (query: string) => void;
-  onNotificationsClick?: () => void;
 }
 
 // ─── Icons ───────────────────────────────────────────────────
@@ -21,12 +21,6 @@ const SearchIcon = () => (
   </svg>
 );
 
-const BellIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
-    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
-    <path d="M13.73 21a2 2 0 01-3.46 0" />
-  </svg>
-);
 
 const UserIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-4 h-4">
@@ -190,7 +184,6 @@ function UserDropdown({ username, avatarUrl }: { username: string; avatarUrl?: s
 export default function Header({
   notificationCount = 0,
   onSearch,
-  onNotificationsClick,
 }: HeaderProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
@@ -243,22 +236,7 @@ export default function Header({
         <ThemeToggle />
 
         {/* Notifications */}
-        <button
-          onClick={onNotificationsClick}
-          className="relative w-9 h-9 rounded-xl flex items-center justify-center hover:opacity-80 transition-opacity"
-          style={{ background: theme.background.input, color: theme.text.secondary }}
-          aria-label="Notifications"
-        >
-          <BellIcon />
-          {notificationCount > 0 && (
-            <span
-              className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center"
-              style={{ background: theme.text.error, color: "#fff" }}
-            >
-              {notificationCount > 9 ? "9+" : notificationCount}
-            </span>
-          )}
-        </button>
+        <NotificationDropdown notificationCount={notificationCount} />
 
         {/* User dropdown */}
         <UserDropdown

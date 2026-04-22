@@ -32,12 +32,13 @@ const MOCK_MATCHES: Match[] = [
 
 function Stars({ rating }: { rating?: number }) {
   if (!rating) return null;
+  const { theme } = useTheme();
   return (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((i) => (
         <svg key={i} viewBox="0 0 24 24" className="w-3 h-3"
-          fill={i <= rating ? "#f59e0b" : "none"}
-          stroke={i <= rating ? "#f59e0b" : "#9ca3af"}
+          fill={i <= rating ? theme.star : "none"}
+          stroke={i <= rating ? theme.star : theme.starEmpty}
           strokeWidth={1.5}>
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
         </svg>
