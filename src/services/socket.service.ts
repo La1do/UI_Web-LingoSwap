@@ -173,6 +173,48 @@ export const socketService = {
     socket?.off("webrtc_ice_candidate");
   },
 
+  // ── Direct call events ───────────────────────────────────
+
+  emitDirectCallRequest(targetUserId: string): void {
+    console.log("[Socket] emit direct_match_request:", { targetUserId });
+    socket?.emit("direct_match_request", { targetUserId });
+  },
+
+  emitDirectCallResponse(callerId: string, accept: boolean): void {
+    console.log("[Socket] emit direct_match_response:", { callerId, accept });
+    socket?.emit("direct_match_response", { callerId, accept });
+  },
+
+  onDirectCallOffer(cb: (payload: { callerId: string; message: string }) => void): void {
+    socket?.off("direct_match_offer");
+    socket?.on("direct_match_offer", (data) => {
+      console.log("[Socket] direct_match_offer:", data);
+      cb(data);
+    });
+  },
+
+  onDirectCallRejected(cb: (payload: { message: string }) => void): void {
+    socket?.off("direct_match_rejected");
+    socket?.on("direct_match_rejected", (data) => {
+      console.log("[Socket] direct_match_rejected:", data);
+      cb(data);
+    });
+  },
+
+  onDirectCallError(cb: (payload: { message: string }) => void): void {
+    socket?.off("direct_match_error");
+    socket?.on("direct_match_error", (data) => {
+      console.log("[Socket] direct_match_error:", data);
+      cb(data);
+    });
+  },
+
+  offDirectCallEvents(): void {
+    socket?.off("direct_match_offer");
+    socket?.off("direct_match_rejected");
+    socket?.off("direct_match_error");
+  },
+
   // Remove all matching listeners (cleanup)
   offMatchingEvents(): void {
     socket?.off("waiting_status");

@@ -3,6 +3,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { userService } from "../../../services/user.service";
+import { socketService } from "../../../services/socket.service";
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -27,7 +28,6 @@ interface ApiFriend {
 }
 
 interface FriendListProps {
-  onStartCall?: (friend: Friend) => void;
   onViewProfile?: (friend: Friend) => void;
 }
 
@@ -61,7 +61,7 @@ function Avatar({ name, avatarUrl, status }: { name: string; avatarUrl?: string;
 
 // ─── Main component ──────────────────────────────────────────
 
-export default function FriendList({ onStartCall, onViewProfile }: FriendListProps) {
+export default function FriendList({ onViewProfile }: FriendListProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
   const { execute, isLoading } = useApi<ApiFriend[]>();
@@ -147,7 +147,10 @@ export default function FriendList({ onStartCall, onViewProfile }: FriendListPro
 
               {friend.status !== "offline" && (
                 <button
-                  onClick={(e) => { e.stopPropagation(); onStartCall?.(friend); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    socketService.emitDirectCallRequest(friend.id);
+                  }}
                   className="opacity-0 group-hover:opacity-100 w-7 h-7 rounded-lg flex items-center justify-center transition-opacity shrink-0"
                   style={{ background: theme.button.bg, color: theme.button.text }}
                   aria-label={`Call ${friend.fullName}`}

@@ -7,6 +7,7 @@ import Header from "./component/Header";
 import FriendList from "./component/FriendList";
 import RecentMatches from "./component/RecentMatches";
 import MatchModal from "./component/MatchModal";
+import IncomingCallModal from "./component/IncomingCallModal";
 
 export default function HomePage() {
   const { theme } = useTheme();
@@ -43,8 +44,7 @@ export default function HomePage() {
           style={{ borderRight: `1px solid ${theme.border.default}` }}
         >
           <FriendList
-            onStartCall={(f) => console.log("call", f.name)}
-            onViewProfile={(f) => console.log("profile", f.name)}
+            onViewProfile={(f) => console.log("profile", f.fullName)}
           />
         </aside>
 
@@ -74,8 +74,8 @@ export default function HomePage() {
           style={{ borderLeft: `1px solid ${theme.border.default}` }}
         >
           <RecentMatches
-            onRematch={(m) => navigate(`/waiting?lang=${m.language.toLowerCase().slice(0, 2)}`)}
-            onViewProfile={(m) => console.log("profile", m.name)}
+            onRematch={(partnerId) => console.log("rematch", partnerId)}
+            onViewProfile={(partnerId) => console.log("profile", partnerId)}
           />
         </aside>
       </div>
@@ -86,6 +86,9 @@ export default function HomePage() {
         onClose={() => setModalOpen(false)}
         onStart={handleStartMatch}
       />
+
+      {/* ── Incoming Call Modal ── */}
+      <IncomingCallModal />
     </div>
   );
 }

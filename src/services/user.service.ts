@@ -77,4 +77,10 @@ export const userService = {
     url: "/api/users/me",
     data: { profile: data },
   }),
+
+ 
+getMatchHistory: (): AxiosRequestConfig => ({
+  method: "GET",
+  url: "/api/user/matches",
+}),
 };
