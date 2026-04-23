@@ -68,9 +68,17 @@
 
 Trước khi tạo hoặc sửa bất kỳ file nào, **phải** show toàn bộ code ra chat để người dùng review.
 
-1. Viết code đầy đủ ra chat (dạng code block)
-2. Chờ người dùng confirm ("ok", "được", "làm đi",confirm...)
-3. Sau khi được confirm mới thực sự tạo/sửa file
+1. **Lên plan**: Mô tả những file nào sẽ thay đổi, thay đổi gì
+2. **Show code đầy đủ** ra chat (dạng code block)
+3. **Chờ người dùng confirm** ("ok", "được", "làm đi", "confirm", "đồng ý", "code đi"...)
+4. Sau khi được confirm mới thực sự tạo/sửa file
+
+**Áp dụng cho MỌI trường hợp:**
+- Tạo page/component mới
+- Fix bug
+- Refactor code
+- Thêm feature
+- Sửa bất kỳ file nào
 
 **Không được tự ý tạo hoặc sửa file mà không có sự đồng ý của người dùng.**
 

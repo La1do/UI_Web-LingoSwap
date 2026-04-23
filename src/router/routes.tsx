@@ -7,6 +7,7 @@ import WaitingPage from "../page/waiting/WaitingPage";
 import MeetingPage from "../page/meeting/MeetingPage";
 import ReviewPage from "../page/review/ReviewPage";
 import ProfilePage from "../page/profile/ProfilePage";
+import AdminPage from "../page/admin/AdminPage";
 
 import ForgotPasswordPage from "../page/forgot-password/ForgotPasswordPage";
 
@@ -20,4 +21,5 @@ export const router = createBrowserRouter([
   { path: "/meeting",         element: <MeetingPage /> },
   { path: "/review",          element: <ReviewPage /> },
   { path: "/profile",         element: <ProfilePage /> },
+  { path: "/admin",           element: <AdminPage /> },
 ]);

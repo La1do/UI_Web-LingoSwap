@@ -171,4 +171,50 @@ export const vi: Translation = {
     away: "Vắng mặt",
     offline: "Ngoại tuyến",
   },
+
+  admin: {
+    title: "Quản trị hệ thống",
+    subtitle: "Quản lý người dùng và tài khoản",
+    backToHome: "← Về trang chủ",
+    usersSection: "Người dùng",
+    reportsSection: "Báo cáo vi phạm",
+    stats: {
+      totalUsers: "Tổng người dùng",
+      active: "Đang hoạt động",
+      banned: "Đã khóa",
+      pendingReports: "Báo cáo chờ xử lý",
+    },
+    table: {
+      user: "Người dùng",
+      email: "Email",
+      role: "Vai trò",
+      status: "Trạng thái",
+      joined: "Ngày tham gia",
+      actions: "Hành động",
+      noUsers: "Không tìm thấy người dùng",
+      searchPlaceholder: "Tìm theo tên hoặc email...",
+      ban: "Khóa",
+      delete: "Xóa",
+    },
+    deleteDialog: {
+      title: "Xóa tài khoản?",
+      description: "Thao tác này sẽ xóa vĩnh viễn tài khoản của {name}. Không thể hoàn tác.",
+      confirm: "Xóa",
+      cancel: "Huỷ",
+    },
+    reports: {
+      all: "Tất cả ({n})",
+      pending: "Chờ xử lý ({n})",
+      resolved: "Đã xử lý",
+      dismissed: "Đã bỏ qua",
+      noReports: "Không có báo cáo nào",
+      reporter: "Người báo cáo",
+      reportedUser: "Người bị báo cáo",
+      description: "Mô tả",
+      dismiss: "Bỏ qua",
+      markResolved: "Đánh dấu đã xử lý",
+    },
+  },
 };
+
+// Append admin section — added after initial file creation

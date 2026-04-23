@@ -180,4 +180,49 @@ export interface Translation {
     away: string;
     offline: string;
   };
+
+  // Admin
+  admin: {
+    title: string;
+    subtitle: string;
+    backToHome: string;
+    usersSection: string;
+    reportsSection: string;
+    stats: {
+      totalUsers: string;
+      active: string;
+      banned: string;
+      pendingReports: string;
+    };
+    table: {
+      user: string;
+      email: string;
+      role: string;
+      status: string;
+      joined: string;
+      actions: string;
+      noUsers: string;
+      searchPlaceholder: string;
+      ban: string;
+      delete: string;
+    };
+    deleteDialog: {
+      title: string;
+      description: string;
+      confirm: string;
+      cancel: string;
+    };
+    reports: {
+      all: string;
+      pending: string;
+      resolved: string;
+      dismissed: string;
+      noReports: string;
+      reporter: string;
+      reportedUser: string;
+      description: string;
+      dismiss: string;
+      markResolved: string;
+    };
+  };
 }
