@@ -20,7 +20,7 @@ export interface Notification {
 // ─── Service ─────────────────────────────────────────────────
 
 export const notificationService = {
-  getNotifications: (limit = 20, page = 1): AxiosRequestConfig => ({
+  getNotifications: (limit = 10, page = 1): AxiosRequestConfig => ({
     method: "GET",
     url: "/api/user/notifications",
     params: { limit, page },

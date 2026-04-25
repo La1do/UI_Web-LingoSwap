@@ -59,15 +59,22 @@ function PartnerCard({ partner, onAddFriend }: {
   onAddFriend: () => void;
 }) {
   const { theme } = useTheme();
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const { execute: sendRequest, isLoading: sending } = useApi();
+  const { execute: checkStatus } = useApi<{ status: string; friendshipId: string | null }>();
   const [sent, setSent] = useState(false);
+  const [friendStatus, setFriendStatus] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!partner) return;
+    checkStatus(userService.checkFriendStatus(partner._id)).then((res) => {
+      if (res) setFriendStatus(res.status);
+    });
+  }, [partner?._id]);
 
   if (!partner) return null;
 
   const avatarUrl = partner.profile.avatar !== "default_avatar.png" ? partner.profile.avatar : undefined;
-  const addLabel = locale === "vi" ? "Gửi yêu cầu kết bạn" : "Send friend request";
-  const sentLabel = locale === "vi" ? "Đã gửi yêu cầu" : "Request sent";
 
   const handleAdd = async () => {
     const result = await sendRequest(userService.sendFriendRequest(partner._id));
@@ -77,10 +84,12 @@ function PartnerCard({ partner, onAddFriend }: {
     }
   };
 
+  // Ẩn nút nếu đã là bạn hoặc đã gửi request
+  const showAddButton = !sent && friendStatus === "none";
+
   return (
     <div className="flex items-center gap-4 p-4 rounded-2xl"
       style={{ background: theme.background.input, border: `1px solid ${theme.border.default}` }}>
-      {/* Avatar */}
       {avatarUrl ? (
         <img src={avatarUrl} alt={partner.profile.fullName}
           className="w-14 h-14 rounded-full object-cover shrink-0"
@@ -91,8 +100,6 @@ function PartnerCard({ partner, onAddFriend }: {
           {partner.profile.fullName.charAt(0).toUpperCase()}
         </div>
       )}
-
-      {/* Info */}
       <div className="flex-1 min-w-0">
         <p className="font-semibold truncate" style={{ color: theme.text.primary }}>
           {partner.profile.fullName}
@@ -101,37 +108,22 @@ function PartnerCard({ partner, onAddFriend }: {
           {partner.email}
         </p>
       </div>
-
-      {/* Add friend button */}
-      <button
-        onClick={handleAdd}
-        disabled={sending || sent}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold shrink-0 transition-opacity hover:opacity-80 disabled:opacity-50"
-        style={{
-          background: sent ? theme.background.card : theme.button.bg,
-          color: sent ? theme.text.success : theme.button.text,
-          border: sent ? `1px solid ${theme.text.success}` : "none",
-        }}
-      >
-        {sent ? (
-          <>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            {sentLabel}
-          </>
-        ) : (
-          <>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
-              <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <line x1="19" y1="8" x2="19" y2="14" />
-              <line x1="22" y1="11" x2="16" y2="11" />
-            </svg>
-            {sending ? "..." : addLabel}
-          </>
-        )}
-      </button>
+      {showAddButton && (
+        <button
+          onClick={handleAdd}
+          disabled={sending}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold shrink-0 transition-opacity hover:opacity-80 disabled:opacity-50"
+          style={{ background: theme.button.bg, color: theme.button.text }}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
+            <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <line x1="19" y1="8" x2="19" y2="14" />
+            <line x1="22" y1="11" x2="16" y2="11" />
+          </svg>
+          {sending ? "..." : t.home.sendRequest}
+        </button>
+      )}
     </div>
   );
 }

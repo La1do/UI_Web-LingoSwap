@@ -4,7 +4,6 @@ import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { userService } from "../../../services/user.service";
-
 // ─── Types ───────────────────────────────────────────────────
 
 export type FriendStatus = "online" | "offline" | "busy" | "away";
@@ -67,8 +66,10 @@ export default function FriendList({ onViewProfile }: FriendListProps) {
   const { t } = useI18n();
   const navigate = useNavigate();
   const { execute, isLoading } = useApi<ApiFriend[]>();
+  const { execute: unfriendExec } = useApi();
   const [friends, setFriends] = useState<Friend[]>([]);
   const [filter, setFilter] = useState<"all" | "online">("all");
+  const [confirmUnfriend, setConfirmUnfriend] = useState<string | null>(null);
 
   useEffect(() => {
     execute(userService.getFriends()).then((data) => {
@@ -127,7 +128,7 @@ export default function FriendList({ onViewProfile }: FriendListProps) {
         ) : (
           displayed.map((friend) => (
             <div key={friend.id}
-              className="flex items-center gap-3 px-2 py-2.5 rounded-xl cursor-pointer group"
+              className="relative flex items-center gap-3 px-2 py-2.5 rounded-xl cursor-pointer group"
               onMouseEnter={(e) => (e.currentTarget.style.background = theme.background.input)}
               onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
               onClick={() => onViewProfile?.(friend)}
@@ -166,6 +167,54 @@ export default function FriendList({ onViewProfile }: FriendListProps) {
                   </svg>
                 </button>
               )}
+
+              {/* Unfriend button + popup confirm */}
+              <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setConfirmUnfriend(confirmUnfriend === friend.id ? null : friend.id); }}
+                  className="opacity-0 group-hover:opacity-100 px-2 py-1 rounded-lg text-[11px] font-medium transition-opacity hover:opacity-80"
+                  style={{ color: theme.text.error, border: `1px solid ${theme.text.error}50`, background: `${theme.text.error}10` }}
+                >
+                  {t.home.unfriend}
+                </button>
+
+                {confirmUnfriend === friend.id && (
+                  <div
+                    className="absolute right-0 top-full mt-1 z-50 rounded-xl p-3 flex flex-col gap-2"
+                    style={{
+                      background: theme.background.card,
+                      border: `1px solid ${theme.border.default}`,
+                      boxShadow: theme.shadow.card,
+                      minWidth: "140px",
+                    }}
+                  >
+                    <p className="text-xs font-medium" style={{ color: theme.text.primary }}>
+                      {t.home.unfriendConfirm}
+                    </p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          unfriendExec(userService.unfriend(friend.id)).then(() => {
+                            setFriends((prev) => prev.filter((f) => f.id !== friend.id));
+                            setConfirmUnfriend(null);
+                          });
+                        }}
+                        className="flex-1 py-1 rounded-lg text-xs font-semibold hover:opacity-80"
+                        style={{ background: theme.text.error, color: theme.button.text }}
+                      >
+                        {t.home.unfriendYes}
+                      </button>
+                      <button
+                        onClick={() => setConfirmUnfriend(null)}
+                        className="flex-1 py-1 rounded-lg text-xs hover:opacity-80"
+                        style={{ background: theme.background.input, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}
+                      >
+                        {t.home.unfriendNo}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           ))
         )}

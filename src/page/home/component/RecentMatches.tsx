@@ -34,6 +34,7 @@ interface Match {
   language?: string;
   duration: string;
   rating?: 1 | 2 | 3 | 4 | 5;
+  friendStatus?: string;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────
@@ -89,13 +90,40 @@ export default function RecentMatches({ onRematch, onViewProfile }: RecentMatche
   const { theme } = useTheme();
   const { t } = useI18n();
   const { execute, isLoading } = useApi<ApiMatch[]>();
+  const { execute: checkStatus } = useApi<{ status: string }>();
+  const { execute: sendRequest } = useApi();
   const [matches, setMatches] = useState<Match[]>([]);
 
   useEffect(() => {
-    execute(userService.getMatchHistory()).then((data) => {
-      if (data) setMatches(data.map(mapApiMatch));
+    execute(userService.getMatchHistory()).then(async (data) => {
+      if (!data) return;
+      const mapped = data.map(mapApiMatch);
+      setMatches(mapped);
+      // Check friend status cho từng partner (parallel)
+      const statuses = await Promise.all(
+        mapped.map((m) =>
+          checkStatus(userService.checkFriendStatus(m.partnerId))
+            .then((res) => ({ id: m.id, status: res?.status ?? "none" }))
+            .catch(() => ({ id: m.id, status: "none" }))
+        )
+      );
+      setMatches((prev) =>
+        prev.map((m) => {
+          const s = statuses.find((x) => x.id === m.id);
+          return s ? { ...m, friendStatus: s.status } : m;
+        })
+      );
     });
   }, []);
+
+  const handleSendRequest = async (match: Match) => {
+    const result = await sendRequest(userService.sendFriendRequest(match.partnerId));
+    if (result !== null) {
+      setMatches((prev) =>
+        prev.map((m) => m.id === match.id ? { ...m, friendStatus: "request_sent" } : m)
+      );
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -162,18 +190,36 @@ export default function RecentMatches({ onRematch, onViewProfile }: RecentMatche
                 </div>
               </div>
 
-              {/* Rematch button */}
-              <button
-                onClick={(e) => { e.stopPropagation(); onRematch?.(match.partnerId); }}
-                className="opacity-0 group-hover:opacity-100 w-7 h-7 rounded-lg flex items-center justify-center transition-opacity shrink-0"
-                style={{ background: theme.button.bg, color: theme.button.text }}
-                aria-label={`Rematch with ${match.name}`}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
-                  <polyline points="23 4 23 10 17 10" />
-                  <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
-                </svg>
-              </button>
+              {/* Actions */}
+              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                {match.friendStatus === "none" && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleSendRequest(match); }}
+                    className="w-7 h-7 rounded-lg flex items-center justify-center"
+                    style={{ background: theme.text.success, color: theme.button.text }}
+                    aria-label={t.home.sendRequest}
+                    title={t.home.sendRequest}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
+                      <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <line x1="19" y1="8" x2="19" y2="14" />
+                      <line x1="22" y1="11" x2="16" y2="11" />
+                    </svg>
+                  </button>
+                )}
+                <button
+                  onClick={(e) => { e.stopPropagation(); onRematch?.(match.partnerId); }}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center"
+                  style={{ background: theme.button.bg, color: theme.button.text }}
+                  aria-label={`Rematch with ${match.name}`}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
+                    <polyline points="23 4 23 10 17 10" />
+                    <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
+                  </svg>
+                </button>
+              </div>
             </div>
           ))
         )}

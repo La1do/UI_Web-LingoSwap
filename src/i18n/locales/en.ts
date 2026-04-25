@@ -159,6 +159,11 @@ export const en: Translation = {
     accepted: "Accepted",
     rejected: "Rejected",
     markAllRead: "Mark all as read",
+    sendRequest: "Add friend",
+    unfriend: "Unfriend",
+    unfriendConfirm: "Are you sure?",
+    unfriendYes: "Yes",
+    unfriendNo: "No",
     matchModal: {
       title: "Choose a language",
       subtitle: "Which language do you want to practice today?",

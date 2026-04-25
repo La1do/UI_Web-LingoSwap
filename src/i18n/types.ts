@@ -167,6 +167,11 @@ export interface Translation {
     accepted: string;
     rejected: string;
     markAllRead: string;
+    sendRequest: string;
+    unfriend: string;
+    unfriendConfirm: string;
+    unfriendYes: string;
+    unfriendNo: string;
     matchModal: {
       title: string;
       subtitle: string;

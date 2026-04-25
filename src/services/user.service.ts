@@ -90,4 +90,14 @@ export const userService = {
     url: `/api/user/matches/${sessionId}/review`,
     data,
   }),
+
+  unfriend: (friendId: string): AxiosRequestConfig => ({
+    method: "DELETE",
+    url: `/api/user/friends/friends/${friendId}`,
+  }),
+
+  checkFriendStatus: (targetUserId: string): AxiosRequestConfig => ({
+    method: "GET",
+    url: `/api/user/friends/friends/${targetUserId}/status`,
+  }),
 };
