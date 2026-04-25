@@ -174,6 +174,16 @@ export const vi: Translation = {
     offline: "Ngoại tuyến",
   },
 
+  directCall: {
+    calling: "Đang gọi",
+    waitingResponse: "Đang chờ phản hồi...",
+    cancel: "Huỷ cuộc gọi",
+    rejected: "Cuộc gọi bị từ chối",
+    error: "Không thể kết nối",
+    timeout: "Không có phản hồi",
+    backToHome: "← Về trang chủ",
+  },
+
   admin: {
     title: "Quản trị hệ thống",
     subtitle: "Quản lý người dùng và tài khoản",

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { userService } from "../../../services/user.service";
-import { socketService } from "../../../services/socket.service";
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -65,6 +65,7 @@ function Avatar({ name, avatarUrl, status }: { name: string; avatarUrl?: string;
 export default function FriendList({ onViewProfile }: FriendListProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
+  const navigate = useNavigate();
   const { execute, isLoading } = useApi<ApiFriend[]>();
   const [friends, setFriends] = useState<Friend[]>([]);
   const [filter, setFilter] = useState<"all" | "online">("all");
@@ -80,7 +81,7 @@ export default function FriendList({ onViewProfile }: FriendListProps) {
         lastSeen: f.lastOnlineAt?.friendly,
       }));
       setFriends(mapped);
-    });
+    })
   }, []);
 
   const displayed = filter === "online"
@@ -149,7 +150,12 @@ export default function FriendList({ onViewProfile }: FriendListProps) {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    socketService.emitDirectCallRequest(friend.id);
+                    const params = new URLSearchParams({
+                      target: friend.id,
+                      name: friend.fullName,
+                      ...(friend.avatarUrl ? { avatar: friend.avatarUrl } : {}),
+                    });
+                    navigate(`/direct-call?${params.toString()}`);
                   }}
                   className="opacity-0 group-hover:opacity-100 w-7 h-7 rounded-lg flex items-center justify-center transition-opacity shrink-0"
                   style={{ background: theme.button.bg, color: theme.button.text }}

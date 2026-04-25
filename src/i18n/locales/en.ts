@@ -174,6 +174,16 @@ export const en: Translation = {
     offline: "Offline",
   },
 
+  directCall: {
+    calling: "Calling",
+    waitingResponse: "Waiting for response...",
+    cancel: "Cancel call",
+    rejected: "Call was rejected",
+    error: "Unable to connect",
+    timeout: "No response",
+    backToHome: "← Back to home",
+  },
+
   admin: {
     title: "Admin Dashboard",
     subtitle: "Manage users and accounts",

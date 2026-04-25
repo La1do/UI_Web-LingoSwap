@@ -4,6 +4,7 @@ import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { userService } from "../../../services/user.service";
 import { notificationService, type Notification } from "../../../services/notification.service";
+import { socketService } from "../../../services/socket.service";
 
 // ─── Bell Icon ───────────────────────────────────────────────
 
@@ -120,11 +121,42 @@ export default function NotificationDropdown() {
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasFetched = useRef(false);
 
-  // Fetch unread count on mount
+  // Fetch unread count on mount + lắng nghe realtime notification
   useEffect(() => {
     fetchCount(notificationService.getUnreadCount()).then((res) => {
       if (res) setUnreadCount(res.unreadCount);
     });
+
+    const handler = (payload: {
+      _id: string;
+      type: string;
+      content: string;
+      isRead: boolean;
+      senderId?: { _id: string; profile: { fullName: string; avatar: string } };
+      metadata?: Record<string, unknown>;
+    }) => {
+      console.log("[NotificationDropdown] new_notification received:", payload);
+      const newNotif: Notification = {
+        _id: payload._id,
+        type: payload.type,
+        content: payload.content,
+        isRead: false,
+        senderId: payload.senderId ?? { _id: "", profile: { fullName: "Unknown", avatar: "" } },
+        metadata: payload.metadata,
+      };
+      setNotifications((prev) => [newNotif, ...prev]);
+      setUnreadCount((c) => c + 1);
+      hasFetched.current = false;
+    };
+
+    // Dùng onReady để đảm bảo socket đã connected trước khi đăng ký listener
+    socketService.onReady((s) => {
+      s.off("new_notification").on("new_notification", handler);
+    });
+
+    return () => {
+      socketService.getSocket()?.off("new_notification", handler);
+    };
   }, []);
 
   // Fetch notifications when dropdown opens (once)
@@ -132,7 +164,11 @@ export default function NotificationDropdown() {
     if (hasFetched.current) return;
     hasFetched.current = true;
     const data = await fetchNotifs(notificationService.getNotifications());
-    if (data) setNotifications(data);
+    if (data) {
+      setNotifications(data);
+      // Recalculate unreadCount từ data thực tế
+      setUnreadCount(data.filter((n) => !n.isRead).length);
+    }
   }, []);
 
   useEffect(() => {
@@ -165,6 +201,7 @@ export default function NotificationDropdown() {
     await markAll(notificationService.markAllRead());
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     setUnreadCount(0);
+    hasFetched.current = false;
   };
 
   return (

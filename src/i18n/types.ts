@@ -183,6 +183,17 @@ export interface Translation {
     offline: string;
   };
 
+  // Direct call waiting
+  directCall: {
+    calling: string;
+    waitingResponse: string;
+    cancel: string;
+    rejected: string;
+    error: string;
+    timeout: string;
+    backToHome: string;
+  };
+
   // Admin
   admin: {
     title: string;

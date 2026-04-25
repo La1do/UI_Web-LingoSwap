@@ -61,6 +61,33 @@ export const socketService = {
     return socket;
   },
 
+  // Chạy callback ngay nếu socket đã connected, hoặc chờ connect event
+  // Nếu socket chưa được tạo, retry mỗi 200ms tối đa 15 lần (3 giây)
+  onReady(cb: (s: Socket) => void): void {
+    if (socket?.connected) {
+      cb(socket);
+      return;
+    }
+    if (socket) {
+      socket.once("connect", () => { if (socket) cb(socket); });
+      return;
+    }
+    // Socket chưa được tạo — poll cho đến khi có
+    let attempts = 0;
+    const interval = setInterval(() => {
+      attempts++;
+      if (socket?.connected) {
+        clearInterval(interval);
+        cb(socket);
+      } else if (socket) {
+        clearInterval(interval);
+        socket.once("connect", () => { if (socket) cb(socket); });
+      } else if (attempts >= 15) {
+        clearInterval(interval);
+      }
+    }, 200);
+  },
+
   // ── Matching events ──────────────────────────────────────
 
   joinQueue(language: string): void {
@@ -213,6 +240,27 @@ export const socketService = {
     socket?.off("direct_match_offer");
     socket?.off("direct_match_rejected");
     socket?.off("direct_match_error");
+  },
+
+  // ── Notification realtime ────────────────────────────────
+
+  onNewNotification(cb: (payload: {
+    _id: string;
+    type: string;
+    content: string;
+    isRead: boolean;
+    senderId?: { _id: string; profile: { fullName: string; avatar: string } };
+    metadata?: Record<string, unknown>;
+  }) => void): void {
+    socket?.off("new_notification");
+    socket?.on("new_notification", (data) => {
+      console.log("[Socket] new_notification:", data);
+      cb(data);
+    });
+  },
+
+  offNewNotification(): void {
+    socket?.off("new_notification");
   },
 
   // Remove all matching listeners (cleanup)
