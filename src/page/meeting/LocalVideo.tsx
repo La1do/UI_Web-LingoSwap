@@ -1,5 +1,5 @@
 // LocalVideo.tsx — Camera của người dùng hiện tại
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import { useAuth } from "../../context/AuthContext";
 import { useI18n } from "../../context/I18nContext";
@@ -19,19 +19,32 @@ export default function LocalVideo({
   const { user } = useAuth();
   const { t } = useI18n();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [hasStream, setHasStream] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (stream) {
-      video.srcObject = stream;
-      video.play().catch(() => {});
-    } else {
+
+    if (!stream) {
       video.srcObject = null;
+      setHasStream(false);
+      return;
     }
+
+    video.srcObject = stream;
+    video.play().catch(() => {});
+    setHasStream(true);
+
+    const onTrackChange = () => setHasStream(stream.getTracks().length > 0);
+    stream.addEventListener("addtrack", onTrackChange);
+    stream.addEventListener("removetrack", onTrackChange);
+    return () => {
+      stream.removeEventListener("addtrack", onTrackChange);
+      stream.removeEventListener("removetrack", onTrackChange);
+    };
   }, [stream]);
 
-  const hasVideo = !!stream && !isCameraOff;
+  const hasVideo = hasStream && !isCameraOff;
 
   return (
     <div

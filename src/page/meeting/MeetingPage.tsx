@@ -23,16 +23,16 @@ export default function MeetingPage() {
   const partnerId = searchParams.get("partner");
   const startTimeRef = useRef(Date.now());
 
-  // Caller = user có id xuất hiện đầu tiên trong sessionId (deterministic)
-  // sessionId là MongoDB ObjectId — dùng hash đơn giản để tránh cả 2 cùng là callee
-  const isCaller = !!user && !!sessionId && !!partnerId &&
-    (sessionId + user.id) > (sessionId + partnerId);
+  // Tính isCaller một lần duy nhất khi mount — dùng ref để tránh re-trigger useEffect trong useWebRTC
+  const isCallerRef = useRef<boolean>(!!user && !!partnerId && user.id > partnerId);
+  const isCaller = isCallerRef.current;
 
   console.log(`[Meeting] userId=${user?.id} | partnerId=${partnerId} | isCaller=${isCaller}`);
 
   const {
     localStream,
     remoteStream,
+    remoteTrackCount,
     isConnected,
     isMuted,
     isCameraOff,
@@ -84,7 +84,7 @@ export default function MeetingPage() {
         <div className="flex-1 flex flex-col gap-3 min-w-0">
           {/* Remote video — full area */}
           <div className="flex-1 relative" style={{ minHeight: 0 }}>
-            <RemoteVideo isConnected={isConnected} participantName={partnerId ?? t.meeting.waitingForConnection} stream={remoteStream} />
+            <RemoteVideo isConnected={isConnected} participantName={partnerId ?? t.meeting.waitingForConnection} stream={remoteStream} trackCount={remoteTrackCount} />
 
             {/* Local video — picture-in-picture */}
             <div className="absolute bottom-4 right-4">

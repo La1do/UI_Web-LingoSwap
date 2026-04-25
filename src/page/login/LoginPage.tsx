@@ -13,6 +13,7 @@ import { useAuth } from "../../context/AuthContext";
 import { authService, type LoginResponse } from "../../services/auth.service";
 import { userService } from "../../services/user.service";
 import type { MeResponse } from "../../context/AuthContext";
+import { socketService } from "../../services/socket.service";
 import {
   validateForm,
   emailRules,
@@ -95,6 +96,7 @@ export default function LoginPage() {
           setMode(me.settings.theme);
         }
       }
+      socketService.connect();
       navigate("/home");
     }
   };

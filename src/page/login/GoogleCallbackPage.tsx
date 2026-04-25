@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useApi } from "../../hook/useApi";
 import { authService, type LoginResponse } from "../../services/auth.service";
+import { socketService } from "../../services/socket.service";
 
 export default function GoogleCallbackPage() {
   const { theme } = useTheme();
@@ -21,12 +22,14 @@ export default function GoogleCallbackPage() {
     if (token) {
       // Backend trả token thẳng qua query param
       localStorage.setItem("access_token", token);
+      socketService.connect();
       navigate("/home", { replace: true });
     } else if (code) {
       // Backend trả code → frontend đổi lấy token
       execute(authService.googleCallback(code)).then((result) => {
         if (result?.token) {
           localStorage.setItem("access_token", result.token);
+          socketService.connect();
           navigate("/home", { replace: true });
         } else {
           navigate("/", { replace: true });

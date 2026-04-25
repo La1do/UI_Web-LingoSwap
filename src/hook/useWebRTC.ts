@@ -13,6 +13,7 @@ export type MediaPermission = "idle" | "requesting" | "granted" | "denied" | "un
 export interface UseWebRTCReturn {
   localStream: MediaStream | null;
   remoteStream: MediaStream | null;
+  remoteTrackCount: number;
   isConnected: boolean;
   isMuted: boolean;
   isCameraOff: boolean;
@@ -25,9 +26,11 @@ export interface UseWebRTCReturn {
 export function useWebRTC(sessionId: string | null, isCaller: boolean): UseWebRTCReturn {
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
+  const pendingOfferRef = useRef<RTCSessionDescriptionInit | null>(null);
 
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const [remoteTrackCount, setRemoteTrackCount] = useState(0); // trigger re-render khi có track mới
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isCameraOff, setIsCameraOff] = useState(false);
@@ -44,6 +47,7 @@ export function useWebRTC(sessionId: string | null, isCaller: boolean): UseWebRT
     localStreamRef.current = null;
     setLocalStream(null);
     setRemoteStream(null);
+    setRemoteTrackCount(0);
     setIsConnected(false);
     socketService.offWebRTCEvents();
     console.log("[WebRTC] Cleanup done");
@@ -124,14 +128,15 @@ export function useWebRTC(sessionId: string | null, isCaller: boolean): UseWebRT
 
       pc.ontrack = (e) => {
         console.log(`[WebRTC] Received remote track: ${e.track.kind}`);
-        e.streams[0]?.getTracks().forEach((t) => {
+        const tracks = e.streams[0]?.getTracks() ?? [e.track];
+        tracks.forEach((t) => {
           if (!remote.getTracks().find(existing => existing.id === t.id)) {
             remote.addTrack(t);
             console.log(`[WebRTC] Added remote ${t.kind} track to stream`);
           }
         });
-        // Force re-render để RemoteVideo nhận stream mới
-        setRemoteStream(new MediaStream(remote.getTracks()));
+        // Force re-render bằng counter — addtrack event không reliable trên mọi browser
+        setRemoteTrackCount((c) => c + 1);
       };
 
       pc.onicecandidate = (e) => {
@@ -155,8 +160,8 @@ export function useWebRTC(sessionId: string | null, isCaller: boolean): UseWebRT
       };
 
       // ── 4. Signaling ─────────────────────────────────────
-      socketService.onOffer(async ({ offer }) => {
-        console.log("[WebRTC] Received offer, creating answer...");
+      const handleOffer = async (offer: RTCSessionDescriptionInit) => {
+        console.log("[WebRTC] Processing offer, creating answer...");
         if (!pcRef.current || pcRef.current.signalingState === "closed") return;
         await pcRef.current.setRemoteDescription(new RTCSessionDescription(offer));
         const answer = await pcRef.current.createAnswer();
@@ -165,6 +170,23 @@ export function useWebRTC(sessionId: string | null, isCaller: boolean): UseWebRT
           socketService.emitAnswer(sessionId, answer);
           console.log("[WebRTC] Answer sent");
         }
+      };
+
+      // Xử lý offer đến sớm (trước khi pc sẵn sàng)
+      if (pendingOfferRef.current) {
+        console.log("[WebRTC] Processing buffered offer...");
+        await handleOffer(pendingOfferRef.current);
+        pendingOfferRef.current = null;
+      }
+
+      socketService.onOffer(async ({ offer }) => {
+        console.log("[WebRTC] Received offer");
+        if (!pcRef.current) {
+          console.log("[WebRTC] PC not ready, buffering offer...");
+          pendingOfferRef.current = offer;
+          return;
+        }
+        await handleOffer(offer);
       });
 
       socketService.onAnswer(async ({ answer }) => {
@@ -198,7 +220,7 @@ export function useWebRTC(sessionId: string | null, isCaller: boolean): UseWebRT
 
     init();
     return () => { cancelled = true; cleanup(); };
-  }, [sessionId, isCaller]);
+  }, [sessionId]); // isCaller không đưa vào deps — giá trị cố định từ mount, tránh re-init
 
   const toggleMute = useCallback(() => {
     const stream = localStreamRef.current;
@@ -220,5 +242,5 @@ export function useWebRTC(sessionId: string | null, isCaller: boolean): UseWebRT
     });
   }, []);
 
-  return { localStream, remoteStream, isConnected, isMuted, isCameraOff, permission, toggleMute, toggleCamera, cleanup };
+  return { localStream, remoteStream, remoteTrackCount, isConnected, isMuted, isCameraOff, permission, toggleMute, toggleCamera, cleanup };
 }
