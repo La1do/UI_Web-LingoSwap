@@ -60,11 +60,18 @@ export const authService = {
     data,
   }),
 
-  // Gửi idToken lấy từ Google Identity Services lên backend
+  // Gửi idToken từ Google lên backend
   googleLogin: (idToken: string): AxiosRequestConfig => ({
     method: "POST",
     url: "/api/auth/google",
     data: { idToken },
+  }),
+
+  // Đổi authorization code lấy token (dùng với auth-code flow redirect)
+  googleCallback: (code: string): AxiosRequestConfig => ({
+    method: "POST",
+    url: "/api/auth/google/callback",
+    data: { code },
   }),
 
   sendForgotPasswordOtp: (email: string): AxiosRequestConfig => ({
