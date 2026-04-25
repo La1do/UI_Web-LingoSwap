@@ -249,7 +249,7 @@ export default function RegisterPage() {
 
               <div className="fade-up fade-up-3">
                 <AuthInput
-                  label={t.auth.register}
+                  label={t.auth.passwordLabel}
                   type="password"
                   placeholder={t.auth.passwordPlaceholder}
                   autoComplete="new-password"

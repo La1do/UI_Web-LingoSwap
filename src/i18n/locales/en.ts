@@ -41,6 +41,7 @@ export const en: Translation = {
     passwordPlaceholder: "••••••••",
     passwordHint: "At least 8 characters, 1 uppercase, 1 number",
     confirmPasswordLabel: "Confirm password",
+    passwordLabel: "Password",
     googleSignIn: "Continue with Google",
     googleSignUp: "Sign up with Google",
 

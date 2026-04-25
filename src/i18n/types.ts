@@ -45,6 +45,7 @@ export interface Translation {
     passwordPlaceholder: string;
     passwordHint: string;
     confirmPasswordLabel: string;
+    passwordLabel: string;
     googleSignIn: string;
     googleSignUp: string;
 

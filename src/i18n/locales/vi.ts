@@ -41,6 +41,7 @@ export const vi: Translation = {
     passwordPlaceholder: "••••••••",
     passwordHint: "Ít nhất 8 ký tự, 1 chữ hoa, 1 số",
     confirmPasswordLabel: "Xác nhận mật khẩu",
+    passwordLabel: "Mật khẩu",
     googleSignIn: "Đăng nhập bằng Google",
     googleSignUp: "Đăng ký bằng Google",
 

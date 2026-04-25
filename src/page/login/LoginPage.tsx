@@ -172,7 +172,7 @@ export default function LoginPage() {
 
           <div className="fade-up fade-up-3">
             <AuthInput
-              label={t.auth.login}
+              label={t.auth.passwordLabel}
               type="password"
               placeholder={t.auth.passwordPlaceholder}
               autoComplete="current-password"
