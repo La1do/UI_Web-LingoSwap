@@ -38,6 +38,6 @@ export const notificationService = {
 
   markAllRead: (): AxiosRequestConfig => ({
     method: "PATCH",
-    url: "/api/user/notifications/read-all",
+    url: "/api/user/notifications/mark-all-read",
   }),
 };

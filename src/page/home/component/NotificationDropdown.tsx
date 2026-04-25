@@ -162,8 +162,7 @@ export default function NotificationDropdown() {
   };
 
   const handleMarkAllRead = async () => {
-    const unread = notifications.filter((n) => !n.isRead);
-    await Promise.all(unread.map((n) => markAll(notificationService.markRead(n._id))));
+    await markAll(notificationService.markAllRead());
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     setUnreadCount(0);
   };
