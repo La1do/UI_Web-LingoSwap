@@ -157,6 +157,7 @@ export const vi: Translation = {
     reject: "Từ chối",
     accepted: "Đã chấp nhận",
     rejected: "Đã từ chối",
+    markAllRead: "Đánh dấu tất cả đã đọc",
     matchModal: {
       title: "Chọn ngôn ngữ luyện tập",
       subtitle: "Bạn muốn luyện ngôn ngữ nào hôm nay?",

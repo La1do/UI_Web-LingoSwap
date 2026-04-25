@@ -82,6 +82,11 @@ Trước khi tạo hoặc sửa bất kỳ file nào, **phải** show toàn bộ
 
 **Không được tự ý tạo hoặc sửa file mà không có sự đồng ý của người dùng.**
 
+**TUYỆT ĐỐI KHÔNG được trả lời "Understood" hay bất kỳ từ tương đương.**
+- Nếu yêu cầu rõ ràng → lên plan ngay và show ra
+- Nếu yêu cầu chưa rõ → hỏi lại cụ thể bằng câu hỏi ngắn gọn
+- Nếu đang chờ confirm → nói rõ "Đang chờ bạn confirm để apply"
+
 | Loại | Convention | Ví dụ |
 |---|---|---|
 | Folder page | kebab-case | `friend-list/` |

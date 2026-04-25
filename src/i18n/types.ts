@@ -165,6 +165,7 @@ export interface Translation {
     reject: string;
     accepted: string;
     rejected: string;
+    markAllRead: string;
     matchModal: {
       title: string;
       subtitle: string;

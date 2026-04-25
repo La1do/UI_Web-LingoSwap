@@ -3,19 +3,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { userService } from "../../../services/user.service";
-
-// ─── Types ───────────────────────────────────────────────────
-
-interface FriendRequest {
-  _id: string;
-  partner: {
-    _id: string;
-    username?: string;
-    email: string;
-    avatar?: string;
-  };
-  sentAt: { full: string; friendly: string };
-}
+import { notificationService, type Notification } from "../../../services/notification.service";
 
 // ─── Bell Icon ───────────────────────────────────────────────
 
@@ -26,72 +14,91 @@ const BellIcon = () => (
   </svg>
 );
 
-// ─── Friend Request Card ──────────────────────────────────────
+// ─── Notification Card ────────────────────────────────────────
 
-function FriendRequestCard({
-  request,
+function NotificationCard({
+  notification,
   onRespond,
+  onMarkRead,
 }: {
-  request: FriendRequest;
-  onRespond: (id: string, status: "accept" | "reject") => void;
+  notification: Notification;
+  onRespond: (notifId: string, status: "accept" | "reject") => void;
+  onMarkRead: (notifId: string) => void;
 }) {
   const { theme } = useTheme();
   const { t } = useI18n();
-  const { execute, isLoading } = useApi();
+  const { execute: respondExec, isLoading } = useApi();
+  const { execute: markExec } = useApi();
   const [done, setDone] = useState<"accept" | "reject" | null>(null);
 
-  const avatarUrl = request.partner.avatar && request.partner.avatar !== "default_avatar.png"
-    ? request.partner.avatar : undefined;
-  const displayName = request.partner.username || request.partner.email;
+  const sender = notification.senderId;
+  const avatarUrl = sender?.profile?.avatar && sender.profile.avatar !== "default_avatar.png"
+    ? sender.profile.avatar : undefined;
+  const displayName = sender?.profile?.fullName ?? "Unknown";
+  const isFriendRequest = notification.type === "friend_request";
+  const friendshipId = notification.metadata?.friendshipId as string | undefined;
 
-  const handle = async (status: "accept" | "reject") => {
-    await execute(userService.respondFriendRequest(request._id, status));
+  const handleRespond = async (status: "accept" | "reject") => {
+    if (friendshipId) {
+      await respondExec(userService.respondFriendRequest(friendshipId, status));
+    }
+    await markExec(notificationService.markRead(notification._id));
     setDone(status);
-    onRespond(request._id, status);
+    onRespond(notification._id, status);
+    onMarkRead(notification._id);
   };
 
   return (
-    <div className="flex flex-col gap-3 p-3 rounded-xl"
-      style={{ background: theme.background.input, border: `1px solid ${theme.border.default}` }}>
-      {/* User info */}
-      <div className="flex items-center gap-3">
+    <div
+      className="flex flex-col gap-3 p-3 rounded-xl"
+      style={{
+        background: notification.isRead ? theme.background.page : theme.background.input,
+        border: `1px solid ${notification.isRead ? theme.border.default : `${theme.button.bg}40`}`,
+        opacity: notification.isRead ? 0.65 : 1,
+        transition: "opacity 0.2s, background 0.2s",
+      }}
+    >
+      {/* User info + content */}
+      <div className="flex items-start gap-3">
         {avatarUrl ? (
-          <img src={avatarUrl} alt={displayName} className="w-10 h-10 rounded-full object-cover shrink-0" />
+          <img src={avatarUrl} alt={displayName} className="w-9 h-9 rounded-full object-cover shrink-0 mt-0.5" />
         ) : (
-          <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
+          <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 mt-0.5"
             style={{ background: theme.button.bg, color: theme.button.text }}>
             {displayName.charAt(0).toUpperCase()}
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium truncate" style={{ color: theme.text.primary }}>
-            {displayName}
+          <p className="text-sm truncate" style={{ color: theme.text.primary }}>
+            {notification.content}
           </p>
-          <p className="text-[11px]" style={{ color: theme.text.placeholder }}>
-            {request.sentAt.friendly}
-          </p>
+          {!notification.isRead && (
+            <span className="inline-block w-2 h-2 rounded-full mt-1" style={{ background: theme.button.bg }} />
+          )}
         </div>
       </div>
 
-      {/* Actions */}
-      {done ? (
-        <p className="text-xs text-center py-1 font-medium"
-          style={{ color: done === "accept" ? theme.text.success : theme.text.placeholder }}>
-          {done === "accept" ? `✓ ${t.home.accepted}` : t.home.rejected}
-        </p>
-      ) : (
+      {/* Friend request actions — chỉ ẩn khi đã trả lời, không phụ thuộc isRead */}
+      {isFriendRequest && !done && (
         <div className="flex gap-2">
-          <button onClick={() => handle("reject")} disabled={isLoading}
+          <button onClick={() => handleRespond("reject")} disabled={isLoading}
             className="flex-1 py-1.5 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity disabled:opacity-50"
-            style={{ background: theme.background.card, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}>
+            style={{ background: theme.background.page, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}>
             {t.home.reject}
           </button>
-          <button onClick={() => handle("accept")} disabled={isLoading}
+          <button onClick={() => handleRespond("accept")} disabled={isLoading}
             className="flex-1 py-1.5 rounded-lg text-xs font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
             style={{ background: theme.button.bg, color: theme.button.text }}>
             {isLoading ? "..." : t.home.accept}
           </button>
         </div>
+      )}
+
+      {done && (
+        <p className="text-xs text-center py-0.5 font-medium"
+          style={{ color: done === "accept" ? theme.text.success : theme.text.placeholder }}>
+          {done === "accept" ? `✓ ${t.home.accepted}` : t.home.rejected}
+        </p>
       )}
     </div>
   );
@@ -99,31 +106,38 @@ function FriendRequestCard({
 
 // ─── Notification Dropdown ────────────────────────────────────
 
-interface NotificationDropdownProps {
-  notificationCount?: number;
-}
-
-export default function NotificationDropdown({ notificationCount = 0 }: NotificationDropdownProps) {
+export default function NotificationDropdown() {
   const { theme } = useTheme();
   const { t } = useI18n();
-  const { execute, isLoading } = useApi<FriendRequest[]>();
+  const { execute: fetchNotifs, isLoading } = useApi<Notification[]>();
+  const { execute: fetchCount } = useApi<{ unreadCount: number }>();
+  const { execute: markAll } = useApi();
+
   const [open, setOpen] = useState(false);
-  const [requests, setRequests] = useState<FriendRequest[]>([]);
-  const [count, setCount] = useState(notificationCount);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasFetched = useRef(false);
 
-  const fetchRequests = useCallback(async () => {
-    const data = await execute(userService.getFriendRequests());
-    if (data) {
-      setRequests(data);
-      setCount(data.length);
-    }
+  // Fetch unread count on mount
+  useEffect(() => {
+    fetchCount(notificationService.getUnreadCount()).then((res) => {
+      if (res) setUnreadCount(res.unreadCount);
+    });
+  }, []);
+
+  // Fetch notifications when dropdown opens (once)
+  const fetchNotifications = useCallback(async () => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+    const data = await fetchNotifs(notificationService.getNotifications());
+    if (data) setNotifications(data);
   }, []);
 
   useEffect(() => {
-    fetchRequests();
-  }, []);
+    if (open) fetchNotifications();
+  }, [open]);
 
   const handleMouseEnter = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -134,8 +148,24 @@ export default function NotificationDropdown({ notificationCount = 0 }: Notifica
     closeTimer.current = setTimeout(() => setOpen(false), 200);
   };
 
-  const handleRespond = (id: string) => {
-    setCount((c) => Math.max(0, c - 1));
+  const handleRespond = (notifId: string) => {
+    setUnreadCount((c) => Math.max(0, c - 1));
+    setNotifications((prev) =>
+      prev.map((n) => n._id === notifId ? { ...n, isRead: true } : n)
+    );
+  };
+
+  const handleMarkRead = (notifId: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => n._id === notifId ? { ...n, isRead: true } : n)
+    );
+  };
+
+  const handleMarkAllRead = async () => {
+    const unread = notifications.filter((n) => !n.isRead);
+    await Promise.all(unread.map((n) => markAll(notificationService.markRead(n._id))));
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    setUnreadCount(0);
   };
 
   return (
@@ -144,13 +174,13 @@ export default function NotificationDropdown({ notificationCount = 0 }: Notifica
       <button
         className="relative w-9 h-9 rounded-xl flex items-center justify-center hover:opacity-80 transition-opacity"
         style={{ background: theme.background.input, color: theme.text.secondary }}
-        aria-label="Notifications"
+        aria-label={t.home.notifications}
       >
         <BellIcon />
-        {count > 0 && (
+        {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center"
             style={{ background: theme.text.error, color: theme.button.text }}>
-            {count > 9 ? "9+" : count}
+            {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
@@ -174,25 +204,41 @@ export default function NotificationDropdown({ notificationCount = 0 }: Notifica
           <h3 className="text-sm font-semibold" style={{ color: theme.text.primary }}>
             {t.home.notifications}
           </h3>
-          {count > 0 && (
-            <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-              style={{ background: `${theme.text.error}18`, color: theme.text.error }}>
-              {t.home.newBadge.replace("{n}", String(count))}
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            {unreadCount > 0 && (
+              <>
+                <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+                  style={{ background: `${theme.text.error}18`, color: theme.text.error }}>
+                  {t.home.newBadge.replace("{n}", String(unreadCount))}
+                </span>
+                <button onClick={handleMarkAllRead}
+                  className="text-[10px] hover:opacity-70 transition-opacity"
+                  style={{ color: theme.text.accent }}>
+                  {t.home.markAllRead}
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Content */}
         <div className="p-3 flex flex-col gap-2 max-h-80 overflow-y-auto">
           {isLoading ? (
-            <p className="text-xs text-center py-4" style={{ color: theme.text.placeholder }}>{t.home.loadingNotifications}</p>
-          ) : requests.length === 0 ? (
+            <p className="text-xs text-center py-4" style={{ color: theme.text.placeholder }}>
+              {t.home.loadingNotifications}
+            </p>
+          ) : notifications.length === 0 ? (
             <p className="text-xs text-center py-4" style={{ color: theme.text.placeholder }}>
               {t.home.noNotifications}
             </p>
           ) : (
-            requests.map((req) => (
-              <FriendRequestCard key={req._id} request={req} onRespond={handleRespond} />
+            notifications.map((notif) => (
+              <NotificationCard
+                key={notif._id}
+                notification={notif}
+                onRespond={handleRespond}
+                onMarkRead={handleMarkRead}
+              />
             ))
           )}
         </div>

@@ -18,13 +18,14 @@ export interface Friend {
   lastSeen?: string;
 }
 
-// API response shape
+// API response shape — flat format từ backend
 interface ApiFriend {
   _id: string;
   email: string;
-  profile: { fullName: string; avatar: string; language?: string };
+  fullName: string;
+  avatar: string;
   status?: string;
-  lastSeen?: { friendly: string };
+  lastOnlineAt?: { full: string; friendly: string };
 }
 
 interface FriendListProps {
@@ -73,11 +74,10 @@ export default function FriendList({ onViewProfile }: FriendListProps) {
       if (!data) return;
       const mapped: Friend[] = data.map((f) => ({
         id: f._id,
-        fullName: f.profile.fullName,
-        avatarUrl: f.profile.avatar,
+        fullName: f.fullName,
+        avatarUrl: f.avatar !== "default_avatar.png" ? f.avatar : undefined,
         status: normalizeStatus(f.status),
-        language: f.profile.language,
-        lastSeen: f.lastSeen?.friendly,
+        lastSeen: f.lastOnlineAt?.friendly,
       }));
       setFriends(mapped);
     });

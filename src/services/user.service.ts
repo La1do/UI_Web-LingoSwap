@@ -79,8 +79,9 @@ export const userService = {
   }),
 
  
-getMatchHistory: (): AxiosRequestConfig => ({
+getMatchHistory: (limit = 20, page = 1): AxiosRequestConfig => ({
   method: "GET",
   url: "/api/user/matches",
+  params: { limit, page },
 }),
 };

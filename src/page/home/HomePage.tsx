@@ -30,7 +30,6 @@ export default function HomePage() {
     >
       {/* ── Header ── */}
       <Header
-        notificationCount={3}
         onSearch={(q) => console.log("search:", q)}
         onNotificationsClick={() => console.log("notifications")}
       />

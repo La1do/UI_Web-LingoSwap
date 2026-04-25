@@ -157,6 +157,7 @@ export const en: Translation = {
     reject: "Reject",
     accepted: "Accepted",
     rejected: "Rejected",
+    markAllRead: "Mark all as read",
     matchModal: {
       title: "Choose a language",
       subtitle: "Which language do you want to practice today?",

@@ -9,7 +9,6 @@ import { LanguageToggle } from "../../component/LanguageToggle";
 import NotificationDropdown from "./NotificationDropdown";
 
 interface HeaderProps {
-  notificationCount?: number;
   onSearch?: (query: string) => void;
 }
 
@@ -182,7 +181,6 @@ function UserDropdown({ username, avatarUrl }: { username: string; avatarUrl?: s
 // ─── Header ──────────────────────────────────────────────────
 
 export default function Header({
-  notificationCount = 0,
   onSearch,
 }: HeaderProps) {
   const { theme } = useTheme();
@@ -236,7 +234,7 @@ export default function Header({
         <ThemeToggle />
 
         {/* Notifications */}
-        <NotificationDropdown notificationCount={notificationCount} />
+        <NotificationDropdown />
 
         {/* User dropdown */}
         <UserDropdown

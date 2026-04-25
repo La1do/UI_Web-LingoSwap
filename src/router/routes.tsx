@@ -13,6 +13,7 @@ import ForgotPasswordPage from "../page/forgot-password/ForgotPasswordPage";
 
 export const router = createBrowserRouter([
   { path: "/",                element: <LoginPage /> },
+  { path: "/login",                element: <LoginPage /> },
   { path: "/register",        element: <RegisterPage /> },
   { path: "/forgot-password", element: <ForgotPasswordPage /> },
   { path: "/auth/callback",   element: <GoogleCallbackPage /> },
