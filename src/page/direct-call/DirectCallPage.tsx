@@ -23,6 +23,12 @@ export default function DirectCallPage() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
+    const s = socketService.getSocket();
+    if (!s) {
+      navigate("/home", { replace: true });
+      return;
+    }
+
     // Emit direct call request
     socketService.emitDirectCallRequest(targetId);
 
@@ -38,29 +44,30 @@ export default function DirectCallPage() {
       });
     }, 1000);
 
-    // Lắng nghe match_found — khi bên kia accept
-    socketService.onReady((s) => {
-      s.off("match_found").on("match_found", (payload: MatchFoundPayload) => {
-        clearInterval(timerRef.current!);
-        navigate(`/meeting?session=${payload.sessionId}&partner=${payload.partnerId}`, { replace: true });
-      });
+    const onMatchFound = (payload: MatchFoundPayload) => {
+      clearInterval(timerRef.current!);
+      navigate(`/meeting?session=${payload.sessionId}&partner=${payload.partnerId}&type=direct`, { replace: true });
+    };
 
-      s.off("direct_match_rejected").on("direct_match_rejected", () => {
-        clearInterval(timerRef.current!);
-        setState("rejected");
-      });
+    const onRejected = () => {
+      clearInterval(timerRef.current!);
+      setState("rejected");
+    };
 
-      s.off("direct_match_error").on("direct_match_error", () => {
-        clearInterval(timerRef.current!);
-        setState("error");
-      });
-    });
+    const onError = () => {
+      clearInterval(timerRef.current!);
+      setState("error");
+    };
+
+    s.off("match_found").on("match_found", onMatchFound);
+    s.off("direct_match_rejected").on("direct_match_rejected", onRejected);
+    s.off("direct_match_error").on("direct_match_error", onError);
 
     return () => {
       clearInterval(timerRef.current!);
-      socketService.getSocket()?.off("match_found");
-      socketService.getSocket()?.off("direct_match_rejected");
-      socketService.getSocket()?.off("direct_match_error");
+      s.off("match_found", onMatchFound);
+      s.off("direct_match_rejected", onRejected);
+      s.off("direct_match_error", onError);
     };
   }, []);
 

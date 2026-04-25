@@ -68,11 +68,17 @@ export default function IncomingCallModal() {
   const handleAccept = () => {
     if (!callerId) return;
     socketService.emitDirectCallResponse(callerId, true);
+    const acceptedCallerId = callerId;
     setCallerId(null);
     setCaller(null);
-    // Backend sẽ emit match_found → navigate handled by useMatching
-    // Tạm thời navigate waiting để xử lý
-    navigate("/meeting");
+    // Lắng nghe match_found từ BE sau khi accept
+    socketService.onReady((s) => {
+      s.once("match_found", (payload: { sessionId: string; partnerId: string }) => {
+        navigate(`/meeting?session=${payload.sessionId}&partner=${payload.partnerId}&type=direct`, { replace: true });
+      });
+    });
+    // Fallback nếu không nhận được match_found
+    console.log("[IncomingCall] Accepted call from:", acceptedCallerId);
   };
 
   const handleReject = () => {
@@ -90,7 +96,7 @@ export default function IncomingCallModal() {
 
   return (
     <div
-      className="fixed bottom-6 right-6 z-50 w-72 rounded-2xl p-4 flex flex-col gap-4"
+      className="fixed top-6 right-6 z-50 w-72 rounded-2xl p-4 flex flex-col gap-4"
       style={{
         background: theme.background.card,
         border: `1px solid ${theme.border.default}`,

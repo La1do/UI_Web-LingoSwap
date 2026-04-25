@@ -143,6 +143,7 @@ export default function ReviewPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { execute: fetchProfile } = useApi<PublicProfile>();
+  const { execute: submitReview, isLoading: submitting } = useApi();
 
   const sessionId = searchParams.get("session");
   const partnerId = searchParams.get("partner");
@@ -150,10 +151,9 @@ export default function ReviewPage() {
 
   const [partner, setPartner] = useState<PublicProfile | null>(null);
   const [overallRating, setOverallRating] = useState(0);
-  const [languageRating, setLanguageRating] = useState(0);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [comment, setComment] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   // Fetch partner profile
   useEffect(() => {
@@ -168,8 +168,6 @@ export default function ReviewPage() {
         title: "Đánh giá cuộc trò chuyện",
         subtitle: "Chia sẻ trải nghiệm của bạn",
         overallLabel: "Trải nghiệm tổng thể",
-        languageLabel: "Kỹ năng ngôn ngữ của đối tác",
-        tagsLabel: "Điều gì nổi bật?",
         commentLabel: "Nhận xét thêm (tuỳ chọn)",
         commentPlaceholder: "Chia sẻ thêm về cuộc trò chuyện...",
         submit: "Gửi đánh giá",
@@ -177,14 +175,11 @@ export default function ReviewPage() {
         successTitle: "Cảm ơn bạn!",
         successDesc: "Đánh giá của bạn giúp chúng tôi cải thiện trải nghiệm.",
         backHome: "Về trang chủ",
-        tags: ["Thân thiện", "Kiên nhẫn", "Phát âm tốt", "Vốn từ phong phú", "Dễ hiểu", "Nhiệt tình", "Đúng giờ"],
       }
     : {
         title: "Rate your conversation",
         subtitle: "Share your experience to help us improve",
         overallLabel: "Overall experience",
-        languageLabel: "Partner's language skills",
-        tagsLabel: "What stood out?",
         commentLabel: "Additional comments (optional)",
         commentPlaceholder: "Share more about the conversation...",
         submit: "Submit review",
@@ -192,7 +187,6 @@ export default function ReviewPage() {
         successTitle: "Thank you!",
         successDesc: "Your feedback helps us improve the experience.",
         backHome: "Back to home",
-        tags: ["Friendly", "Patient", "Good pronunciation", "Rich vocabulary", "Easy to understand", "Enthusiastic", "Punctual"],
       };
 
   const toggleTag = (tag: string) => {
@@ -200,8 +194,17 @@ export default function ReviewPage() {
   };
 
   const handleSubmit = async () => {
-    console.log("Review submitted:", { sessionId, partnerId, overallRating, languageRating, selectedTags, comment });
-    setSubmitted(true);
+    if (!sessionId || overallRating === 0) return;
+    setSubmitError("");
+    const result = await submitReview(userService.reviewMatch(sessionId, {
+      rating: overallRating,
+      comment: comment.trim() || undefined,
+    }));
+    if (result !== null) {
+      setSubmitted(true);
+    } else {
+      setSubmitError(locale === "vi" ? "Gửi đánh giá thất bại. Vui lòng thử lại." : "Failed to submit review. Please try again.");
+    }
   };
 
   const formatDuration = () => {
@@ -261,24 +264,6 @@ export default function ReviewPage() {
 
         <div className="h-px w-full" style={{ background: theme.border.default }} />
 
-        {/* Language rating */}
-        <div className="flex flex-col items-center gap-3">
-          <p className="text-sm font-medium" style={{ color: theme.text.secondary }}>{t.languageLabel}</p>
-          <StarRating value={languageRating} onChange={setLanguageRating} />
-        </div>
-
-        <div className="h-px w-full" style={{ background: theme.border.default }} />
-
-        {/* Tags */}
-        <div className="flex flex-col gap-3">
-          <p className="text-sm font-medium" style={{ color: theme.text.secondary }}>{t.tagsLabel}</p>
-          <div className="flex flex-wrap gap-2">
-            {t.tags.map((tag) => (
-              <Tag key={tag} label={tag} selected={selectedTags.includes(tag)} onClick={() => toggleTag(tag)} />
-            ))}
-          </div>
-        </div>
-
         {/* Comment */}
         <div className="flex flex-col gap-2">
           <p className="text-sm font-medium" style={{ color: theme.text.secondary }}>{t.commentLabel}</p>
@@ -290,6 +275,11 @@ export default function ReviewPage() {
             onBlur={(e) => (e.target.style.borderColor = theme.border.default)} />
         </div>
 
+        {/* Error */}
+        {submitError && (
+          <p className="text-xs text-center" style={{ color: theme.text.error }}>{submitError}</p>
+        )}
+
         {/* Actions */}
         <div className="flex gap-3">
           <button onClick={() => navigate("/home")}
@@ -297,10 +287,10 @@ export default function ReviewPage() {
             style={{ background: theme.background.input, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}>
             {t.skip}
           </button>
-          <button onClick={handleSubmit} disabled={overallRating === 0}
+          <button onClick={handleSubmit} disabled={overallRating === 0 || submitting}
             className="flex-1 py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
             style={{ background: theme.button.bg, color: theme.button.text }}>
-            {t.submit}
+            {submitting ? "..." : t.submit}
           </button>
         </div>
       </div>

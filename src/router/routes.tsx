@@ -9,6 +9,7 @@ import ReviewPage from "../page/review/ReviewPage";
 import ProfilePage from "../page/profile/ProfilePage";
 import AdminPage from "../page/admin/AdminPage";
 import DirectCallPage from "../page/direct-call/DirectCallPage";
+import CallEndedPage from "../page/call-ended/CallEndedPage";
 import ForgotPasswordPage from "../page/forgot-password/ForgotPasswordPage";
 
 export const router = createBrowserRouter([
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
   { path: "/home",            element: <HomePage /> },
   { path: "/waiting",         element: <WaitingPage /> },
   { path: "/direct-call",     element: <DirectCallPage /> },
+  { path: "/call-ended",      element: <CallEndedPage /> },
   { path: "/meeting",         element: <MeetingPage /> },
   { path: "/review",          element: <ReviewPage /> },
   { path: "/profile",         element: <ProfilePage /> },

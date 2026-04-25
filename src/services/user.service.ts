@@ -79,9 +79,15 @@ export const userService = {
   }),
 
  
-getMatchHistory: (limit = 20, page = 1): AxiosRequestConfig => ({
-  method: "GET",
-  url: "/api/user/matches",
-  params: { limit, page },
-}),
+  getMatchHistory: (limit = 7, page = 1): AxiosRequestConfig => ({
+    method: "GET",
+    url: "/api/user/matches",
+    params: { limit, page },
+  }),
+
+  reviewMatch: (sessionId: string, data: { rating: number; comment?: string }): AxiosRequestConfig => ({
+    method: "POST",
+    url: `/api/user/matches/${sessionId}/review`,
+    data,
+  }),
 };

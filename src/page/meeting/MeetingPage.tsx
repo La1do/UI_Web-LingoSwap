@@ -21,6 +21,7 @@ export default function MeetingPage() {
 
   const sessionId = searchParams.get("session");
   const partnerId = searchParams.get("partner");
+  const callType = searchParams.get("type"); // "direct" | null
   const startTimeRef = useRef(Date.now());
 
   // Tính isCaller một lần duy nhất khi mount — dùng ref để tránh re-trigger useEffect trong useWebRTC
@@ -47,7 +48,15 @@ export default function MeetingPage() {
     cleanup();
     socketService.leaveQueue();
     const duration = Math.floor((Date.now() - startTimeRef.current) / 1000);
-    navigate(`/review?session=${sessionId}&partner=${partnerId}&duration=${duration}`, { replace });
+    if (callType === "direct") {
+      const params = new URLSearchParams({
+        partner: partnerId ?? "",
+        duration: String(duration),
+      });
+      navigate(`/call-ended?${params.toString()}`, { replace });
+    } else {
+      navigate(`/review?session=${sessionId}&partner=${partnerId}&duration=${duration}`, { replace });
+    }
   };
 
   useEffect(() => {
