@@ -181,9 +181,9 @@ export default function ReviewPage() {
         backHome: "Back to home",
       };
 
-  const toggleTag = (tag: string) => {
-    setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
-  };
+  // const toggleTag = (tag: string) => {
+  //   setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
+  // };
 
   const handleSubmit = async () => {
     if (!sessionId || overallRating === 0) return;
