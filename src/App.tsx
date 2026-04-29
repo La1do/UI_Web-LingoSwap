@@ -3,6 +3,7 @@ import { RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import { I18nProvider } from "./context/I18nContext";
 import { AuthProvider } from "./context/AuthContext";
+import { FriendProvider } from "./context/FriendContext";
 import { router } from "./router/routes";
 
 export default function App() {
@@ -10,7 +11,9 @@ export default function App() {
     <I18nProvider>
       <ThemeProvider>
         <AuthProvider>
-          <RouterProvider router={router} />
+          <FriendProvider>
+            <RouterProvider router={router} />
+          </FriendProvider>
         </AuthProvider>
       </ThemeProvider>
     </I18nProvider>

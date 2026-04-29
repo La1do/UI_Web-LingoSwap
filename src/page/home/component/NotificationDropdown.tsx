@@ -5,6 +5,7 @@ import { useApi } from "../../../hook/useApi";
 import { userService } from "../../../services/user.service";
 import { notificationService, type Notification } from "../../../services/notification.service";
 import { socketService } from "../../../services/socket.service";
+import { useFriends } from "../../../context/FriendContext";
 
 // ─── Bell Icon ───────────────────────────────────────────────
 
@@ -30,6 +31,7 @@ function NotificationCard({
   const { t } = useI18n();
   const { execute: respondExec, isLoading } = useApi();
   const { execute: markExec } = useApi();
+  const { refetchFriends } = useFriends();
   const [done, setDone] = useState<"accept" | "reject" | null>(null);
 
   const sender = notification.senderId;
@@ -47,6 +49,7 @@ function NotificationCard({
     setDone(status);
     onRespond(notification._id, status);
     onMarkRead(notification._id);
+    if (status === "accept") refetchFriends();
   };
 
   return (
@@ -70,7 +73,7 @@ function NotificationCard({
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <p className="text-sm truncate" style={{ color: theme.text.primary }}>
+          <p className="text-sm" style={{ color: theme.text.primary }}>
             {notification.content}
           </p>
           {!notification.isRead && (

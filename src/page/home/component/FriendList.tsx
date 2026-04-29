@@ -1,44 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { userService } from "../../../services/user.service";
+import { useFriends, type Friend, type FriendStatus } from "../../../context/FriendContext";
 // ─── Types ───────────────────────────────────────────────────
 
-export type FriendStatus = "online" | "offline" | "busy" | "away";
-
-export interface Friend {
-  id: string;
-  fullName: string;
-  avatarUrl?: string;
-  status: FriendStatus;
-  language?: string;
-  lastSeen?: string;
-}
-
-// API response shape — flat format từ backend
-interface ApiFriend {
-  _id: string;
-  email: string;
-  fullName: string;
-  avatar: string;
-  status?: string;
-  lastOnlineAt?: { full: string; friendly: string };
-}
+export type { FriendStatus, Friend };
 
 interface FriendListProps {
   onViewProfile?: (friend: Friend) => void;
 }
-
-// ─── Status config ───────────────────────────────────────────
-
-function normalizeStatus(s?: string): FriendStatus {
-  if (s === "online" || s === "busy" || s === "away") return s;
-  return "offline";
-}
-
-// ─── Avatar ──────────────────────────────────────────────────
 
 function Avatar({ name, avatarUrl, status }: { name: string; avatarUrl?: string; status: FriendStatus }) {
   const { theme } = useTheme();
@@ -59,31 +32,18 @@ function Avatar({ name, avatarUrl, status }: { name: string; avatarUrl?: string;
   );
 }
 
+// ─── Avatar ──────────────────────────────────────────────────
+
 // ─── Main component ──────────────────────────────────────────
 
 export default function FriendList({ onViewProfile }: FriendListProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
   const navigate = useNavigate();
-  const { execute, isLoading } = useApi<ApiFriend[]>();
+  const { friends, isLoading, removeFriend } = useFriends();
   const { execute: unfriendExec } = useApi();
-  const [friends, setFriends] = useState<Friend[]>([]);
   const [filter, setFilter] = useState<"all" | "online">("all");
   const [confirmUnfriend, setConfirmUnfriend] = useState<string | null>(null);
-
-  useEffect(() => {
-    execute(userService.getFriends()).then((data) => {
-      if (!data) return;
-      const mapped: Friend[] = data.map((f) => ({
-        id: f._id,
-        fullName: f.fullName,
-        avatarUrl: f.avatar !== "default_avatar.png" ? f.avatar : undefined,
-        status: normalizeStatus(f.status),
-        lastSeen: f.lastOnlineAt?.friendly,
-      }));
-      setFriends(mapped);
-    })
-  }, []);
 
   const displayed = filter === "online"
     ? friends.filter((f) => f.status !== "offline")
@@ -136,10 +96,10 @@ export default function FriendList({ onViewProfile }: FriendListProps) {
               <Avatar name={friend.fullName} avatarUrl={friend.avatarUrl} status={friend.status} />
 
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate" style={{ color: theme.text.primary }}>
+                <p className="text-sm font-medium " style={{ color: theme.text.primary }}>
                   {friend.fullName}
                 </p>
-                <p className="text-[11px] truncate" style={{ color: theme.text.placeholder }}>
+                <p className="text-[9px]" style={{ color: theme.text.placeholder }}>
                   {friend.status === "offline" && friend.lastSeen
                     ? `Last seen ${friend.lastSeen}`
                     : t.friendStatus[friend.status]}
@@ -195,7 +155,7 @@ export default function FriendList({ onViewProfile }: FriendListProps) {
                       <button
                         onClick={() => {
                           unfriendExec(userService.unfriend(friend.id)).then(() => {
-                            setFriends((prev) => prev.filter((f) => f.id !== friend.id));
+                            removeFriend(friend.id);
                             setConfirmUnfriend(null);
                           });
                         }}

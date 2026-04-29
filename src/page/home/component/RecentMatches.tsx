@@ -3,6 +3,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { userService } from "../../../services/user.service";
+import { useFriends } from "../../../context/FriendContext";
 
 // ─── API response types ───────────────────────────────────────
 
@@ -92,6 +93,7 @@ export default function RecentMatches({ onRematch, onViewProfile }: RecentMatche
   const { execute, isLoading } = useApi<ApiMatch[]>();
   const { execute: checkStatus } = useApi<{ status: string }>();
   const { execute: sendRequest } = useApi();
+  const { refetchFriends } = useFriends();
   const [matches, setMatches] = useState<Match[]>([]);
 
   useEffect(() => {
@@ -122,6 +124,7 @@ export default function RecentMatches({ onRematch, onViewProfile }: RecentMatche
       setMatches((prev) =>
         prev.map((m) => m.id === match.id ? { ...m, friendStatus: "request_sent" } : m)
       );
+      refetchFriends();
     }
   };
 

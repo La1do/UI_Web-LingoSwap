@@ -263,6 +263,26 @@ export const socketService = {
     socket?.off("new_notification");
   },
 
+  // ── Heartbeat (30s) ──────────────────────────────────────
+
+  emitHeartbeat(): void {
+    socket?.emit("heartbeat");
+  },
+
+  // ── Friend presence ──────────────────────────────────────
+
+  onFriendStatusChange(cb: (payload: { userId: string; status: "online" | "offline" }) => void): void {
+    socket?.off("friend_status_change");
+    socket?.on("friend_status_change", (data) => {
+      console.log("[Socket] friend_status_change:", data);
+      cb(data);
+    });
+  },
+
+  offFriendStatusChange(): void {
+    socket?.off("friend_status_change");
+  },
+
   // Remove all matching listeners (cleanup)
   offMatchingEvents(): void {
     socket?.off("waiting_status");

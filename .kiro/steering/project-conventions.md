@@ -1,7 +1,7 @@
 # LingoSwap — Project Conventions
 
 Đây là các quy tắc bắt buộc khi làm việc với project này. Đọc kỹ trước khi bắt đầu bất kỳ tác vụ nào.
-
+inclusion: always
 ---
 
 ## Cấu trúc thư mục

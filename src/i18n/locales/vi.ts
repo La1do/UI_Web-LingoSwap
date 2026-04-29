@@ -164,6 +164,8 @@ export const vi: Translation = {
     unfriendConfirm: "Xác nhận?",
     unfriendYes: "Có",
     unfriendNo: "Không",
+    streak: "Chuỗi ngày",
+    streakDays: "ngày",
     matchModal: {
       title: "Chọn ngôn ngữ luyện tập",
       subtitle: "Bạn muốn luyện ngôn ngữ nào hôm nay?",

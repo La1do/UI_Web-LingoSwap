@@ -164,6 +164,8 @@ export const en: Translation = {
     unfriendConfirm: "Are you sure?",
     unfriendYes: "Yes",
     unfriendNo: "No",
+    streak: "Day streak",
+    streakDays: "days",
     matchModal: {
       title: "Choose a language",
       subtitle: "Which language do you want to practice today?",

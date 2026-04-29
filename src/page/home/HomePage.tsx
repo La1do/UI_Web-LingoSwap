@@ -7,6 +7,7 @@ import FriendList from "./component/FriendList";
 import RecentMatches from "./component/RecentMatches";
 import MatchModal from "./component/MatchModal";
 import IncomingCallModal from "./component/IncomingCallModal";
+import StreakCard from "./component/StreakCard";
 
 export default function HomePage() {
   const { theme } = useTheme();
@@ -45,7 +46,10 @@ export default function HomePage() {
         </aside>
 
         {/* Center — main content */}
-        <main className="flex-1 overflow-y-auto p-6 flex flex-col items-center justify-center gap-6">
+        <main className="flex-1 overflow-y-auto p-6 flex flex-col items-center gap-6 pt-8">
+          {/* Streak */}
+          <StreakCard />
+
           {/* Find match button */}
           <button
             onClick={() => setModalOpen(true)}
