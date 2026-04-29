@@ -11,6 +11,7 @@ export type { FriendStatus, Friend };
 
 interface FriendListProps {
   onViewProfile?: (friend: Friend) => void;
+  onOpenChat?: (friend: Friend) => void;
 }
 
 function Avatar({ name, avatarUrl, status }: { name: string; avatarUrl?: string; status: FriendStatus }) {
@@ -36,7 +37,7 @@ function Avatar({ name, avatarUrl, status }: { name: string; avatarUrl?: string;
 
 // ─── Main component ──────────────────────────────────────────
 
-export default function FriendList({ onViewProfile }: FriendListProps) {
+export default function FriendList({ onViewProfile, onOpenChat }: FriendListProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
   const navigate = useNavigate();
@@ -45,9 +46,12 @@ export default function FriendList({ onViewProfile }: FriendListProps) {
   const [filter, setFilter] = useState<"all" | "online">("all");
   const [confirmUnfriend, setConfirmUnfriend] = useState<string | null>(null);
 
-  const displayed = filter === "online"
+  const STATUS_ORDER: Record<FriendStatus, number> = { online: 0, busy: 1, away: 2, offline: 3 };
+
+  const displayed = (filter === "online"
     ? friends.filter((f) => f.status !== "offline")
-    : friends;
+    : friends
+  ).slice().sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status]);
 
   const onlineCount = friends.filter((f) => f.status === "online").length;
 
@@ -91,7 +95,7 @@ export default function FriendList({ onViewProfile }: FriendListProps) {
               className="relative flex items-center gap-3 px-2 py-2.5 rounded-xl cursor-pointer group"
               onMouseEnter={(e) => (e.currentTarget.style.background = theme.background.input)}
               onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-              onClick={() => onViewProfile?.(friend)}
+              onClick={() => { onViewProfile?.(friend); onOpenChat?.(friend); }}
             >
               <Avatar name={friend.fullName} avatarUrl={friend.avatarUrl} status={friend.status} />
 

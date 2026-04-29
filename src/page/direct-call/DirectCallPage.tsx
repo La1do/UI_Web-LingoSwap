@@ -23,16 +23,32 @@ export default function DirectCallPage() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    const s = socketService.getSocket();
-    if (!s) {
-      navigate("/home", { replace: true });
-      return;
-    }
+    // Emit direct call request — dùng onReady để đảm bảo socket connected
+    // Không navigate về home nếu socket chưa có, hiện UI trước rồi xử lý sau
+    socketService.onReady((s) => {
+      socketService.emitDirectCallRequest(targetId);
 
-    // Emit direct call request
-    socketService.emitDirectCallRequest(targetId);
+      const onMatchFound = (payload: MatchFoundPayload) => {
+        clearInterval(timerRef.current!);
+        navigate(`/meeting?session=${payload.sessionId}&partner=${payload.partnerId}&type=direct`, { replace: true });
+      };
 
-    // Countdown
+      const onRejected = () => {
+        clearInterval(timerRef.current!);
+        setState("rejected");
+      };
+
+      const onError = () => {
+        clearInterval(timerRef.current!);
+        setState("error");
+      };
+
+      s.off("match_found").on("match_found", onMatchFound);
+      s.off("direct_match_rejected").on("direct_match_rejected", onRejected);
+      s.off("direct_match_error").on("direct_match_error", onError);
+    });
+
+    // Countdown — bắt đầu ngay khi vào page
     timerRef.current = setInterval(() => {
       setCountdown((c) => {
         if (c <= 1) {
@@ -44,30 +60,14 @@ export default function DirectCallPage() {
       });
     }, 1000);
 
-    const onMatchFound = (payload: MatchFoundPayload) => {
-      clearInterval(timerRef.current!);
-      navigate(`/meeting?session=${payload.sessionId}&partner=${payload.partnerId}&type=direct`, { replace: true });
-    };
-
-    const onRejected = () => {
-      clearInterval(timerRef.current!);
-      setState("rejected");
-    };
-
-    const onError = () => {
-      clearInterval(timerRef.current!);
-      setState("error");
-    };
-
-    s.off("match_found").on("match_found", onMatchFound);
-    s.off("direct_match_rejected").on("direct_match_rejected", onRejected);
-    s.off("direct_match_error").on("direct_match_error", onError);
-
     return () => {
       clearInterval(timerRef.current!);
-      s.off("match_found", onMatchFound);
-      s.off("direct_match_rejected", onRejected);
-      s.off("direct_match_error", onError);
+      const s = socketService.getSocket();
+      if (s) {
+        s.off("match_found");
+        s.off("direct_match_rejected");
+        s.off("direct_match_error");
+      }
     };
   }, []);
 

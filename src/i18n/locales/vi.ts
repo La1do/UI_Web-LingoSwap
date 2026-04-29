@@ -181,6 +181,14 @@ export const vi: Translation = {
     offline: "Ngoại tuyến",
   },
 
+  chat: {
+    typeMessage: "Nhập tin nhắn...",
+    sendImage: "Gửi hình",
+    noMessages: "Chưa có tin nhắn",
+    you: "Bạn",
+    call: "Gọi điện",
+  },
+
   directCall: {
     calling: "Đang gọi",
     waitingResponse: "Đang chờ phản hồi...",

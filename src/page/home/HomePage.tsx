@@ -8,12 +8,27 @@ import RecentMatches from "./component/RecentMatches";
 import MatchModal from "./component/MatchModal";
 import IncomingCallModal from "./component/IncomingCallModal";
 import StreakCard from "./component/StreakCard";
+import ChatWindow from "./component/ChatWindow";
+import type { Friend } from "../../context/FriendContext";
 
 export default function HomePage() {
   const { theme } = useTheme();
   const { locale } = useI18n();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [openChats, setOpenChats] = useState<Friend[]>([]);
+
+  const handleOpenChat = (friend: Friend) => {
+    setOpenChats((prev) => {
+      if (prev.find((f) => f.id === friend.id)) return prev;
+      if (prev.length >= 2) return [prev[1], friend];
+      return [...prev, friend];
+    });
+  };
+
+  const handleCloseChat = (friendId: string) => {
+    setOpenChats((prev) => prev.filter((f) => f.id !== friendId));
+  };
 
   const handleStartMatch = (language: string) => {
     setModalOpen(false);
@@ -42,6 +57,7 @@ export default function HomePage() {
         >
           <FriendList
             onViewProfile={(f) => console.log("profile", f.fullName)}
+            onOpenChat={handleOpenChat}
           />
         </aside>
 
@@ -89,6 +105,16 @@ export default function HomePage() {
 
       {/* ── Incoming Call Modal ── */}
       <IncomingCallModal />
+
+      {/* ── Chat Windows (max 2, bottom-right) ── */}
+      {openChats.map((friend, i) => (
+        <ChatWindow
+          key={friend.id}
+          friend={friend}
+          onClose={() => handleCloseChat(friend.id)}
+          offsetIndex={openChats.length - 1 - i}
+        />
+      ))}
     </div>
   );
 }

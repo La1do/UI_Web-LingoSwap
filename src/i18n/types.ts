@@ -190,6 +190,15 @@ export interface Translation {
     offline: string;
   };
 
+  // Chat window
+  chat: {
+    typeMessage: string;
+    sendImage: string;
+    noMessages: string;
+    you: string;
+    call: string;
+  };
+
   // Direct call waiting
   directCall: {
     calling: string;

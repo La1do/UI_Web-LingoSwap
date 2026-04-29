@@ -181,6 +181,14 @@ export const en: Translation = {
     offline: "Offline",
   },
 
+  chat: {
+    typeMessage: "Type a message...",
+    sendImage: "Send image",
+    noMessages: "No messages yet",
+    you: "You",
+    call: "Call",
+  },
+
   directCall: {
     calling: "Calling",
     waitingResponse: "Waiting for response...",
