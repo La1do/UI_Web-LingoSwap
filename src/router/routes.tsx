@@ -8,6 +8,7 @@ import MeetingPage from "../page/meeting/MeetingPage";
 import ReviewPage from "../page/review/ReviewPage";
 import ProfilePage from "../page/profile/ProfilePage";
 import AdminPage from "../page/admin/AdminPage";
+import AdminLoginPage from "../page/admin/AdminLoginPage";
 import DirectCallPage from "../page/direct-call/DirectCallPage";
 import CallEndedPage from "../page/call-ended/CallEndedPage";
 import ForgotPasswordPage from "../page/forgot-password/ForgotPasswordPage";
@@ -26,4 +27,5 @@ export const router = createBrowserRouter([
   { path: "/review",          element: <ReviewPage /> },
   { path: "/profile",         element: <ProfilePage /> },
   { path: "/admin",           element: <AdminPage /> },
+  { path: "/admin/login",     element: <AdminLoginPage /> },
 ]);

@@ -30,7 +30,7 @@ export default function UserTable({ users, onBan, onDelete }: UserTableProps) {
   );
 
   const avatarUrl = (u: AdminUser) =>
-    u.profile.avatar && u.profile.avatar !== "default_avatar.png" ? u.profile.avatar : undefined;
+    u.profile?.avatar && u.profile.avatar !== "default_avatar.png" ? u.profile.avatar : undefined;
 
   const headers = [
     t.admin.table.user, t.admin.table.email, t.admin.table.role,
@@ -80,16 +80,16 @@ export default function UserTable({ users, onBan, onDelete }: UserTableProps) {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       {avatarUrl(user) ? (
-                        <img src={avatarUrl(user)} alt={user.profile.fullName}
+                        <img src={avatarUrl(user)} alt={user.profile?.fullName ?? user.email}
                           className="w-8 h-8 rounded-full object-cover shrink-0" />
                       ) : (
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
                           style={{ background: theme.button.bg, color: theme.button.text }}>
-                          {user.profile.fullName.charAt(0).toUpperCase()}
+                          {(user.profile?.fullName ?? user.email ?? "?").charAt(0).toUpperCase()}
                         </div>
                       )}
                       <span className="font-medium truncate max-w-[120px]" style={{ color: theme.text.primary }}>
-                        {user.profile.fullName}
+                        {user.profile?.fullName ?? user.email}
                       </span>
                     </div>
                   </td>
@@ -157,7 +157,7 @@ export default function UserTable({ users, onBan, onDelete }: UserTableProps) {
               {t.admin.deleteDialog.title}
             </h3>
             <p className="text-sm" style={{ color: theme.text.secondary }}>
-              {t.admin.deleteDialog.description.replace("{name}", confirmDelete.profile.fullName)}
+              {t.admin.deleteDialog.description.replace("{name}", confirmDelete.profile?.fullName ?? confirmDelete.email)}
             </p>
             <div className="flex gap-3">
               <button onClick={() => setConfirmDelete(null)}

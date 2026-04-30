@@ -138,7 +138,7 @@ export const socketService = {
 
   // ── Chat events ──────────────────────────────────────────
 
-  sendMessage(payload: { partnerId: string; content: string; matchSessionId: string }): void {
+  sendMessage(payload: { partnerId: string; content: string; matchSessionId: string | null }): void {
     console.log("[Socket] emit send_message:", payload);
     socket?.emit("send_message", payload);
   },

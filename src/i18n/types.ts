@@ -217,11 +217,17 @@ export interface Translation {
     backToHome: string;
     usersSection: string;
     reportsSection: string;
+    appealsSection: string;
+    dashboardSection: string;
     stats: {
       totalUsers: string;
       active: string;
       banned: string;
       pendingReports: string;
+      online: string;
+      newToday: string;
+      totalSessions: string;
+      totalMessages: string;
     };
     table: {
       user: string;
@@ -253,5 +259,21 @@ export interface Translation {
       dismiss: string;
       markResolved: string;
     };
+    appeals: {
+      all: string;
+      pending: string;
+      approved: string;
+      rejected: string;
+      noAppeals: string;
+      approve: string;
+      reject: string;
+      adminNotes: string;
+      adminNotesPlaceholder: string;
+      user: string;
+      banReason: string;
+      appealContent: string;
+      processing: string;
+    };
+    logout: string;
   };
 }

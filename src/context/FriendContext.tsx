@@ -78,8 +78,20 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     const id = ++fetchRef.current;
     try {
       const res = await axios.get<ApiFriend[]>("/api/user/friends/friends");
-      if (id === fetchRef.current) {
-        setFriends(res.data.map(mapApiFriend));
+      if (id !== fetchRef.current) return;
+
+      const mapped = res.data.map(mapApiFriend);
+      setFriends(mapped);
+
+      // Merge online status từ API riêng
+      try {
+        const onlineRes = await axios.get<{ onlineFriendIds: string[] }>("/api/user/friends/online-friends");
+        const onlineSet = new Set(onlineRes.data.onlineFriendIds ?? []);
+        setFriends(mapped.map((f) =>
+          onlineSet.has(f.id) ? { ...f, status: "online" as FriendStatus } : f
+        ));
+      } catch {
+        // online-friends API thất bại — giữ nguyên status từ friends API
       }
     } catch {
       // silent
@@ -120,20 +132,47 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
   // Heartbeat mỗi 30s — chỉ khi authenticated
   useEffect(() => {
     if (!isAuthenticated) return;
-    socketService.onReady(() => socketService.emitHeartbeat());
+    socketService.onReady((s) => {
+      socketService.emitHeartbeat();
+      // Refetch online status sau mỗi lần reconnect
+      s.on("connect", () => {
+        socketService.emitHeartbeat();
+        fetchFriends();
+      });
+    });
     const interval = setInterval(() => socketService.emitHeartbeat(), 30_000);
-    return () => clearInterval(interval);
-  }, [isAuthenticated]);
+    return () => {
+      clearInterval(interval);
+      socketService.getSocket()?.off("connect");
+    };
+  }, [isAuthenticated, fetchFriends]);
 
   // Realtime friend status — chỉ khi authenticated
   useEffect(() => {
     if (!isAuthenticated) return;
+
+    const handler = ({ userId, status }: { userId: string; status: string }) => {
+      updateFriendStatus(userId, normalizeStatus(status));
+    };
+
+    const registerListener = () => {
+      const s = socketService.getSocket();
+      if (!s) return;
+      s.off("friend_status_change").on("friend_status_change", handler);
+    };
+
+    // Đăng ký ngay nếu socket đã sẵn sàng, hoặc chờ
+    socketService.onReady(registerListener);
+
+    // Re-register sau mỗi lần reconnect
     socketService.onReady((s) => {
-      s.off("friend_status_change").on("friend_status_change", ({ userId, status }) => {
-        updateFriendStatus(userId, normalizeStatus(status));
-      });
+      s.on("connect", registerListener);
     });
-    return () => socketService.offFriendStatusChange();
+
+    return () => {
+      socketService.offFriendStatusChange();
+      socketService.getSocket()?.off("connect", registerListener);
+    };
   }, [isAuthenticated, updateFriendStatus]);
 
   return (

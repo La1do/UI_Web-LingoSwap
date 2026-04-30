@@ -27,8 +27,10 @@ function Avatar({ name, avatarUrl, status }: { name: string; avatarUrl?: string;
           {name.charAt(0).toUpperCase()}
         </div>
       )}
-      <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2"
-        style={{ background: theme.status[status], borderColor: theme.background.card }} />
+      {status === "online" && (
+        <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2"
+          style={{ background: theme.status.online, borderColor: theme.background.card }} />
+      )}
     </div>
   );
 }

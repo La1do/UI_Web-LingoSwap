@@ -91,6 +91,11 @@ export const userService = {
     data,
   }),
 
+  getOnlineFriends: (): AxiosRequestConfig => ({
+    method: "GET",
+    url: "/api/user/friends/online-friends",
+  }),
+
   unfriend: (friendId: string): AxiosRequestConfig => ({
     method: "DELETE",
     url: `/api/user/friends/friends/${friendId}`,

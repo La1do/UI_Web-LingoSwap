@@ -115,7 +115,7 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
     socketService.sendMessage({
       partnerId: friend.id,
       content: text,
-      matchSessionId: convIdRef.current ?? "",
+      matchSessionId: null, // null = chat trực tiếp với friend, không phải trong phòng match
     });
   }, [input, friend.id, user?.id]);
 
@@ -137,7 +137,7 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
       socketService.sendMessage({
         partnerId: friend.id,
         content: base64,
-        matchSessionId: convIdRef.current ?? "",
+        matchSessionId: null, // null = chat trực tiếp với friend
       });
     };
     reader.readAsDataURL(file);
