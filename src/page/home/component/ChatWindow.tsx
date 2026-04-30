@@ -158,7 +158,7 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
 
   return (
     <div
-      className="fixed bottom-0 z-50 flex flex-col rounded-t-2xl overflow-hidden"
+      className="fixed bottom-0 z-50 flex flex-col rounded-t-2xl overflow-hidden min-h-100"
       style={{
         right: `${rightOffset}px`,
         width: "300px",
