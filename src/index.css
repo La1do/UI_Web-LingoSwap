@@ -9,3 +9,24 @@
     color 0.3s ease,
     box-shadow 0.3s ease;
 }
+
+/* Ngăn text cursor xuất hiện trên các element không phải input */
+body {
+  cursor: default;
+}
+
+p, span, h1, h2, h3, h4, h5, h6, div, label, li {
+  user-select: none;
+  cursor: default;
+}
+
+/* Cho phép select text ở các element cần thiết */
+input, textarea, [contenteditable] {
+  user-select: text;
+  cursor: text;
+}
+
+/* Button và link dùng pointer */
+button, a, [role="button"] {
+  cursor: pointer;
+}

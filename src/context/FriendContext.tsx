@@ -126,6 +126,8 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
       setFriends([]);
       return;
     }
+    // Reconnect socket nếu chưa connected (ví dụ sau F5)
+    socketService.connect();
     fetchFriends();
   }, [isAuthenticated]);
 

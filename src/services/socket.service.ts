@@ -53,6 +53,7 @@ export const socketService = {
   disconnect(): void {
     if (socket) {
       socket.disconnect();
+      console.log("nesssssssssssssssssssss")
       socket = null;
     }
   },
