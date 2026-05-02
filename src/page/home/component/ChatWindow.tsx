@@ -5,7 +5,7 @@ import { useI18n } from "../../../context/I18nContext";
 import { useAuth } from "../../../context/AuthContext";
 import { useApi } from "../../../hook/useApi";
 import { useFriends, type Friend } from "../../../context/FriendContext";
-import { chatService, type ChatMessage } from "../../../services/chat.service";
+import { chatService, type ChatMessage, type UploadImageResponse } from "../../../services/chat.service";
 import { socketService } from "../../../services/socket.service";
 
 interface ChatWindowProps {
@@ -21,6 +21,7 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
   const navigate = useNavigate();
   const { updateConversationId } = useFriends();
   const { execute: fetchMessages } = useApi<ChatMessage[]>();
+  const { execute: uploadImageExec } = useApi<UploadImageResponse>();
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -119,29 +120,46 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
     });
   }, [input, friend.id, user?.id]);
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    e.target.value = "";
+
+    // Optimistic UI — hiện preview base64 ngay
     const reader = new FileReader();
     reader.onload = () => {
       const base64 = reader.result as string;
+      const tempId = `temp-img-${Date.now()}`;
       const tempMsg: ChatMessage = {
-        _id: `temp-img-${Date.now()}`,
+        _id: tempId,
         conversationId: convIdRef.current ?? "",
         senderId: user?.id ?? "",
         content: base64,
         type: "image",
-        createdAt: { full: "", friendly: "Vừa xong" },
+        createdAt: { full: "", friendly: "Đang gửi..." },
       };
       setMessages((prev) => [...prev, tempMsg]);
-      socketService.sendMessage({
-        partnerId: friend.id,
-        content: base64,
-        matchSessionId: null, // null = chat trực tiếp với friend
+
+      // Gọi API upload
+      uploadImageExec(chatService.uploadImage(file, friend.id, null)).then((res) => {
+        if (res) {
+          // Replace temp message bằng URL thật từ Cloudinary
+          setMessages((prev) =>
+            prev.map((m) =>
+              m._id === tempId
+                ? { ...m, _id: res._id, content: res.content, conversationId: res.conversationId }
+                : m
+            )
+          );
+          // Cập nhật conversationId nếu chưa có
+          if (!convIdRef.current && res.conversationId) {
+            convIdRef.current = res.conversationId;
+            updateConversationId(friend.id, res.conversationId);
+          }
+        }
       });
     };
     reader.readAsDataURL(file);
-    e.target.value = "";
   };
 
   const handleCall = () => {
@@ -231,21 +249,21 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
                 const isMe = msg.senderId === user?.id;
                 return (
                   <div key={msg._id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-                    <div
-                      className="max-w-[75%] px-3 py-2 rounded-2xl text-sm"
-                      style={{
-                        background: isMe ? theme.button.bg : theme.background.card,
-                        color: isMe ? theme.button.text : theme.text.primary,
-                        borderBottomRightRadius: isMe ? "4px" : undefined,
-                        borderBottomLeftRadius: !isMe ? "4px" : undefined,
-                      }}
-                    >
-                      {msg.type === "image" ? (
-                        <img src={msg.content} alt="img" className="max-w-full rounded-lg" />
-                      ) : (
+                    {msg.type === "image" ? (
+                      <img src={msg.content} alt="img" className="max-w-[75%] rounded-xl" />
+                    ) : (
+                      <div
+                        className="max-w-[75%] px-3 py-2 rounded-2xl text-sm"
+                        style={{
+                          background: isMe ? theme.button.bg : theme.background.card,
+                          color: isMe ? theme.button.text : theme.text.primary,
+                          borderBottomRightRadius: isMe ? "4px" : undefined,
+                          borderBottomLeftRadius: !isMe ? "4px" : undefined,
+                        }}
+                      >
                         <span style={{ wordBreak: "break-word" }}>{msg.content}</span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 );
               })

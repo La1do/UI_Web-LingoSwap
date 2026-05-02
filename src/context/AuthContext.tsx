@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
+import axiosInstance from "../library/axios.customize";
+import { socketService } from "../services/socket.service";
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -15,6 +17,12 @@ export interface AuthUser {
   settings: {
     theme: string;
     uiLanguage: string;
+  };
+  stats?: {
+    streak: number;
+    totalHours: number;
+    totalSessions: number;
+    learningCalendar: Record<string, number>;
   };
 }
 
@@ -33,6 +41,12 @@ export interface MeResponse {
   settings: {
     theme: string;
     uiLanguage: string;
+  };
+  stats?: {
+    streak: number;
+    totalHours: number;
+    totalSessions: number;
+    learningCalendar: Record<string, number>;
   };
   role: string;
   statusAccount: string;
@@ -123,6 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       country: data.profile.country ?? "",
       role: data.role,
       settings: data.settings,
+      stats: data.stats,
     };
     // Đồng bộ theme từ server vào localStorage để ThemeContext đọc đúng
     if (data.settings?.theme) {
@@ -142,6 +157,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const logout = useCallback(() => {
+    // Gọi API logout (fire-and-forget — không block UI)
+    axiosInstance.post("/api/auth/logout").catch(() => {});
+    // Disconnect socket
+    socketService.disconnect();
+    // Clear local state
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");
     setUser(null);

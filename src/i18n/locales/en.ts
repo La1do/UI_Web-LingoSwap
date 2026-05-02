@@ -166,6 +166,9 @@ export const en: Translation = {
     unfriendNo: "No",
     streak: "Day streak",
     streakDays: "days",
+    totalHours: "Total hours",
+    totalSessions: "Total sessions",
+    daysThisMonth: "Days this month",
     matchModal: {
       title: "Choose a language",
       subtitle: "Which language do you want to practice today?",

@@ -166,6 +166,9 @@ export const vi: Translation = {
     unfriendNo: "Không",
     streak: "Chuỗi ngày",
     streakDays: "ngày",
+    totalHours: "Tổng giờ học",
+    totalSessions: "Tổng phiên",
+    daysThisMonth: "Ngày học tháng này",
     matchModal: {
       title: "Chọn ngôn ngữ luyện tập",
       subtitle: "Bạn muốn luyện ngôn ngữ nào hôm nay?",

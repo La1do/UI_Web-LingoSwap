@@ -91,4 +91,9 @@ export const authService = {
     url: "/api/auth/password/change",
     data,
   }),
+
+  logout: (): AxiosRequestConfig => ({
+    method: "POST",
+    url: "/api/auth/logout",
+  }),
 };

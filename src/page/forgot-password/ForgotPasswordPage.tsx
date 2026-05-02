@@ -12,7 +12,7 @@ export default function ForgotPasswordPage() {
   const { theme } = useTheme();
   const { t } = useI18n();
   const navigate = useNavigate();
-  const [step, setStep] = useState<Step>("success");
+  const [step, setStep] = useState<Step>("email");
   const [email, setEmail] = useState("");
 
   return (

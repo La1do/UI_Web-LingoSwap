@@ -174,6 +174,9 @@ export interface Translation {
     unfriendNo: string;
     streak: string;
     streakDays: string;
+    totalHours: string;
+    totalSessions: string;
+    daysThisMonth: string;
     matchModal: {
       title: string;
       subtitle: string;
