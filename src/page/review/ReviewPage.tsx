@@ -3,7 +3,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
 import { useApi } from "../../hook/useApi";
+import { useAuth } from "../../context/AuthContext";
 import { userService } from "../../services/user.service";
+import type { MeResponse } from "../../context/AuthContext";
+import StreakCelebration from "./component/StreakCelebration";
 
 // ─── Types ───────────────────────────────────────────────────
 interface PublicProfile {
@@ -136,6 +139,8 @@ export default function ReviewPage() {
   const [searchParams] = useSearchParams();
   const { execute: fetchProfile } = useApi<PublicProfile>();
   const { execute: submitReview, isLoading: submitting } = useApi();
+  const { execute: fetchMe } = useApi<MeResponse>();
+  const { setUserFromMe, user } = useAuth();
 
   const sessionId = searchParams.get("session");
   const partnerId = searchParams.get("partner");
@@ -146,6 +151,7 @@ export default function ReviewPage() {
   const [comment, setComment] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [newStreak, setNewStreak] = useState<number | null>(null);
 
   // Fetch partner profile
   useEffect(() => {
@@ -193,6 +199,12 @@ export default function ReviewPage() {
       comment: comment.trim() || undefined,
     }));
     if (result !== null) {
+      // Fetch lại user để lấy streak mới
+      const me = await fetchMe(userService.getMe());
+      if (me) {
+        setUserFromMe(me);
+        setNewStreak(me.stats?.streak ?? 0);
+      }
       setSubmitted(true);
     } else {
       setSubmitError(locale === "vi" ? "Gửi đánh giá thất bại. Vui lòng thử lại." : "Failed to submit review. Please try again.");
@@ -205,6 +217,15 @@ export default function ReviewPage() {
   };
 
   if (submitted) {
+    if (newStreak !== null && newStreak > 0) {
+      return (
+        <StreakCelebration
+          streak={newStreak}
+          onContinue={() => navigate("/home")}
+        />
+      );
+    }
+    // Streak = 0 → success screen thường
     return (
       <div className="min-h-screen flex items-center justify-center px-4"
         style={{ background: theme.background.page, fontFamily: "'DM Sans', sans-serif" }}>
