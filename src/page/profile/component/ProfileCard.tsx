@@ -9,7 +9,7 @@ export default function ProfileCard() {
   const { theme } = useTheme();
   const { user, updateUser } = useAuth();
   const { t } = useI18n();
-  const { execute } = useApi<{ avatar: string }>();
+  const { execute } = useApi<{ avatarUrl: string }>();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -17,10 +17,14 @@ export default function ProfileCard() {
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cacheBust, setCacheBust] = useState(0);
 
   if (!user) return null;
 
-  const avatarUrl = preview ?? (user.avatar !== "default_avatar.png" ? user.avatar : undefined);
+  const rawAvatarUrl = preview ?? (user.avatar !== "default_avatar.png" ? user.avatar : undefined);
+  const avatarUrl = rawAvatarUrl && cacheBust > 0 && !preview
+    ? `${rawAvatarUrl}?t=${cacheBust}`
+    : rawAvatarUrl;
 
   const handleSelect = (file: File) => {
     if (!file.type.startsWith("image/")) { setError(t.profile.errorImageOnly); return; }
@@ -37,7 +41,8 @@ export default function ProfileCard() {
     formData.append("avatar", pendingFile);
     const result = await execute(userService.uploadAvatar(formData));
     if (result) {
-      updateUser({ avatar: result.avatar });
+      updateUser({ avatar: result.avatarUrl });
+      setCacheBust(Date.now());
       setPreview(null);
       setPendingFile(null);
     } else {
