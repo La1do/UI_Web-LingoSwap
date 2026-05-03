@@ -202,6 +202,18 @@ export const en: Translation = {
     backToHome: "← Back to home",
   },
 
+  messages: {
+    title: "Messages",
+    searchFriends: "Search friends...",
+    noFriendSelected: "No conversation selected",
+    selectFriendHint: "Select a friend to start chatting",
+    detail: "Detail",
+    backToHome: "Back to home",
+    online: "Online",
+    offline: "Offline",
+    noFriends: "No friends yet",
+  },
+
   admin: {
     title: "Admin Dashboard",
     subtitle: "Manage users and accounts",

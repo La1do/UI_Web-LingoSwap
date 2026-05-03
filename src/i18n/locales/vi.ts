@@ -202,6 +202,18 @@ export const vi: Translation = {
     backToHome: "← Về trang chủ",
   },
 
+  messages: {
+    title: "Tin nhắn",
+    searchFriends: "Tìm bạn bè...",
+    noFriendSelected: "Chưa chọn cuộc trò chuyện",
+    selectFriendHint: "Chọn một người bạn để bắt đầu nhắn tin",
+    detail: "Chi tiết",
+    backToHome: "Về trang chủ",
+    online: "Đang hoạt động",
+    offline: "Ngoại tuyến",
+    noFriends: "Chưa có bạn bè",
+  },
+
   admin: {
     title: "Quản trị hệ thống",
     subtitle: "Quản lý người dùng và tài khoản",

@@ -213,6 +213,19 @@ export interface Translation {
     backToHome: string;
   };
 
+  // Messages page
+  messages: {
+    title: string;
+    searchFriends: string;
+    noFriendSelected: string;
+    selectFriendHint: string;
+    detail: string;
+    backToHome: string;
+    online: string;
+    offline: string;
+    noFriends: string;
+  };
+
   // Admin
   admin: {
     title: string;

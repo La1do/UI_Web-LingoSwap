@@ -13,6 +13,7 @@ import StreakDemoPage from "../page/streak-demo/StreakDemoPage";
 import DirectCallPage from "../page/direct-call/DirectCallPage";
 import CallEndedPage from "../page/call-ended/CallEndedPage";
 import ForgotPasswordPage from "../page/forgot-password/ForgotPasswordPage";
+import MessagesPage from "../page/messages/MessagesPage";
 
 export const router = createBrowserRouter([
   { path: "/",                element: <LoginPage /> },
@@ -30,4 +31,5 @@ export const router = createBrowserRouter([
   { path: "/admin",           element: <AdminPage /> },
   { path: "/admin/login",     element: <AdminLoginPage /> },
   { path: "/streak-demo",     element: <StreakDemoPage /> },
+  { path: "/messages",        element: <MessagesPage /> },
 ]);
