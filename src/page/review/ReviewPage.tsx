@@ -40,22 +40,6 @@ function StarRating({ value, onChange, size = "lg" }: {
   );
 }
 
-// ─── Tag Button ──────────────────────────────────────────────
-function Tag({ label, selected, onClick }: { label: string; selected: boolean; onClick: () => void }) {
-  const { theme } = useTheme();
-  return (
-    <button type="button" onClick={onClick}
-      className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
-      style={{
-        background: selected ? theme.button.bg : theme.background.input,
-        color: selected ? theme.button.text : theme.text.secondary,
-        border: `1px solid ${selected ? theme.button.bg : theme.border.default}`,
-      }}>
-      {label}
-    </button>
-  );
-}
-
 // ─── Partner Card ─────────────────────────────────────────────
 function PartnerCard({ partner, onAddFriend }: {
   partner: PublicProfile | null;
@@ -87,7 +71,6 @@ function PartnerCard({ partner, onAddFriend }: {
     }
   };
 
-  // Ẩn nút nếu đã là bạn hoặc đã gửi request
   const showAddButton = !sent && friendStatus === "none";
 
   return (
@@ -140,7 +123,7 @@ export default function ReviewPage() {
   const { execute: fetchProfile } = useApi<PublicProfile>();
   const { execute: submitReview, isLoading: submitting } = useApi();
   const { execute: fetchMe } = useApi<MeResponse>();
-  const { setUserFromMe, user } = useAuth();
+  const { setUserFromMe } = useAuth();
 
   const sessionId = searchParams.get("session");
   const partnerId = searchParams.get("partner");
@@ -152,6 +135,7 @@ export default function ReviewPage() {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [newStreak, setNewStreak] = useState<number | null>(null);
+  const [newCalendar, setNewCalendar] = useState<Record<string, number> | null>(null);
 
   // Fetch partner profile
   useEffect(() => {
@@ -187,10 +171,6 @@ export default function ReviewPage() {
         backHome: "Back to home",
       };
 
-  // const toggleTag = (tag: string) => {
-  //   setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
-  // };
-
   const handleSubmit = async () => {
     if (!sessionId || overallRating === 0) return;
     setSubmitError("");
@@ -199,11 +179,11 @@ export default function ReviewPage() {
       comment: comment.trim() || undefined,
     }));
     if (result !== null) {
-      // Fetch lại user để lấy streak mới
       const me = await fetchMe(userService.getMe());
       if (me) {
         setUserFromMe(me);
         setNewStreak(me.stats?.streak ?? 0);
+        setNewCalendar(me.stats?.learningCalendar ?? {});
       }
       setSubmitted(true);
     } else {
@@ -211,16 +191,33 @@ export default function ReviewPage() {
     }
   };
 
+  const handleSkip = async () => {
+    const me = await fetchMe(userService.getMe());
+    if (me) {
+      setUserFromMe(me);
+      const streak = me.stats?.streak ?? 0;
+      if (streak > 0) {
+        setNewStreak(streak);
+        setNewCalendar(me.stats?.learningCalendar ?? {});
+        setSubmitted(true);
+        return;
+      }
+    }
+    navigate("/home");
+  };
+
   const formatDuration = () => {
     const secs = Number(duration);
     return `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
   };
 
+  // ─── Show streak celebration ──────────────────────────────
   if (submitted) {
     if (newStreak !== null && newStreak > 0) {
       return (
         <StreakCelebration
           streak={newStreak}
+          calendar={newCalendar ?? undefined}
           onContinue={() => navigate("/home")}
         />
       );
@@ -295,7 +292,7 @@ export default function ReviewPage() {
 
         {/* Actions */}
         <div className="flex gap-3">
-          <button onClick={() => navigate("/home")}
+          <button onClick={handleSkip}
             className="flex-1 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition-opacity"
             style={{ background: theme.background.input, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}>
             {t.skip}

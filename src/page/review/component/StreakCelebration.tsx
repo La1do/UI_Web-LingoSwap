@@ -69,7 +69,12 @@ export default function StreakCelebration({ streak, calendar: calendarProp, mock
   const { locale } = useI18n();
   const { user } = useAuth();
 
-  const calendar = calendarProp ?? user?.stats?.learningCalendar ?? {};
+  const rawCalendar = calendarProp ?? user?.stats?.learningCalendar ?? {};
+  // Nếu calendar rỗng nhưng streak > 0, tự thêm ngày hôm nay vào
+  const calendar: Record<string, number> =
+    Object.keys(rawCalendar).length === 0 && streak > 0
+      ? { [mockToday ?? toLocalDateStr(new Date())]: 1 }
+      : rawCalendar;
   const baseDate = mockToday ? new Date(mockToday + "T12:00:00") : new Date();
   const todayKey = mockToday ?? toLocalDateStr(new Date());
   const dayLabels = locale === "vi" ? DAY_LABELS_VI : DAY_LABELS_EN;
