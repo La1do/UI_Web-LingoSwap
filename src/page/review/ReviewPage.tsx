@@ -7,6 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import { userService } from "../../services/user.service";
 import type { MeResponse } from "../../context/AuthContext";
 import StreakCelebration from "./component/StreakCelebration";
+import ReportModal from "./component/ReportModal";
 
 // ─── Types ───────────────────────────────────────────────────
 interface PublicProfile {
@@ -41,9 +42,10 @@ function StarRating({ value, onChange, size = "lg" }: {
 }
 
 // ─── Partner Card ─────────────────────────────────────────────
-function PartnerCard({ partner, onAddFriend }: {
+function PartnerCard({ partner, onAddFriend, onReport }: {
   partner: PublicProfile | null;
   onAddFriend: () => void;
+  onReport: () => void;
 }) {
   const { theme } = useTheme();
   const { t } = useI18n();
@@ -110,6 +112,18 @@ function PartnerCard({ partner, onAddFriend }: {
           {sending ? "..." : t.home.sendRequest}
         </button>
       )}
+      {/* Report button */}
+      <button
+        onClick={onReport}
+        className="w-8 h-8 rounded-lg flex items-center justify-center hover:opacity-80 transition-opacity shrink-0"
+        style={{ background: `${theme.text.error}15`, color: theme.text.error }}
+        title={t.report.button}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+          <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+          <line x1="4" y1="22" x2="4" y2="15" />
+        </svg>
+      </button>
     </div>
   );
 }
@@ -117,7 +131,7 @@ function PartnerCard({ partner, onAddFriend }: {
 // ─── Main Page ───────────────────────────────────────────────
 export default function ReviewPage() {
   const { theme } = useTheme();
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { execute: fetchProfile } = useApi<PublicProfile>();
@@ -136,6 +150,7 @@ export default function ReviewPage() {
   const [submitError, setSubmitError] = useState("");
   const [newStreak, setNewStreak] = useState<number | null>(null);
   const [newCalendar, setNewCalendar] = useState<Record<string, number> | null>(null);
+  const [showReport, setShowReport] = useState(false);
 
   // Fetch partner profile
   useEffect(() => {
@@ -144,32 +159,6 @@ export default function ReviewPage() {
       if (data) setPartner(data);
     });
   }, [partnerId]);
-
-  const t = locale === "vi"
-    ? {
-        title: "Đánh giá cuộc trò chuyện",
-        subtitle: "Chia sẻ trải nghiệm của bạn",
-        overallLabel: "Trải nghiệm tổng thể",
-        commentLabel: "Nhận xét thêm (tuỳ chọn)",
-        commentPlaceholder: "Chia sẻ thêm về cuộc trò chuyện...",
-        submit: "Gửi đánh giá",
-        skip: "Bỏ qua",
-        successTitle: "Cảm ơn bạn!",
-        successDesc: "Đánh giá của bạn giúp chúng tôi cải thiện trải nghiệm.",
-        backHome: "Về trang chủ",
-      }
-    : {
-        title: "Rate your conversation",
-        subtitle: "Share your experience to help us improve",
-        overallLabel: "Overall experience",
-        commentLabel: "Additional comments (optional)",
-        commentPlaceholder: "Share more about the conversation...",
-        submit: "Submit review",
-        skip: "Skip",
-        successTitle: "Thank you!",
-        successDesc: "Your feedback helps us improve the experience.",
-        backHome: "Back to home",
-      };
 
   const handleSubmit = async () => {
     if (!sessionId || overallRating === 0) return;
@@ -187,7 +176,7 @@ export default function ReviewPage() {
       }
       setSubmitted(true);
     } else {
-      setSubmitError(locale === "vi" ? "Gửi đánh giá thất bại. Vui lòng thử lại." : "Failed to submit review. Please try again.");
+      setSubmitError(t.review.errorSubmit);
     }
   };
 
@@ -231,12 +220,12 @@ export default function ReviewPage() {
             style={{ background: `${theme.text.success}18`, border: `2px solid ${theme.text.success}` }}>
             ✓
           </div>
-          <h2 className="text-2xl font-semibold" style={{ color: theme.text.primary }}>{t.successTitle}</h2>
-          <p className="text-sm" style={{ color: theme.text.secondary }}>{t.successDesc}</p>
+          <h2 className="text-2xl font-semibold" style={{ color: theme.text.primary }}>{t.review.successTitle}</h2>
+          <p className="text-sm" style={{ color: theme.text.secondary }}>{t.review.successDesc}</p>
           <button onClick={() => navigate("/home")}
             className="mt-2 px-8 py-3 rounded-xl text-sm font-semibold hover:opacity-80 transition-opacity"
             style={{ background: theme.button.bg, color: theme.button.text }}>
-            {t.backHome}
+            {t.review.backHome}
           </button>
         </div>
       </div>
@@ -244,6 +233,7 @@ export default function ReviewPage() {
   }
 
   return (
+    <>
     <div className="min-h-screen flex items-center justify-center px-4 py-10"
       style={{ background: theme.background.page, fontFamily: "'DM Sans', sans-serif" }}>
       <div className="w-full max-w-lg rounded-2xl p-8 flex flex-col gap-6"
@@ -251,8 +241,8 @@ export default function ReviewPage() {
 
         {/* Header */}
         <div className="text-center flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold" style={{ color: theme.text.primary }}>{t.title}</h1>
-          <p className="text-sm" style={{ color: theme.text.secondary }}>{t.subtitle}</p>
+          <h1 className="text-2xl font-semibold" style={{ color: theme.text.primary }}>{t.review.title}</h1>
+          <p className="text-sm" style={{ color: theme.text.secondary }}>{t.review.subtitle}</p>
           {Number(duration) > 0 && (
             <span className="text-xs mt-1 px-3 py-1 rounded-full self-center"
               style={{ background: theme.background.input, color: theme.text.placeholder }}>
@@ -262,13 +252,13 @@ export default function ReviewPage() {
         </div>
 
         {/* Partner card */}
-        <PartnerCard partner={partner} onAddFriend={() => {}} />
+        <PartnerCard partner={partner} onAddFriend={() => {}} onReport={() => setShowReport(true)} />
 
         <div className="h-px w-full" style={{ background: theme.border.default }} />
 
         {/* Overall rating */}
         <div className="flex flex-col items-center gap-3">
-          <p className="text-sm font-medium" style={{ color: theme.text.secondary }}>{t.overallLabel}</p>
+          <p className="text-sm font-medium" style={{ color: theme.text.secondary }}>{t.review.overallLabel}</p>
           <StarRating value={overallRating} onChange={setOverallRating} />
         </div>
 
@@ -276,9 +266,9 @@ export default function ReviewPage() {
 
         {/* Comment */}
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium" style={{ color: theme.text.secondary }}>{t.commentLabel}</p>
+          <p className="text-sm font-medium" style={{ color: theme.text.secondary }}>{t.review.commentLabel}</p>
           <textarea value={comment} onChange={(e) => setComment(e.target.value)}
-            placeholder={t.commentPlaceholder} rows={3}
+            placeholder={t.review.commentPlaceholder} rows={3}
             className="w-full rounded-xl px-4 py-3 text-sm outline-none resize-none"
             style={{ background: theme.background.input, color: theme.text.primary, border: `1px solid ${theme.border.default}` }}
             onFocus={(e) => (e.target.style.borderColor = theme.border.focused)}
@@ -295,15 +285,26 @@ export default function ReviewPage() {
           <button onClick={handleSkip}
             className="flex-1 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition-opacity"
             style={{ background: theme.background.input, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}>
-            {t.skip}
+            {t.review.skip}
           </button>
           <button onClick={handleSubmit} disabled={overallRating === 0 || submitting}
             className="flex-1 py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
             style={{ background: theme.button.bg, color: theme.button.text }}>
-            {submitting ? "..." : t.submit}
+            {submitting ? "..." : t.review.submit}
           </button>
         </div>
       </div>
     </div>
+
+    {/* Report modal */}
+    {showReport && partner && (
+      <ReportModal
+        reportedUserId={partner._id}
+        reportedUserName={partner.profile.fullName}
+        matchSessionId={sessionId}
+        onClose={() => setShowReport(false)}
+      />
+    )}
+    </>
   );
 }

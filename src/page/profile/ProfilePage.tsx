@@ -9,7 +9,7 @@ import ChangePasswordForm from "./component/ChangePasswordForm";
 
 export default function ProfilePage() {
   const { theme } = useTheme();
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const navigate = useNavigate();
 
   return (
@@ -54,7 +54,7 @@ export default function ProfilePage() {
             style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}
           >
             <h2 className="text-base font-semibold" style={{ color: theme.text.primary }}>
-              {locale === "vi" ? "Cài đặt chung" : "General settings"}
+              {t.profile.generalSettings}
             </h2>
             <SettingsForm />
           </section>

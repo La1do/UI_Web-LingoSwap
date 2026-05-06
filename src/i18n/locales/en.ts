@@ -36,6 +36,7 @@ export const en: Translation = {
     termsText: "By signing up, you agree to our",
     termsLink: "Terms of Service",
     privacyLink: "Privacy Policy",
+    termsAnd: "and",
 
     emailPlaceholder: "you@example.com",
     passwordPlaceholder: "••••••••",
@@ -44,6 +45,11 @@ export const en: Translation = {
     passwordLabel: "Password",
     googleSignIn: "Continue with Google",
     googleSignUp: "Sign up with Google",
+
+    fullNameLabel: "Full name",
+    fullNamePlaceholder: "Your full name",
+    countryLabel: "Country",
+    countryPlaceholder: "Select your country",
 
     passwordStrength: {
       weak: "Weak",
@@ -109,6 +115,9 @@ export const en: Translation = {
     errorImageOnly: "Only image files are accepted.",
     errorFileTooLarge: "File must not exceed 2MB.",
     errorUploadFailed: "Upload failed. Please try again.",
+    generalSettings: "General settings",
+    editProfileLabel: "Edit profile",
+    logoutLabel: "Log out",
     settings: {
       appearance: "Appearance",
       light: "Light",
@@ -169,6 +178,9 @@ export const en: Translation = {
     totalHours: "Total hours",
     totalSessions: "Total sessions",
     daysThisMonth: "Days this month",
+    findPartner: "Find a partner",
+    chooseLanguageHint: "Choose a language and start practicing",
+    searchFriends: "Search friends...",
     matchModal: {
       title: "Choose a language",
       subtitle: "Which language do you want to practice today?",
@@ -200,6 +212,94 @@ export const en: Translation = {
     error: "Unable to connect",
     timeout: "No response",
     backToHome: "← Back to home",
+  },
+
+  review: {
+    title: "Rate your conversation",
+    subtitle: "Share your experience to help us improve",
+    overallLabel: "Overall experience",
+    commentLabel: "Additional comments (optional)",
+    commentPlaceholder: "Share more about the conversation...",
+    submit: "Submit review",
+    skip: "Skip",
+    successTitle: "Thank you!",
+    successDesc: "Your feedback helps us improve the experience.",
+    backHome: "Back to home",
+    errorSubmit: "Failed to submit review. Please try again.",
+  },
+
+  streak: {
+    title: "Day Streak!",
+    subtitle: "You've maintained a",
+    days: "day streak",
+    continue: "Continue →",
+    great: "Amazing! 🎉",
+    dayLabels: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+  },
+
+  waiting: {
+    title: "Finding a match...",
+    subtitle: "Looking for someone to practice {lang} with",
+    tip: "Tip: Get ready to start a conversation!",
+    cancel: "Cancel search",
+    elapsed: "Waiting {s}s",
+    timeout: "No partner found. Please try again.",
+    matched: "Match found! Connecting...",
+    retry: "Try again",
+  },
+
+  streakCalendar: {
+    title: "Streak calendar",
+    close: "Close",
+    monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    dayLabels: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+  },
+
+  incomingCall: {
+    incoming: "Incoming call",
+    accept: "Accept",
+    reject: "Decline",
+    rejected: "Call declined",
+  },
+
+  callEnded: {
+    ended: "Call ended",
+    backHome: "Back to home",
+  },
+
+  appeal: {
+    title: "Account Appeal",
+    subtitle: "Your account has been banned. If you believe this is a mistake, submit an appeal.",
+    invalidToken: "Invalid link",
+    invalidTokenDesc: "The appeal link is invalid or has expired. Please check your email again.",
+    reasonLabel: "Appeal reason",
+    reasonPlaceholder: "Describe why you believe the account ban was a mistake...",
+    reasonHint: "Minimum 20 characters",
+    submit: "Submit appeal",
+    submitting: "Submitting...",
+    successTitle: "Appeal submitted!",
+    successDesc: "We will review your appeal within 3–5 business days and respond via email.",
+    backToLogin: "← Back to login",
+    errorGeneric: "Submission failed. The link may have expired or already been used.",
+  },
+
+  report: {
+    title: "Report user",
+    subtitle: "Select a reason for reporting",
+    reasonLabel: "Reason",
+    reasons: {
+      spam: "Spam",
+      harassment: "Harassment",
+      inappropriate: "Inappropriate content",
+      hate: "Hate speech",
+      other: "Other",
+    },
+    submit: "Submit report",
+    submitting: "Submitting...",
+    cancel: "Cancel",
+    success: "Report submitted successfully",
+    error: "Failed to submit report. Please try again.",
+    button: "Report",
   },
 
   messages: {
@@ -261,6 +361,18 @@ export const en: Translation = {
       description: "Description",
       dismiss: "Dismiss",
       markResolved: "Mark Resolved",
+      resolveTitle: "Resolve Report",
+      adminNotes: "Admin notes",
+      adminNotesPlaceholder: "Enter notes about the decision...",
+      banUser: "Ban the reported user",
+      banDuration: "Ban duration",
+      noBan: "No ban",
+      ban3days: "3 days",
+      ban7days: "7 days",
+      ban30days: "30 days",
+      banPermanent: "Permanent",
+      confirm: "Confirm",
+      cancel: "Cancel",
     },
     appeals: {
       all: "All",

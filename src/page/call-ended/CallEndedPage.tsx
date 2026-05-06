@@ -12,7 +12,7 @@ interface PublicProfile {
 
 export default function CallEndedPage() {
   const { theme } = useTheme();
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { execute } = useApi<PublicProfile>();
@@ -31,10 +31,6 @@ export default function CallEndedPage() {
   const mins = Math.floor(duration / 60);
   const secs = String(duration % 60).padStart(2, "0");
   const durationStr = `${mins}:${secs}`;
-
-  const label = locale === "vi"
-    ? { ended: "Cuộc gọi đã kết thúc", backHome: "Về trang chủ" }
-    : { ended: "Call ended", backHome: "Back to home" };
 
   const name = profile?.profile.fullName ?? partnerId;
   const avatar = profile?.profile.avatar;
@@ -64,7 +60,7 @@ export default function CallEndedPage() {
           </svg>
         </div>
 
-        <p className="text-sm font-medium" style={{ color: theme.text.secondary }}>{label.ended}</p>
+        <p className="text-sm font-medium" style={{ color: theme.text.secondary }}>{t.callEnded.ended}</p>
 
         {/* Avatar + tên */}
         <div className="flex flex-col items-center gap-2">
@@ -92,7 +88,7 @@ export default function CallEndedPage() {
           className="mt-2 px-8 py-2.5 rounded-xl text-sm font-semibold hover:opacity-80 transition-opacity"
           style={{ background: theme.button.bg, color: theme.button.text }}
         >
-          {label.backHome}
+          {t.callEnded.backHome}
         </button>
       </div>
     </div>

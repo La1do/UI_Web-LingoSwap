@@ -63,7 +63,7 @@ function Avatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
 
 function UserDropdown({ username, avatarUrl }: { username: string; avatarUrl?: string }) {
   const { theme } = useTheme();
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -91,19 +91,15 @@ function UserDropdown({ username, avatarUrl }: { username: string; avatarUrl?: s
   }, []);
 
 
-  const label = locale === "vi"
-    ? { profile: "Chỉnh sửa hồ sơ", logout: "Đăng xuất" }
-    : { profile: "Edit profile", logout: "Log out" };
-
   const menuItems = [
     {
       icon: <UserIcon />,
-      label: label.profile,
+      label: t.profile.editProfileLabel,
       onClick: () => { setOpen(false); navigate("/profile"); },
     },
     {
       icon: <LogoutIcon />,
-      label: label.logout,
+      label: t.profile.logoutLabel,
       onClick: () => { setOpen(false); logout(); navigate("/"); },
       danger: true,
     },
@@ -215,7 +211,7 @@ export default function Header({
         </span>
         <input
           type="text"
-          placeholder={t.common.or === "or" ? "Search friends..." : "Tìm bạn bè..."}
+          placeholder={t.home.searchFriends}
           onChange={(e) => onSearch?.(e.target.value)}
           className="w-full pl-9 pr-4 py-2 rounded-xl text-sm outline-none"
           style={{

@@ -15,17 +15,13 @@ const AUTO_DISMISS_MS = 30_000;
 
 export default function IncomingCallModal() {
   const { theme } = useTheme();
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const { execute } = useApi<CallerInfo>();
 
   const [callerId, setCallerId] = useState<string | null>(null);
   const [caller, setCaller] = useState<CallerInfo | null>(null);
   const [rejected, setRejected] = useState(false);
-
-  const t = locale === "vi"
-    ? { incoming: "Cuộc gọi đến", accept: "Bắt máy", reject: "Từ chối", rejected: "Cuộc gọi bị từ chối" }
-    : { incoming: "Incoming call", accept: "Accept", reject: "Decline", rejected: "Call declined" };
 
   // Listen for incoming calls
   useEffect(() => {
@@ -115,7 +111,7 @@ export default function IncomingCallModal() {
           </div>
         )}
         <div className="min-w-0">
-          <p className="text-xs font-medium" style={{ color: theme.text.accent }}>{t.incoming}</p>
+          <p className="text-xs font-medium" style={{ color: theme.text.accent }}>{t.incomingCall.incoming}</p>
           <p className="text-sm font-semibold truncate" style={{ color: theme.text.primary }}>{displayName}</p>
         </div>
 
@@ -131,18 +127,18 @@ export default function IncomingCallModal() {
 
       {/* Actions */}
       {rejected ? (
-        <p className="text-xs text-center" style={{ color: theme.text.placeholder }}>{t.rejected}</p>
+        <p className="text-xs text-center" style={{ color: theme.text.placeholder }}>{t.incomingCall.rejected}</p>
       ) : (
         <div className="flex gap-2">
           <button onClick={handleReject}
             className="flex-1 py-2 rounded-xl text-xs font-medium hover:opacity-80 transition-opacity"
             style={{ background: theme.background.input, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}>
-            {t.reject}
+            {t.incomingCall.reject}
           </button>
           <button onClick={handleAccept}
             className="flex-1 py-2 rounded-xl text-xs font-semibold hover:opacity-80 transition-opacity"
             style={{ background: theme.text.success, color: theme.button.text }}>
-            {t.accept}
+            {t.incomingCall.accept}
           </button>
         </div>
       )}

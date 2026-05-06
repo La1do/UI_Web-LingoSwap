@@ -117,7 +117,7 @@ export default function SettingsForm() {
                 {isSelected && (
                   <div className="w-5 h-5 rounded-full flex items-center justify-center"
                     style={{ background: theme.button.bg }}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5} className="w-3 h-3">
+                    <svg viewBox="0 0 24 24" fill="none" stroke={theme.button.text} strokeWidth={2.5} className="w-3 h-3">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   </div>

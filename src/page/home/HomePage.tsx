@@ -13,7 +13,7 @@ import type { Friend } from "../../context/FriendContext";
 
 export default function HomePage() {
   const { theme } = useTheme();
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [openChats, setOpenChats] = useState<Friend[]>([]);
@@ -34,8 +34,6 @@ export default function HomePage() {
     setModalOpen(false);
     navigate(`/waiting?lang=${language}`);
   };
-
-  const findLabel = locale === "vi" ? "Tìm người luyện tập" : "Find a partner";
 
   return (
     <div
@@ -76,11 +74,11 @@ export default function HomePage() {
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            {findLabel}
+            {t.home.findPartner}
           </button>
 
           <p className="text-xs" style={{ color: theme.text.placeholder }}>
-            {locale === "vi" ? "Chọn ngôn ngữ và bắt đầu luyện tập ngay" : "Choose a language and start practicing"}
+            {t.home.chooseLanguageHint}
           </p>
         </main>
 
@@ -90,7 +88,6 @@ export default function HomePage() {
           style={{ borderLeft: `1px solid ${theme.border.default}` }}
         >
           <RecentMatches
-            onRematch={(partnerId) => console.log("rematch", partnerId)}
             onViewProfile={(partnerId) => console.log("profile", partnerId)}
           />
         </aside>

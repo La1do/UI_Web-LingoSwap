@@ -36,6 +36,7 @@ export const vi: Translation = {
     termsText: "Bằng cách đăng ký, bạn đồng ý với",
     termsLink: "Điều khoản dịch vụ",
     privacyLink: "Chính sách bảo mật",
+    termsAnd: "và",
 
     emailPlaceholder: "you@example.com",
     passwordPlaceholder: "••••••••",
@@ -44,6 +45,11 @@ export const vi: Translation = {
     passwordLabel: "Mật khẩu",
     googleSignIn: "Đăng nhập bằng Google",
     googleSignUp: "Đăng ký bằng Google",
+
+    fullNameLabel: "Họ và tên",
+    fullNamePlaceholder: "Nhập họ và tên",
+    countryLabel: "Quốc gia",
+    countryPlaceholder: "Chọn quốc gia",
 
     passwordStrength: {
       weak: "Yếu",
@@ -109,6 +115,9 @@ export const vi: Translation = {
     errorImageOnly: "Chỉ chấp nhận file ảnh.",
     errorFileTooLarge: "File không được vượt quá 2MB.",
     errorUploadFailed: "Tải lên thất bại. Vui lòng thử lại.",
+    generalSettings: "Cài đặt chung",
+    editProfileLabel: "Chỉnh sửa hồ sơ",
+    logoutLabel: "Đăng xuất",
     settings: {
       appearance: "Giao diện",
       light: "Sáng",
@@ -169,6 +178,9 @@ export const vi: Translation = {
     totalHours: "Tổng giờ học",
     totalSessions: "Tổng phiên",
     daysThisMonth: "Ngày học tháng này",
+    findPartner: "Tìm người luyện tập",
+    chooseLanguageHint: "Chọn ngôn ngữ và bắt đầu luyện tập ngay",
+    searchFriends: "Tìm bạn bè...",
     matchModal: {
       title: "Chọn ngôn ngữ luyện tập",
       subtitle: "Bạn muốn luyện ngôn ngữ nào hôm nay?",
@@ -200,6 +212,94 @@ export const vi: Translation = {
     error: "Không thể kết nối",
     timeout: "Không có phản hồi",
     backToHome: "← Về trang chủ",
+  },
+
+  review: {
+    title: "Đánh giá cuộc trò chuyện",
+    subtitle: "Chia sẻ trải nghiệm của bạn",
+    overallLabel: "Trải nghiệm tổng thể",
+    commentLabel: "Nhận xét thêm (tuỳ chọn)",
+    commentPlaceholder: "Chia sẻ thêm về cuộc trò chuyện...",
+    submit: "Gửi đánh giá",
+    skip: "Bỏ qua",
+    successTitle: "Cảm ơn bạn!",
+    successDesc: "Đánh giá của bạn giúp chúng tôi cải thiện trải nghiệm.",
+    backHome: "Về trang chủ",
+    errorSubmit: "Gửi đánh giá thất bại. Vui lòng thử lại.",
+  },
+
+  streak: {
+    title: "Chuỗi ngày học!",
+    subtitle: "Bạn đã duy trì",
+    days: "ngày liên tiếp",
+    continue: "Tiếp tục →",
+    great: "Tuyệt vời! 🎉",
+    dayLabels: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
+  },
+
+  waiting: {
+    title: "Đang tìm kiếm...",
+    subtitle: "Đang tìm người luyện {lang} cùng bạn",
+    tip: "Mẹo: Hãy chuẩn bị sẵn sàng để bắt đầu cuộc trò chuyện!",
+    cancel: "Huỷ tìm kiếm",
+    elapsed: "Đã chờ {s}s",
+    timeout: "Không tìm được đối tác. Vui lòng thử lại.",
+    matched: "Đã tìm thấy! Đang kết nối...",
+    retry: "Thử lại",
+  },
+
+  streakCalendar: {
+    title: "Lịch streak",
+    close: "Đóng",
+    monthNames: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+    dayLabels: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
+  },
+
+  incomingCall: {
+    incoming: "Cuộc gọi đến",
+    accept: "Bắt máy",
+    reject: "Từ chối",
+    rejected: "Cuộc gọi bị từ chối",
+  },
+
+  callEnded: {
+    ended: "Cuộc gọi đã kết thúc",
+    backHome: "Về trang chủ",
+  },
+
+  appeal: {
+    title: "Kháng cáo tài khoản",
+    subtitle: "Tài khoản của bạn đã bị khóa. Nếu bạn cho rằng đây là nhầm lẫn, hãy gửi đơn kháng cáo.",
+    invalidToken: "Link không hợp lệ",
+    invalidTokenDesc: "Link kháng cáo không hợp lệ hoặc đã hết hạn. Vui lòng kiểm tra lại email.",
+    reasonLabel: "Lý do kháng cáo",
+    reasonPlaceholder: "Mô tả lý do bạn cho rằng tài khoản bị khóa là nhầm lẫn...",
+    reasonHint: "Tối thiểu 20 ký tự",
+    submit: "Gửi đơn kháng cáo",
+    submitting: "Đang gửi...",
+    successTitle: "Đơn kháng cáo đã được gửi!",
+    successDesc: "Chúng tôi sẽ xem xét đơn của bạn trong vòng 3–5 ngày làm việc và phản hồi qua email.",
+    backToLogin: "← Về trang đăng nhập",
+    errorGeneric: "Gửi đơn thất bại. Link có thể đã hết hạn hoặc đã được sử dụng.",
+  },
+
+  report: {
+    title: "Báo cáo người dùng",
+    subtitle: "Chọn lý do báo cáo",
+    reasonLabel: "Lý do",
+    reasons: {
+      spam: "Spam",
+      harassment: "Quấy rối",
+      inappropriate: "Nội dung không phù hợp",
+      hate: "Ngôn ngữ thù địch",
+      other: "Khác",
+    },
+    submit: "Gửi báo cáo",
+    submitting: "Đang gửi...",
+    cancel: "Huỷ",
+    success: "Báo cáo đã được ghi lại",
+    error: "Gửi báo cáo thất bại. Vui lòng thử lại.",
+    button: "Báo cáo",
   },
 
   messages: {
@@ -261,6 +361,18 @@ export const vi: Translation = {
       description: "Mô tả",
       dismiss: "Bỏ qua",
       markResolved: "Đánh dấu đã xử lý",
+      resolveTitle: "Xử lý báo cáo",
+      adminNotes: "Ghi chú admin",
+      adminNotesPlaceholder: "Nhập ghi chú về quyết định xử lý...",
+      banUser: "Khóa tài khoản người vi phạm",
+      banDuration: "Thời hạn khóa",
+      noBan: "Không khóa",
+      ban3days: "3 ngày",
+      ban7days: "7 ngày",
+      ban30days: "30 ngày",
+      banPermanent: "Vĩnh viễn",
+      confirm: "Xác nhận xử lý",
+      cancel: "Huỷ",
     },
     appeals: {
       all: "Tất cả",

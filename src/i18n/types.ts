@@ -40,6 +40,7 @@ export interface Translation {
     termsText: string;
     termsLink: string;
     privacyLink: string;
+    termsAnd: string;
 
     emailPlaceholder: string;
     passwordPlaceholder: string;
@@ -48,6 +49,11 @@ export interface Translation {
     passwordLabel: string;
     googleSignIn: string;
     googleSignUp: string;
+
+    fullNameLabel: string;
+    fullNamePlaceholder: string;
+    countryLabel: string;
+    countryPlaceholder: string;
 
     passwordStrength: {
       weak: string;
@@ -115,6 +121,9 @@ export interface Translation {
     errorImageOnly: string;
     errorFileTooLarge: string;
     errorUploadFailed: string;
+    generalSettings: string;
+    editProfileLabel: string;
+    logoutLabel: string;
     settings: {
       appearance: string;
       light: string;
@@ -177,6 +186,9 @@ export interface Translation {
     totalHours: string;
     totalSessions: string;
     daysThisMonth: string;
+    findPartner: string;
+    chooseLanguageHint: string;
+    searchFriends: string;
     matchModal: {
       title: string;
       subtitle: string;
@@ -211,6 +223,102 @@ export interface Translation {
     error: string;
     timeout: string;
     backToHome: string;
+  };
+
+  // Review page
+  review: {
+    title: string;
+    subtitle: string;
+    overallLabel: string;
+    commentLabel: string;
+    commentPlaceholder: string;
+    submit: string;
+    skip: string;
+    successTitle: string;
+    successDesc: string;
+    backHome: string;
+    errorSubmit: string;
+  };
+
+  // Streak celebration
+  streak: {
+    title: string;
+    subtitle: string;
+    days: string;
+    continue: string;
+    great: string;
+    dayLabels: string[];
+  };
+
+  // Waiting page
+  waiting: {
+    title: string;
+    subtitle: string;
+    tip: string;
+    cancel: string;
+    elapsed: string;
+    timeout: string;
+    matched: string;
+    retry: string;
+  };
+
+  // Streak calendar modal
+  streakCalendar: {
+    title: string;
+    close: string;
+    monthNames: string[];
+    dayLabels: string[];
+  };
+
+  // Incoming call modal
+  incomingCall: {
+    incoming: string;
+    accept: string;
+    reject: string;
+    rejected: string;
+  };
+
+  // Call ended page
+  callEnded: {
+    ended: string;
+    backHome: string;
+  };
+
+  // Appeal page
+  appeal: {
+    title: string;
+    subtitle: string;
+    invalidToken: string;
+    invalidTokenDesc: string;
+    reasonLabel: string;
+    reasonPlaceholder: string;
+    reasonHint: string;
+    submit: string;
+    submitting: string;
+    successTitle: string;
+    successDesc: string;
+    backToLogin: string;
+    errorGeneric: string;
+  };
+
+  // Report
+  report: {
+    title: string;
+    subtitle: string;
+    reasonLabel: string;
+    reasons: {
+      spam: string;
+      harassment: string;
+      inappropriate: string;
+      hate: string;
+      other: string;
+    };
+    submit: string;
+    submitting: string;
+    cancel: string;
+    success: string;
+    error: string;
+    button: string;
   };
 
   // Messages page
@@ -274,6 +382,18 @@ export interface Translation {
       description: string;
       dismiss: string;
       markResolved: string;
+      resolveTitle: string;
+      adminNotes: string;
+      adminNotesPlaceholder: string;
+      banUser: string;
+      banDuration: string;
+      noBan: string;
+      ban3days: string;
+      ban7days: string;
+      ban30days: string;
+      banPermanent: string;
+      confirm: string;
+      cancel: string;
     };
     appeals: {
       all: string;

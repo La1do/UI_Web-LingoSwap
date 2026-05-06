@@ -17,7 +17,7 @@ const LANGUAGE_LABELS: Record<string, { label: string; flag: string }> = {
 
 export default function WaitingPage() {
   const { theme } = useTheme();
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [elapsed, setElapsed] = useState(0);
@@ -28,31 +28,9 @@ export default function WaitingPage() {
   const { status, matchData, errorMessage, startMatching, cancelMatching } = useMatching();
   const statusRef = useRef(status);
 
-useEffect(() => {
-  statusRef.current = status;
-}, [status]);
-
-  const t = locale === "vi"
-    ? {
-        title: "Đang tìm kiếm...",
-        subtitle: `Đang tìm người luyện ${langInfo.label} cùng bạn`,
-        tip: "Mẹo: Hãy chuẩn bị sẵn sàng để bắt đầu cuộc trò chuyện!",
-        cancel: "Huỷ tìm kiếm",
-        elapsed: (s: number) => `Đã chờ ${s}s`,
-        timeout: "Không tìm được đối tác. Vui lòng thử lại.",
-        matched: "Đã tìm thấy! Đang kết nối...",
-        retry: "Thử lại",
-      }
-    : {
-        title: "Finding a match...",
-        subtitle: `Looking for someone to practice ${langInfo.label} with`,
-        tip: "Tip: Get ready to start a conversation!",
-        cancel: "Cancel search",
-        elapsed: (s: number) => `Waiting ${s}s`,
-        timeout: "No partner found. Please try again.",
-        matched: "Match found! Connecting...",
-        retry: "Try again",
-      };
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
 
   // Start matching on mount
   useEffect(() => {
@@ -128,14 +106,16 @@ useEffect(() => {
       {/* Text */}
       <div className="text-center flex flex-col gap-2">
         <h1 className="text-2xl font-semibold" style={{ color: isError ? theme.text.error : theme.text.primary }}>
-          {isError ? (errorMessage ?? t.timeout) : status === "matched" ? t.matched : t.title}
+          {isError ? (errorMessage ?? t.waiting.timeout) : status === "matched" ? t.waiting.matched : t.waiting.title}
         </h1>
         {!isError && (
-          <p className="text-sm" style={{ color: theme.text.secondary }}>{t.subtitle}</p>
+          <p className="text-sm" style={{ color: theme.text.secondary }}>
+            {t.waiting.subtitle.replace("{lang}", langInfo.label)}
+          </p>
         )}
         {status === "waiting" && (
           <p className="text-xs mt-1" style={{ color: theme.text.placeholder }}>
-            {t.elapsed(elapsed)}
+            {t.waiting.elapsed.replace("{s}", String(elapsed))}
           </p>
         )}
       </div>
@@ -150,7 +130,7 @@ useEffect(() => {
             color: theme.text.secondary,
           }}
         >
-          💡 {t.tip}
+          💡 {t.waiting.tip}
         </div>
       )}
 
@@ -162,7 +142,7 @@ useEffect(() => {
             className="px-6 py-2.5 rounded-xl text-sm font-semibold hover:opacity-80 transition-opacity"
             style={{ background: theme.button.bg, color: theme.button.text }}
           >
-            {t.retry}
+            {t.waiting.retry}
           </button>
         )}
         <button
@@ -174,7 +154,7 @@ useEffect(() => {
             border: `1px solid ${theme.border.default}`,
           }}
         >
-          {t.cancel}
+          {t.waiting.cancel}
         </button>
       </div>
 

@@ -37,9 +37,12 @@ export function useApi<T = unknown>(): UseApiReturn<T> {
       setState({ data: response.data, status: "success", error: null });
       return response.data;
     } catch (err) {
-      const axiosError = err as AxiosError<{ message?: string }>;
+      const axiosError = err as AxiosError<{ message?: string; error?: string; errors?: string[] }>;
+      const data = axiosError.response?.data;
       const message =
-        axiosError.response?.data?.message ??
+        data?.message ??
+        data?.error ??
+        (Array.isArray(data?.errors) && data.errors.length > 0 ? data.errors[0] : null) ??
         axiosError.message ??
         "Something went wrong";
 

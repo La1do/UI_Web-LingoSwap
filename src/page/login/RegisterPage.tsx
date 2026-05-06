@@ -66,7 +66,7 @@ function PasswordStrength({ password }: { password: string }) {
     { label: s.checks.special,   pass: /[^A-Za-z0-9]/.test(password) },
   ];
   const score = checks.filter((c) => c.pass).length;
-  const colors = [theme.border.default, theme.text.error, "#F5A623", theme.text.success, theme.text.success];
+  const colors = [theme.border.default, theme.text.error, theme.warning, theme.text.success, theme.text.success];
   const labels = ["", s.weak, s.medium, s.good, s.strong];
 
   if (!password) return null;
@@ -115,7 +115,7 @@ export default function RegisterPage() {
   const [submitted, setSubmitted] = useState(false);
 
   const getFieldRules = (current: RegisterFields) => ({
-    fullName: [required("Full name", t.validation)],
+    fullName: [required(t.auth.fullNameLabel, t.validation)],
     email: emailRules("Email", t.validation),
     password: strongPasswordRules(t.auth.register, t.validation),
     confirmPassword: confirmPasswordRules(() => current.password, t.auth.confirmPasswordLabel, t.validation),
@@ -188,7 +188,7 @@ export default function RegisterPage() {
         }
         .primary-btn:hover:not(:disabled) {
           transform: translateY(-1px);
-          box-shadow: 0 6px 24px rgba(26,111,212,0.35);
+          box-shadow: 0 6px 24px ${theme.button.bg}55;
           background: ${theme.button.bgHover} !important;
         }
         .primary-btn:active:not(:disabled) { transform: translateY(0); }
@@ -223,9 +223,9 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
               <div className="fade-up fade-up-2">
                 <AuthInput
-                  label="Full name"
+                  label={t.auth.fullNameLabel}
                   type="text"
-                  placeholder="Your full name"
+                  placeholder={t.auth.fullNamePlaceholder}
                   autoComplete="name"
                   leftIcon={<UserIcon />}
                   value={values.fullName}
@@ -279,7 +279,7 @@ export default function RegisterPage() {
               <div className="fade-up fade-up-5 flex flex-col gap-1.5">
                 <label className="text-xs font-medium tracking-widest uppercase"
                   style={{ color: theme.text.secondary }}>
-                  Country
+                  {t.auth.countryLabel}
                 </label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -305,7 +305,7 @@ export default function RegisterPage() {
                     onFocus={(e) => (e.target.style.borderColor = theme.border.focused)}
                     onBlur={(e) => (e.target.style.borderColor = theme.border.default)}
                   >
-                    <option value="" disabled>Select your country</option>
+                    <option value="" disabled>{t.auth.countryPlaceholder}</option>
                     <option value="VN">🇻🇳 Vietnam</option>
                     <option value="US">🇺🇸 United States</option>
                     <option value="GB">🇬🇧 United Kingdom</option>
@@ -320,7 +320,6 @@ export default function RegisterPage() {
                     <option value="TH">🇹🇭 Thailand</option>
                     <option value="OTHER">🌍 Other</option>
                   </select>
-                  {/* Chevron */}
                   <span className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
                     style={{ color: theme.text.placeholder }}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
@@ -333,7 +332,7 @@ export default function RegisterPage() {
               <p className="text-xs fade-up fade-up-5" style={{ color: theme.text.placeholder }}>
                 {t.auth.termsText}{" "}
                 <a href="/terms" className="hover:opacity-80" style={{ color: theme.text.accent }}>{t.auth.termsLink}</a>{" "}
-                và{" "}
+                {t.auth.termsAnd}{" "}
                 <a href="/privacy" className="hover:opacity-80" style={{ color: theme.text.accent }}>{t.auth.privacyLink}</a>.
               </p>
 

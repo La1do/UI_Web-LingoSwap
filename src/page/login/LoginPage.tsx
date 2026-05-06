@@ -124,7 +124,7 @@ export default function LoginPage() {
         }
         .primary-btn:hover:not(:disabled) {
           transform: translateY(-1px);
-          box-shadow: 0 6px 24px rgba(26,111,212,0.35);
+          box-shadow: 0 6px 24px ${theme.button.bg}55;
           background: ${theme.button.bgHover} !important;
         }
         .primary-btn:active:not(:disabled) { transform: translateY(0); }

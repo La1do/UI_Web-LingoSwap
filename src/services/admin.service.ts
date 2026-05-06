@@ -68,4 +68,20 @@ export const adminService = {
     url: `/api/admin/appeals/${id}/resolve`,
     data,
   }),
+
+  getReports: (status?: "pending" | "resolved" | "dismissed"): AxiosRequestConfig => ({
+    method: "GET",
+    url: "/api/admin/reports",
+    params: status ? { status } : undefined,
+  }),
+
+  resolveReport: (id: string, data: {
+    status: "resolved" | "dismissed";
+    adminNotes?: string;
+    banDuration?: "3_days" | "7_days" | "30_days" | "permanent";
+  }): AxiosRequestConfig => ({
+    method: "PATCH",
+    url: `/api/admin/reports/${id}/status`,
+    data,
+  }),
 };

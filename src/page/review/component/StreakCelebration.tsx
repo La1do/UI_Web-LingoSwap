@@ -10,9 +10,6 @@ interface StreakCelebrationProps {
   onContinue: () => void;
 }
 
-const DAY_LABELS_VI = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
-const DAY_LABELS_EN = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-
 function toLocalDateStr(date: Date): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -28,7 +25,6 @@ function getMondayOfWeek(date: Date): Date {
   return monday;
 }
 
-// Normal mode: T2→CN tuần hiện tại + T2 tuần sau (8 ngày)
 function getWeekDays8(baseDate: Date): string[] {
   const monday = getMondayOfWeek(baseDate);
   const days: string[] = [];
@@ -43,11 +39,8 @@ function getWeekDays8(baseDate: Date): string[] {
   return days;
 }
 
-// Slide mode: T2→CN tuần TRƯỚC + T2 tuần này (8 ngày)
-// Hiển thị 7 ô: T2→CN tuần trước, ô thứ 8 = T2 tuần này (xuất hiện sau slide)
 function getPrevWeekDays8(baseDate: Date): string[] {
   const monday = getMondayOfWeek(baseDate);
-  // T2 tuần trước
   const prevMonday = new Date(monday);
   prevMonday.setDate(monday.getDate() - 7);
   const days: string[] = [];
@@ -56,7 +49,6 @@ function getPrevWeekDays8(baseDate: Date): string[] {
     d.setDate(prevMonday.getDate() + i);
     days.push(toLocalDateStr(d));
   }
-  // T2 tuần này (ô thứ 8)
   days.push(toLocalDateStr(monday));
   return days;
 }
@@ -66,20 +58,19 @@ const CELL_TOTAL = CELL_W + 8;
 
 export default function StreakCelebration({ streak, calendar: calendarProp, mockToday, onContinue }: StreakCelebrationProps) {
   const { theme } = useTheme();
-  const { locale } = useI18n();
+  const { t } = useI18n();
   const { user } = useAuth();
 
   const rawCalendar = calendarProp ?? user?.stats?.learningCalendar ?? {};
-  // Nếu calendar rỗng nhưng streak > 0, tự thêm ngày hôm nay vào
   const calendar: Record<string, number> =
     Object.keys(rawCalendar).length === 0 && streak > 0
       ? { [mockToday ?? toLocalDateStr(new Date())]: 1 }
       : rawCalendar;
+
   const baseDate = mockToday ? new Date(mockToday + "T12:00:00") : new Date();
   const todayKey = mockToday ?? toLocalDateStr(new Date());
-  const dayLabels = locale === "vi" ? DAY_LABELS_VI : DAY_LABELS_EN;
+  const dayLabels = t.streak.dayLabels;
 
-  // Điều kiện slide: hôm nay T2 + streak >= 2 + CN hôm qua có streak
   const yesterday = new Date(baseDate);
   yesterday.setDate(baseDate.getDate() - 1);
   const yesterdayKey = toLocalDateStr(yesterday);
@@ -91,30 +82,18 @@ export default function StreakCelebration({ streak, calendar: calendarProp, mock
     yesterdayDow === 0 &&
     (calendar[yesterdayKey] ?? 0) > 0;
 
-  // Chọn days array
-  // Slide mode: tuần trước + T2 tuần này
-  // Normal mode: tuần hiện tại + T2 tuần sau
   const days8 = shouldSlide ? getPrevWeekDays8(baseDate) : getWeekDays8(baseDate);
-
-  // Index hôm nay trong days8 (chỉ dùng cho normal mode)
   const todayIndexInWeek = days8.indexOf(todayKey);
 
-  // Các ô cần bừng lửa
   const activeDayIndices: number[] = [];
   if (shouldSlide) {
-    // Bừng các ngày trong tuần trước (index 0-6) có streak
-    // Không bừng T2 tuần này (index 7) — sẽ bừng sau slide
     days8.slice(0, 7).forEach((d, i) => {
-      if ((calendar[d] ?? 0) > 0) {
-        activeDayIndices.push(i);
-      }
+      if ((calendar[d] ?? 0) > 0) activeDayIndices.push(i);
     });
     activeDayIndices.sort((a, b) => a - b);
   } else {
     days8.slice(0, 7).forEach((d, i) => {
-      if (i <= todayIndexInWeek && (calendar[d] ?? 0) > 0) {
-        activeDayIndices.push(i);
-      }
+      if (i <= todayIndexInWeek && (calendar[d] ?? 0) > 0) activeDayIndices.push(i);
     });
   }
 
@@ -126,8 +105,8 @@ export default function StreakCelebration({ streak, calendar: calendarProp, mock
   const [translateX, setTranslateX] = useState(0);
 
   useEffect(() => {
-    const t = setTimeout(() => setPageVisible(true), 80);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setPageVisible(true), 80);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -154,9 +133,7 @@ export default function StreakCelebration({ streak, calendar: calendarProp, mock
     }
   }, [litCount, pageVisible, activeDayIndices.length, shouldSlide, slideTriggered]);
 
-  const label = locale === "vi"
-    ? { title: "Chuỗi ngày học!", subtitle: "Bạn đã duy trì", days: "ngày liên tiếp", continue: "Tiếp tục →", great: "Tuyệt vời! 🎉" }
-    : { title: "Day Streak!", subtitle: "You've maintained a", days: "day streak", continue: "Continue →", great: "Amazing! 🎉" };
+  const label = t.streak;
 
   return (
     <div
@@ -198,7 +175,6 @@ export default function StreakCelebration({ streak, calendar: calendarProp, mock
         {label.great}
       </p>
 
-      {/* Row container */}
       <div style={{ width: `${7 * CELL_TOTAL - 8}px`, overflow: "hidden" }}>
         <div
           className="flex gap-2"
@@ -217,7 +193,6 @@ export default function StreakCelebration({ streak, calendar: calendarProp, mock
               (shouldSlide && i === 7 && mondayLit);
 
             const isToday = dateKey === todayKey;
-            // Label luôn T2→CN (index 0→6), ô thứ 8 = T2
             const labelText = i === 7 ? dayLabels[0] : dayLabels[i];
 
             return (

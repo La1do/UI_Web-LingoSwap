@@ -40,6 +40,7 @@ export const lightTheme = {
   },
   star:      "#f59e0b",
   starEmpty: "#9ca3af",
+  warning:   "#f59e0b",
   overlay: {
     default: "rgba(0,0,0,0.5)",
     strong:  "rgba(0,0,0,0.7)",
@@ -84,6 +85,7 @@ export const darkTheme = {
   },
   star:      "#f59e0b",
   starEmpty: "#9ca3af",
+  warning:   "#f59e0b",
   overlay: {
     default: "rgba(0,0,0,0.5)",
     strong:  "rgba(0,0,0,0.7)",
@@ -100,5 +102,6 @@ export interface AppTheme {
   status: { online: string; busy: string; away: string; offline: string };
   star: string;
   starEmpty: string;
+  warning: string;
   overlay: { default: string; strong: string };
 }

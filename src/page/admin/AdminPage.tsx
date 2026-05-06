@@ -8,7 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 import PageShell from "../../layout/PageShell";
 import StatsBar from "./component/StatsBar";
 import UserTable, { type AdminUser } from "./component/UserTable";
-import ReportList, { type Report } from "./component/ReportList";
+import ReportList, { type Report, type ResolvePayload, type ApiReport, mapApiReport } from "./component/ReportList";
 import AppealList from "./component/AppealList";
 import { adminService, type DashboardStats, type Appeal } from "../../services/admin.service";
 
@@ -73,7 +73,7 @@ export default function AdminPage() {
 
   // Data state
   const [users, setUsers] = useState<AdminUser[]>([]);
-  const [reports] = useState<Report[]>([]); // reports API not yet available
+  const [reports, setReports] = useState<Report[]>([]);
   const [appeals, setAppeals] = useState<Appeal[]>([]);
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
 
@@ -81,6 +81,8 @@ export default function AdminPage() {
   const { execute: fetchUsers, isLoading: loadingUsers } = useApi<AdminUser[]>();
   const { execute: fetchDashboard, isLoading: loadingDashboard } = useApi<DashboardStats>();
   const { execute: fetchAppeals, isLoading: loadingAppeals } = useApi<Appeal[]>();
+  const { execute: fetchReports, isLoading: loadingReports } = useApi<ApiReport[]>();
+  const { execute: resolveReportExec } = useApi();
   const { execute: banExec } = useApi();
   const { execute: deleteExec } = useApi();
 
@@ -99,6 +101,11 @@ export default function AdminPage() {
     if (activeSection === "appeals" && appeals.length === 0) {
       fetchAppeals(adminService.getAppeals()).then((data) => {
         if (data) setAppeals(data);
+      });
+    }
+    if (activeSection === "reports" && reports.length === 0) {
+      fetchReports(adminService.getReports()).then((data) => {
+        if (data) setReports(data.map(mapApiReport));
       });
     }
   }, [activeSection]);
@@ -138,6 +145,17 @@ export default function AdminPage() {
     );
   };
 
+  const handleResolveReport = async (report: Report, payload: ResolvePayload) => {
+    await resolveReportExec(adminService.resolveReport(report._id, payload));
+    setReports((prev) =>
+      prev.map((r) =>
+        r._id === report._id
+          ? { ...r, status: payload.status, adminNotes: payload.adminNotes }
+          : r
+      )
+    );
+  };
+
   const sectionLabel: Record<AdminSection, string> = {
     dashboard: t.admin.dashboardSection,
     users: t.admin.usersSection,
@@ -169,7 +187,11 @@ export default function AdminPage() {
 
           {NAV_ITEMS.map((item) => {
             const isActive = activeSection === item.id;
-            const badge = item.id === "appeals" && pendingAppeals > 0 ? pendingAppeals : null;
+            const badge = item.id === "appeals" && pendingAppeals > 0
+              ? pendingAppeals
+              : item.id === "reports" && reports.filter((r) => r.status === "pending").length > 0
+              ? reports.filter((r) => r.status === "pending").length
+              : null;
             return (
               <button
                 key={item.id}
@@ -244,7 +266,11 @@ export default function AdminPage() {
             {activeSection === "reports" && (
               <section className="rounded-2xl p-6 flex flex-col gap-4"
                 style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}>
-                <ReportList reports={reports} onResolve={() => {}} onDismiss={() => {}} />
+                {loadingReports ? (
+                  <p className="text-sm" style={{ color: theme.text.placeholder }}>{t.common.loading}</p>
+                ) : (
+                  <ReportList reports={reports} onResolve={handleResolveReport} />
+                )}
               </section>
             )}
 

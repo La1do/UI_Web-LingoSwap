@@ -10,6 +10,7 @@ import LocalVideo from "./LocalVideo";
 import ChatPanel from "./ChatPanel";
 import { socketService } from "../../services/socket.service";
 import { useWebRTC } from "../../hook/useWebRTC";
+import ReportModal from "../review/component/ReportModal";
 
 export default function MeetingPage() {
   const { theme } = useTheme();
@@ -18,6 +19,7 @@ export default function MeetingPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [isChatOpen, setIsChatOpen] = useState(true);
+  const [showReport, setShowReport] = useState(false);
 
   const sessionId = searchParams.get("session");
   const partnerId = searchParams.get("partner");
@@ -69,6 +71,7 @@ export default function MeetingPage() {
   }, []);
 
   return (
+    <>
     <PageShell controlsPosition="top-right" hideLanguage>
     <div
       className="min-h-screen flex flex-col"
@@ -180,6 +183,20 @@ export default function MeetingPage() {
               </svg>
               {t.meeting.endCall}
             </button>
+
+            {/* Report button */}
+            <ControlBtn
+              active={false}
+              activeColor={theme.background.input}
+              inactiveColor={theme.background.input}
+              onClick={() => setShowReport(true)}
+              label={t.report.button}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5" style={{ color: theme.text.error }}>
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                <line x1="4" y1="22" x2="4" y2="15" />
+              </svg>
+            </ControlBtn>
           </div>
         </div>
 
@@ -194,6 +211,15 @@ export default function MeetingPage() {
       </div>
     </div>
     </PageShell>
+      {showReport && partnerId && (
+        <ReportModal
+          reportedUserId={partnerId}
+          reportedUserName={partnerId}
+          matchSessionId={sessionId}
+          onClose={() => setShowReport(false)}
+        />
+      )}
+    </>
   );
 }
 

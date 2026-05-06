@@ -7,11 +7,6 @@ interface StreakCalendarModalProps {
   onClose: () => void;
 }
 
-const MONTH_NAMES_VI = ["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"];
-const MONTH_NAMES_EN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-const DAY_LABELS_VI = ["T2","T3","T4","T5","T6","T7","CN"];
-const DAY_LABELS_EN = ["Mo","Tu","We","Th","Fr","Sa","Su"];
-
 function getDaysInMonth(year: number, month: number): number {
   return new Date(year, month + 1, 0).getDate();
 }
@@ -24,14 +19,14 @@ function getFirstDayOfWeek(year: number, month: number): number {
 
 export default function StreakCalendarModal({ calendar, onClose }: StreakCalendarModalProps) {
   const { theme } = useTheme();
-  const { locale } = useI18n();
+  const { t } = useI18n();
 
   const today = new Date();
   const [viewYear, setViewYear] = useState(today.getFullYear());
   const [viewMonth, setViewMonth] = useState(today.getMonth());
 
-  const monthNames = locale === "vi" ? MONTH_NAMES_VI : MONTH_NAMES_EN;
-  const dayLabels = locale === "vi" ? DAY_LABELS_VI : DAY_LABELS_EN;
+  const monthNames = t.streakCalendar.monthNames;
+  const dayLabels = t.streakCalendar.dayLabels;
 
   const daysInMonth = getDaysInMonth(viewYear, viewMonth);
   const firstDayOffset = getFirstDayOfWeek(viewYear, viewMonth);
@@ -147,7 +142,7 @@ export default function StreakCalendarModal({ calendar, onClose }: StreakCalenda
           className="w-full py-2 rounded-xl text-sm font-medium hover:opacity-80 transition-opacity"
           style={{ background: theme.background.input, color: theme.text.secondary }}
         >
-          {locale === "vi" ? "Đóng" : "Close"}
+          {t.streakCalendar.close}
         </button>
       </div>
     </div>

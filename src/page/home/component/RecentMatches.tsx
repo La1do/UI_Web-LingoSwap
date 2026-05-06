@@ -4,6 +4,7 @@ import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { userService } from "../../../services/user.service";
 import { useFriends } from "../../../context/FriendContext";
+import ReportModal from "../../review/component/ReportModal";
 
 // ─── API response types ───────────────────────────────────────
 
@@ -81,13 +82,12 @@ function Stars({ rating }: { rating?: number }) {
 // ─── Props ───────────────────────────────────────────────────
 
 interface RecentMatchesProps {
-  onRematch?: (partnerId: string) => void;
   onViewProfile?: (partnerId: string) => void;
 }
 
 // ─── Main component ──────────────────────────────────────────
 
-export default function RecentMatches({ onRematch, onViewProfile }: RecentMatchesProps) {
+export default function RecentMatches({ onViewProfile }: RecentMatchesProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
   const { execute, isLoading } = useApi<ApiMatch[]>();
@@ -95,6 +95,7 @@ export default function RecentMatches({ onRematch, onViewProfile }: RecentMatche
   const { execute: sendRequest } = useApi();
   const { refetchFriends } = useFriends();
   const [matches, setMatches] = useState<Match[]>([]);
+  const [reportTarget, setReportTarget] = useState<{ id: string; name: string; sessionId: string } | null>(null);
 
   useEffect(() => {
     execute(userService.getMatchHistory()).then(async (data) => {
@@ -212,14 +213,18 @@ export default function RecentMatches({ onRematch, onViewProfile }: RecentMatche
                   </button>
                 )}
                 <button
-                  onClick={(e) => { e.stopPropagation(); onRematch?.(match.partnerId); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setReportTarget({ id: match.partnerId, name: match.name, sessionId: match.id });
+                  }}
                   className="w-7 h-7 rounded-lg flex items-center justify-center"
-                  style={{ background: theme.button.bg, color: theme.button.text }}
-                  aria-label={`Rematch with ${match.name}`}
+                  style={{ background: `${theme.text.error}15`, color: theme.text.error }}
+                  aria-label={t.report.button}
+                  title={t.report.button}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
-                    <polyline points="23 4 23 10 17 10" />
-                    <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
+                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                    <line x1="4" y1="22" x2="4" y2="15" />
                   </svg>
                 </button>
               </div>
@@ -227,6 +232,15 @@ export default function RecentMatches({ onRematch, onViewProfile }: RecentMatche
           ))
         )}
       </div>
+
+      {reportTarget && (
+        <ReportModal
+          reportedUserId={reportTarget.id}
+          reportedUserName={reportTarget.name}
+          matchSessionId={reportTarget.sessionId}
+          onClose={() => setReportTarget(null)}
+        />
+      )}
     </div>
   );
 }

@@ -105,4 +105,22 @@ export const userService = {
     method: "GET",
     url: `/api/user/friends/friends/${targetUserId}/status`,
   }),
+
+  reportUser: (data: {
+    reportedUserId: string;
+    reason: string;
+    matchSessionId?: string | null;
+    conversationId?: string | null;
+    evidenceMessageIds?: string[];
+  }): AxiosRequestConfig => ({
+    method: "POST",
+    url: "/api/user/reports",
+    data,
+  }),
+
+  submitAppeal: (data: { appealToken: string; reason: string }): AxiosRequestConfig => ({
+    method: "POST",
+    url: "/api/users/appeal",
+    data,
+  }),
 };

@@ -13,7 +13,7 @@ interface GoogleSignInButtonProps {
 }
 
 export default function GoogleSignInButton({ label }: GoogleSignInButtonProps) {
-  const { theme, setMode } = useTheme();
+  const { mode, setMode } = useTheme();
   const navigate = useNavigate();
   const { execute } = useApi<LoginResponse>();
   const { execute: executeMe } = useApi<MeResponse>();
@@ -42,8 +42,7 @@ export default function GoogleSignInButton({ label }: GoogleSignInButtonProps) {
     <div
       className="w-full flex justify-center"
       style={{
-        // Override Google button style để match theme
-        colorScheme: theme.background.page === "#F0F6FF" ? "light" : "dark",
+        colorScheme: mode,
       }}
     >
       <GoogleLogin
