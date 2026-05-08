@@ -46,7 +46,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { execute, isLoading, isError, error: apiError } = useApi<LoginResponse>();
   const { execute: executeMe } = useApi<MeResponse>();
-  const { setUserFromResponse, setUserFromMe } = useAuth();
+  const { setUserFromResponse, setUserFromMe, logout } = useAuth();
 
   const [values, setValues] = useState<LoginFields>({ email: "", password: "" });
   const [errors, setErrors] = useState<FormErrors<LoginFields>>({});
@@ -91,6 +91,12 @@ export default function LoginPage() {
       // Fetch full profile từ /api/users/me
       const me = await executeMe(userService.getMe());
       if (me) {
+        // Chặn admin đăng nhập vào trang user
+        if (me.role === "admin") {
+          logout();
+          setErrors({ email: "Tài khoản admin không thể đăng nhập tại đây. Vui lòng dùng trang Admin Portal." });
+          return;
+        }
         setUserFromMe(me);
         if (me.settings?.theme === "light" || me.settings?.theme === "dark") {
           setMode(me.settings.theme);
