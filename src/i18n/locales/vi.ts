@@ -202,6 +202,10 @@ export const vi: Translation = {
     noMessages: "Chưa có tin nhắn",
     you: "Bạn",
     call: "Gọi điện",
+    sending: "Đang gửi...",
+    sent: "Đã gửi",
+    failed: "Gửi thất bại",
+    retry: "Thử lại",
   },
 
   directCall: {
@@ -265,6 +269,16 @@ export const vi: Translation = {
   callEnded: {
     ended: "Cuộc gọi đã kết thúc",
     backHome: "Về trang chủ",
+  },
+
+  error: {
+    notFoundTitle: "Trang không tồn tại",
+    notFoundDesc: "Trang bạn đang tìm kiếm không tồn tại hoặc đã bị xoá.",
+    errorTitle: "Đã xảy ra lỗi",
+    errorDesc: "Có gì đó không ổn. Vui lòng thử lại hoặc quay về trang chủ.",
+    backToHome: "Về trang chủ",
+    backToLogin: "Về đăng nhập",
+    retry: "Thử lại",
   },
 
   appeal: {

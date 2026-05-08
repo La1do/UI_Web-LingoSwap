@@ -5,6 +5,14 @@ import { I18nProvider } from "./context/I18nContext";
 import { AuthProvider } from "./context/AuthContext";
 import { FriendProvider } from "./context/FriendContext";
 import { router } from "./router/routes";
+import { useAuth } from "./context/AuthContext";
+import AppLoader from "./page/component/AppLoader";
+
+function AppContent() {
+  const { isInitializing } = useAuth();
+  if (isInitializing) return <AppLoader />;
+  return <RouterProvider router={router} />;
+}
 
 export default function App() {
   return (
@@ -12,7 +20,7 @@ export default function App() {
       <ThemeProvider>
         <AuthProvider>
           <FriendProvider>
-            <RouterProvider router={router} />
+            <AppContent />
           </FriendProvider>
         </AuthProvider>
       </ThemeProvider>

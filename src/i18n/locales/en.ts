@@ -202,6 +202,10 @@ export const en: Translation = {
     noMessages: "No messages yet",
     you: "You",
     call: "Call",
+    sending: "Sending...",
+    sent: "Sent",
+    failed: "Failed to send",
+    retry: "Retry",
   },
 
   directCall: {
@@ -265,6 +269,16 @@ export const en: Translation = {
   callEnded: {
     ended: "Call ended",
     backHome: "Back to home",
+  },
+
+  error: {
+    notFoundTitle: "Page not found",
+    notFoundDesc: "The page you're looking for doesn't exist or has been removed.",
+    errorTitle: "Something went wrong",
+    errorDesc: "An unexpected error occurred. Please try again or go back home.",
+    backToHome: "Back to home",
+    backToLogin: "Back to login",
+    retry: "Try again",
   },
 
   appeal: {

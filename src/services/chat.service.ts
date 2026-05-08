@@ -2,6 +2,8 @@ import type { AxiosRequestConfig } from "axios";
 
 // ─── Types ───────────────────────────────────────────────────
 
+export type MessageStatus = "sending" | "sent" | "failed";
+
 export interface ChatMessage {
   _id: string;
   conversationId: string;
@@ -9,6 +11,7 @@ export interface ChatMessage {
   content: string;
   type: "text" | "image";
   createdAt: { full: string; friendly: string } | string;
+  status?: MessageStatus; // chỉ có ở tin nhắn optimistic của mình
 }
 
 export interface UploadImageResponse {

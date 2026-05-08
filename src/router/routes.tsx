@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "../page/login/LoginPage";
 import RegisterPage from "../page/login/RegisterPage";
 import GoogleCallbackPage from "../page/login/GoogleCallbackPage";
@@ -16,6 +16,8 @@ import ForgotPasswordPage from "../page/forgot-password/ForgotPasswordPage";
 import MessagesPage from "../page/messages/MessagesPage";
 import AppealPage from "../page/appeal/AppealPage";
 import ProtectedRoute from "./ProtectedRoute";
+import NotFoundPage from "../page/error/NotFoundPage";
+import ErrorPage from "../page/error/ErrorPage";
 
 // ─── Helpers ─────────────────────────────────────────────────
 
@@ -30,31 +32,38 @@ const admin = (element: React.ReactNode) => (
 // ─── Router ──────────────────────────────────────────────────
 
 export const router = createBrowserRouter([
-  // ── Public (cả 2 role) ──────────────────────────────────
-  { path: "/",                element: <LoginPage /> },
-  { path: "/login",           element: <LoginPage /> },
-  { path: "/register",        element: <RegisterPage /> },
-  { path: "/forgot-password", element: <ForgotPasswordPage /> },
-  { path: "/auth/callback",   element: <GoogleCallbackPage /> },
-  { path: "/appeal",          element: <AppealPage /> },
+  // ── Root với errorElement bắt mọi runtime crash ──────────
+  {
+    path: "/",
+    errorElement: <ErrorPage />,
+    children: [
+      // ── Public (cả 2 role) ────────────────────────────────
+      { index: true,              element: <LoginPage /> },
+      { path: "login",            element: <LoginPage /> },
+      { path: "register",         element: <RegisterPage /> },
+      { path: "forgot-password",  element: <ForgotPasswordPage /> },
+      { path: "auth/callback",    element: <GoogleCallbackPage /> },
+      { path: "appeal",           element: <AppealPage /> },
 
-  // ── Admin public ─────────────────────────────────────────
-  { path: "/admin/login",     element: <AdminLoginPage /> },
+      // ── Admin public ──────────────────────────────────────
+      { path: "admin/login",      element: <AdminLoginPage /> },
 
-  // ── User protected ───────────────────────────────────────
-  { path: "/home",            element: user(<HomePage />) },
-  { path: "/waiting",         element: user(<WaitingPage />) },
-  { path: "/direct-call",     element: user(<DirectCallPage />) },
-  { path: "/call-ended",      element: user(<CallEndedPage />) },
-  { path: "/meeting",         element: user(<MeetingPage />) },
-  { path: "/review",          element: user(<ReviewPage />) },
-  { path: "/profile",         element: user(<ProfilePage />) },
-  { path: "/messages",        element: user(<MessagesPage />) },
-  { path: "/streak-demo",     element: user(<StreakDemoPage />) },
+      // ── User protected ────────────────────────────────────
+      { path: "home",             element: user(<HomePage />) },
+      { path: "waiting",          element: user(<WaitingPage />) },
+      { path: "direct-call",      element: user(<DirectCallPage />) },
+      { path: "call-ended",       element: user(<CallEndedPage />) },
+      { path: "meeting",          element: user(<MeetingPage />) },
+      { path: "review",           element: user(<ReviewPage />) },
+      { path: "profile",          element: user(<ProfilePage />) },
+      { path: "messages",         element: user(<MessagesPage />) },
+      { path: "streak-demo",      element: user(<StreakDemoPage />) },
 
-  // ── Admin protected ──────────────────────────────────────
-  { path: "/admin",           element: admin(<AdminPage />) },
+      // ── Admin protected ───────────────────────────────────
+      { path: "admin",            element: admin(<AdminPage />) },
 
-  // ── Fallback ─────────────────────────────────────────────
-  { path: "*",                element: <Navigate to="/login" replace /> },
+      // ── 404 ───────────────────────────────────────────────
+      { path: "*",                element: <NotFoundPage /> },
+    ],
+  },
 ]);

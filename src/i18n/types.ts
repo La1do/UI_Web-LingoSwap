@@ -212,6 +212,10 @@ export interface Translation {
     noMessages: string;
     you: string;
     call: string;
+    sending: string;
+    sent: string;
+    failed: string;
+    retry: string;
   };
 
   // Direct call waiting
@@ -282,6 +286,17 @@ export interface Translation {
   callEnded: {
     ended: string;
     backHome: string;
+  };
+
+  // Error pages
+  error: {
+    notFoundTitle: string;
+    notFoundDesc: string;
+    errorTitle: string;
+    errorDesc: string;
+    backToHome: string;
+    backToLogin: string;
+    retry: string;
   };
 
   // Appeal page

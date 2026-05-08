@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import axiosInstance from "../library/axios.customize";
 import { socketService } from "../services/socket.service";
 
@@ -55,6 +55,7 @@ export interface MeResponse {
 interface AuthContextValue {
   user: AuthUser | null;
   isAuthenticated: boolean;
+  isInitializing: boolean;
   setUserFromResponse: (data: {
     id: string;
     email: string;
@@ -79,6 +80,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue>({
   user: null,
   isAuthenticated: false,
+  isInitializing: true,
   setUserFromResponse: () => {},
   setUserFromMe: () => {},
   updateUser: () => {},
@@ -100,6 +102,48 @@ function loadUserFromStorage(): AuthUser | null {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(loadUserFromStorage);
+  const [isInitializing, setIsInitializing] = useState(true);
+
+  // Verify token khi app load — nếu có token thì gọi /api/users/me
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setIsInitializing(false);
+      return;
+    }
+    axiosInstance
+      .get<MeResponse>("/api/users/me")
+      .then((res) => {
+        const data = res.data;
+        const authUser: AuthUser = {
+          id: data._id,
+          email: data.email,
+          fullName: data.profile.fullName,
+          avatar: data.profile.avatar,
+          language: data.profile.language ?? "",
+          proficiencyLevel: data.profile.proficiencyLevel ?? "",
+          bio: data.profile.bio,
+          country: data.profile.country ?? "",
+          role: data.role,
+          settings: data.settings,
+          stats: data.stats,
+        };
+        if (data.settings?.theme) {
+          localStorage.setItem("theme", data.settings.theme);
+        }
+        localStorage.setItem("user", JSON.stringify(authUser));
+        setUser(authUser);
+      })
+      .catch(() => {
+        // Token hết hạn hoặc không hợp lệ → clear
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user");
+        setUser(null);
+      })
+      .finally(() => {
+        setIsInitializing(false);
+      });
+  }, []);
 
   const setUserFromResponse = useCallback((data: {
     id: string;
@@ -168,7 +212,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, setUserFromResponse, setUserFromMe, updateUser, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isInitializing, setUserFromResponse, setUserFromMe, updateUser, logout }}>
       {children}
     </AuthContext.Provider>
   );
