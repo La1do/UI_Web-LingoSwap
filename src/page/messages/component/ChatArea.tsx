@@ -56,6 +56,7 @@ export default function ChatArea({ friend }: ChatAreaProps) {
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const convIdRef = useRef<string | null>(friend.conversationId ?? null);
 
   useEffect(() => {
@@ -123,6 +124,9 @@ export default function ChatArea({ friend }: ChatAreaProps) {
     const isConnected = socket?.connected ?? false;
 
     setInput("");
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
 
     const tempMsg: ChatMessage = {
       _id: `temp-${Date.now()}`,
@@ -313,12 +317,24 @@ export default function ChatArea({ friend }: ChatAreaProps) {
 
         <div className="flex-1 flex items-center px-4 py-2 rounded-2xl"
           style={{ background: theme.background.input, border: `1px solid ${theme.border.default}` }}>
-          <input type="text" value={input}
-            onChange={(e) => setInput(e.target.value)}
+          <textarea
+            ref={textareaRef}
+            rows={1}
+            value={input}
+            onChange={(e) => {
+              setInput(e.target.value);
+              e.target.style.height = "auto";
+              e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
+            }}
             onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
             placeholder={t.chat.typeMessage}
-            className="flex-1 text-sm outline-none bg-transparent"
-            style={{ color: theme.text.primary }} />
+            className="flex-1 text-sm outline-none bg-transparent resize-none leading-5"
+            style={{
+              color: theme.text.primary,
+              maxHeight: "120px",
+              overflowY: "auto",
+            }}
+          />
         </div>
 
         <button onClick={handleSend} disabled={!input.trim()}

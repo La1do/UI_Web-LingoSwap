@@ -23,6 +23,7 @@ export interface AuthUser {
     totalHours: number;
     totalSessions: number;
     learningCalendar: Record<string, number>;
+    lastStreakUpdate?: string;
   };
 }
 
@@ -47,6 +48,7 @@ export interface MeResponse {
     totalHours: number;
     totalSessions: number;
     learningCalendar: Record<string, number>;
+    lastStreakUpdate?: string;
   };
   role: string;
   statusAccount: string;
@@ -98,6 +100,19 @@ function loadUserFromStorage(): AuthUser | null {
   }
 }
 
+// ─── Helper — normalize learningCalendar ─────────────────────
+// BE có thể trả về array ["2026-05-09"] hoặc object {"2026-05-09": 1}
+
+function normalizeCalendar(raw: unknown): Record<string, number> {
+  if (Array.isArray(raw)) {
+    return Object.fromEntries((raw as string[]).map((d) => [d, 1]));
+  }
+  if (raw && typeof raw === "object") {
+    return raw as Record<string, number>;
+  }
+  return {};
+}
+
 // ─── Provider ────────────────────────────────────────────────
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -126,7 +141,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           country: data.profile.country ?? "",
           role: data.role,
           settings: data.settings,
-          stats: data.stats,
+          stats: data.stats ? {
+            ...data.stats,
+            learningCalendar: normalizeCalendar(data.stats.learningCalendar),
+          } : undefined,
         };
         if (data.settings?.theme) {
           localStorage.setItem("theme", data.settings.theme);
@@ -181,7 +199,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       country: data.profile.country ?? "",
       role: data.role,
       settings: data.settings,
-      stats: data.stats,
+      stats: data.stats ? {
+        ...data.stats,
+        learningCalendar: normalizeCalendar(data.stats.learningCalendar),
+      } : undefined,
     };
     // Đồng bộ theme từ server vào localStorage để ThemeContext đọc đúng
     if (data.settings?.theme) {

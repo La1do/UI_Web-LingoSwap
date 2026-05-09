@@ -172,7 +172,11 @@ export default function ReviewPage() {
       if (me) {
         setUserFromMe(me);
         setNewStreak(me.stats?.streak ?? 0);
-        setNewCalendar(me.stats?.learningCalendar ?? {});
+        const rawCal = me.stats?.learningCalendar;
+        const cal: Record<string, number> = Array.isArray(rawCal)
+          ? Object.fromEntries((rawCal as string[]).map((d) => [d, 1]))
+          : (rawCal as Record<string, number>) ?? {};
+        setNewCalendar(cal);
       }
       setSubmitted(true);
     } else {
@@ -187,7 +191,11 @@ export default function ReviewPage() {
       const streak = me.stats?.streak ?? 0;
       if (streak > 0) {
         setNewStreak(streak);
-        setNewCalendar(me.stats?.learningCalendar ?? {});
+        const rawCal = me.stats?.learningCalendar;
+        const cal: Record<string, number> = Array.isArray(rawCal)
+          ? Object.fromEntries((rawCal as string[]).map((d) => [d, 1]))
+          : (rawCal as Record<string, number>) ?? {};
+        setNewCalendar(cal);
         setSubmitted(true);
         return;
       }

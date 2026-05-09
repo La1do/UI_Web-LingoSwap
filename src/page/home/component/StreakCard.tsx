@@ -12,6 +12,13 @@ function formatHours(hours: number): string {
   return `${h}h ${m}m`;
 }
 
+function toLocalDateStr(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 export default function StreakCard() {
   const { theme } = useTheme();
   const { t } = useI18n();
@@ -22,6 +29,15 @@ export default function StreakCard() {
   const totalHours = user?.stats?.totalHours ?? 0;
   const totalSessions = user?.stats?.totalSessions ?? 0;
   const calendar = user?.stats?.learningCalendar ?? {};
+  const lastStreakUpdate = user?.stats?.lastStreakUpdate;
+
+  // Lửa sáng nếu lastStreakUpdate là ngày hôm nay
+  const isUpdatedToday = lastStreakUpdate
+    ? toLocalDateStr(new Date(lastStreakUpdate)) === toLocalDateStr(new Date())
+    : false;
+
+  const flameColor = isUpdatedToday ? theme.star : theme.starEmpty;
+  const flameBg = isUpdatedToday ? `${theme.star}20` : `${theme.text.placeholder}15`;
 
   const statCards = [
     { label: t.home.totalHours, value: formatHours(totalHours), color: theme.text.accent },
@@ -44,13 +60,14 @@ export default function StreakCard() {
             onClick={() => setShowCalendar(true)}
             className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 active:scale-95"
             style={{
-              background: `${theme.star}20`,
+              background: flameBg,
               cursor: "pointer",
               transition: "transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background 0.2s ease",
+              filter: isUpdatedToday ? "none" : "grayscale(1)",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = "scale(1.15)";
-              e.currentTarget.style.boxShadow = `0 4px 16px ${theme.star}50`;
+              e.currentTarget.style.boxShadow = isUpdatedToday ? `0 4px 16px ${theme.star}50` : "none";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = "scale(1)";
@@ -63,13 +80,13 @@ export default function StreakCard() {
             🔥
           </button>
           <div>
-            <p className="text-2xl font-bold leading-none" style={{ color: theme.text.primary }}>
+            <p className="text-2xl font-bold leading-none" style={{ color: isUpdatedToday ? theme.text.primary : theme.text.placeholder }}>
               {streak}{" "}
               <span className="text-sm font-normal" style={{ color: theme.text.secondary }}>
                 {t.home.streakDays}
               </span>
             </p>
-            <p className="text-xs mt-0.5" style={{ color: theme.text.placeholder }}>
+            <p className="text-xs mt-0.5" style={{ color: isUpdatedToday ? flameColor : theme.text.placeholder }}>
               {t.home.streak}
             </p>
           </div>

@@ -58,6 +58,7 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const convIdRef = useRef<string | null>(friend.conversationId ?? null);
 
   useEffect(() => {
@@ -123,6 +124,10 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
     const isConnected = socket?.connected ?? false;
 
     setInput("");
+    // Reset textarea height
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
 
     const tempMsg: ChatMessage = {
       _id: `temp-${Date.now()}`,
@@ -220,6 +225,7 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
       className="fixed bottom-0 z-50 flex flex-col rounded-t-2xl overflow-hidden"
       style={{
         right: `${rightOffset}px`, width: "300px",
+        height: "400px",
         background: theme.background.card,
         border: `1px solid ${theme.border.default}`,
         borderBottom: "none", boxShadow: theme.shadow.card,
@@ -270,8 +276,8 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
       </div>
 
       {/* Messages */}
-      <div className="overflow-y-auto p-3 flex flex-col gap-1"
-        style={{ height: "320px", background: theme.background.page }}>
+      <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-1"
+        style={{ background: theme.background.page }}>
         {messages.length === 0 ? (
           <p className="text-xs text-center py-8" style={{ color: theme.text.placeholder }}>
             {t.chat.noMessages}
@@ -335,12 +341,25 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
         </button>
         <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageSelect} />
 
-        <input type="text" value={input}
-          onChange={(e) => setInput(e.target.value)}
+        <textarea
+          ref={textareaRef}
+          rows={1}
+          value={input}
+          onChange={(e) => {
+            setInput(e.target.value);
+            // Auto-resize
+            e.target.style.height = "auto";
+            e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
+          }}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
           placeholder={t.chat.typeMessage}
-          className="flex-1 text-sm outline-none bg-transparent"
-          style={{ color: theme.text.primary }} />
+          className="flex-1 text-sm outline-none bg-transparent resize-none leading-5"
+          style={{
+            color: theme.text.primary,
+            maxHeight: "120px",
+            overflowY: "auto",
+          }}
+        />
 
         <button onClick={handleSend} disabled={!input.trim()}
           className="w-7 h-7 rounded-lg flex items-center justify-center hover:opacity-80 transition-opacity shrink-0 disabled:opacity-40"
