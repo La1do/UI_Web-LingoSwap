@@ -25,7 +25,7 @@ let socket: Socket | null = null;
 
 export const socketService = {
   connect(): Socket {
-    if (socket?.connected) return socket;
+    if (socket) return socket;
 
     socket = io(import.meta.env.VITE_BACKEND_URL as string, {
       auth: {
@@ -180,17 +180,17 @@ export const socketService = {
     socket?.emit("webrtc_ice_candidate", { sessionId, candidate });
   },
 
-  onOffer(cb: (payload: { sessionId: string; offer: RTCSessionDescriptionInit }) => void): void {
+  onOffer(cb: (payload: { sessionId?: string; offer: RTCSessionDescriptionInit }) => void): void {
     socket?.off("webrtc_offer");
     socket?.on("webrtc_offer", cb);
   },
 
-  onAnswer(cb: (payload: { sessionId: string; answer: RTCSessionDescriptionInit }) => void): void {
+  onAnswer(cb: (payload: { sessionId?: string; answer: RTCSessionDescriptionInit }) => void): void {
     socket?.off("webrtc_answer");
     socket?.on("webrtc_answer", cb);
   },
 
-  onIceCandidate(cb: (payload: { sessionId: string; candidate: RTCIceCandidateInit }) => void): void {
+  onIceCandidate(cb: (payload: { sessionId?: string; candidate: RTCIceCandidateInit }) => void): void {
     socket?.off("webrtc_ice_candidate");
     socket?.on("webrtc_ice_candidate", cb);
   },

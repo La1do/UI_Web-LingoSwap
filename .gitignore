@@ -1,4 +1,9 @@
 .kiro/
+
+# Markdown docs
+*.md
+!README.md
+
 # Logs
 logs
 *.log

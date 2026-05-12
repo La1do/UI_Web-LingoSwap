@@ -1,14 +1,10 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import { socketService } from "../services/socket.service";
-
-const ICE_SERVERS: RTCConfiguration = {
-  iceServers: [
-    { urls: "stun:stun.l.google.com:19302" },
-    { urls: "stun:stun1.l.google.com:19302" },
-  ],
-};
-
-export type MediaPermission = "idle" | "requesting" | "granted" | "denied" | "unavailable";
+import { useCallback, useEffect, useReducer, useRef } from "react";
+import {
+  WebRTCManager,
+  webrtcReducer,
+  initialWebRTCState,
+  signalingService,
+} from "../services/webrtc";
 
 export interface UseWebRTCReturn {
   localStream: MediaStream | null;
@@ -17,45 +13,36 @@ export interface UseWebRTCReturn {
   isConnected: boolean;
   isMuted: boolean;
   isCameraOff: boolean;
-  permission: MediaPermission;
+  permission: string;
   toggleMute: () => void;
   toggleCamera: () => void;
   cleanup: () => void;
 }
 
 export function useWebRTC(sessionId: string | null, isCaller: boolean): UseWebRTCReturn {
-  const pcRef = useRef<RTCPeerConnection | null>(null);
-  const localStreamRef = useRef<MediaStream | null>(null);
-  const pendingOfferRef = useRef<RTCSessionDescriptionInit | null>(null);
+  const [state, dispatch] = useReducer(webrtcReducer, initialWebRTCState);
+  const managerRef = useRef<WebRTCManager | null>(null);
 
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-  const [remoteTrackCount, setRemoteTrackCount] = useState(0); // trigger re-render khi có track mới
-  const [isConnected, setIsConnected] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [isCameraOff, setIsCameraOff] = useState(false);
-  const [permission, setPermission] = useState<MediaPermission>("idle");
+  const dispose = useCallback((resetState: boolean) => {
+    console.log("[Hook] Cleaning up...");
+    managerRef.current?.cleanup();
+    managerRef.current = null;
+    signalingService.cleanup();
+    if (resetState) {
+      dispatch({ type: "RESET" });
+    }
+    console.log("[Hook] Cleanup done");
+  }, []);
 
   const cleanup = useCallback(() => {
-    console.log("[WebRTC] Cleaning up...");
-    localStreamRef.current?.getTracks().forEach((t) => {
-      t.stop();
-      console.log(`[WebRTC] Stopped track: ${t.kind} (${t.label})`);
-    });
-    pcRef.current?.close();
-    pcRef.current = null;
-    localStreamRef.current = null;
-    setLocalStream(null);
-    setRemoteStream(null);
-    setRemoteTrackCount(0);
-    setIsConnected(false);
-    socketService.offWebRTCEvents();
-    console.log("[WebRTC] Cleanup done");
-  }, []);
+    dispose(true);
+  }, [dispose]);
 
   useEffect(() => {
     if (!sessionId) return;
     let cancelled = false;
+    let answerReceived = false;
+    let offerRetryId: number | null = null;
 
     const init = async () => {
       // ── 1. Check secure context ──────────────────────────
@@ -65,182 +52,230 @@ export function useWebRTC(sessionId: string | null, isCaller: boolean): UseWebRT
           "  → navigator.mediaDevices is unavailable on HTTP.\n" +
           "  → Use HTTPS or access via 'localhost' instead of IP."
         );
-        setPermission("unavailable");
+        dispatch({ type: "SET_PERMISSION", payload: "unavailable" });
         return;
       }
 
       if (!navigator.mediaDevices?.getUserMedia) {
         console.error("[WebRTC] ❌ navigator.mediaDevices.getUserMedia not supported in this browser.");
-        setPermission("unavailable");
+        dispatch({ type: "SET_PERMISSION", payload: "unavailable" });
         return;
       }
 
-      // ── 2. Request media ─────────────────────────────────
-      setPermission("requesting");
-      let stream: MediaStream;
+      dispatch({ type: "SET_PERMISSION", payload: "requesting" });
+      dispatch({ type: "SET_CONNECTION_STATE", payload: "connecting" });
+
+      const manager = new WebRTCManager({
+        onLocalStream: (stream) => {
+          dispatch({ type: "SET_LOCAL_STREAM", payload: stream });
+        },
+
+        onRemoteStream: (stream) => {
+          dispatch({ type: "SET_REMOTE_STREAM", payload: stream });
+        },
+
+        onRemoteTrack: () => {
+          dispatch({ type: "INCREMENT_REMOTE_TRACK_COUNT" });
+        },
+
+        onConnectionStateChange: (connectionState) => {
+          if (connectionState === "connected") {
+            dispatch({ type: "SET_CONNECTION_STATE", payload: "connected" });
+          } else if (connectionState === "disconnected") {
+            dispatch({ type: "SET_CONNECTION_STATE", payload: "disconnected" });
+          } else if (connectionState === "failed") {
+            dispatch({ type: "SET_CONNECTION_STATE", payload: "failed" });
+          } else if (connectionState === "closed") {
+            dispatch({ type: "SET_CONNECTION_STATE", payload: "closed" });
+          }
+        },
+
+        onIceCandidate: (candidate) => {
+          signalingService.emitIceCandidate(sessionId, candidate.toJSON());
+        },
+
+        onError: (message) => {
+          dispatch({ type: "SET_ERROR", payload: message });
+        },
+      });
+
+      managerRef.current = manager;
 
       try {
-        console.log("[WebRTC] Requesting camera + mic...");
-        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        console.log("[WebRTC] ✓ Camera + mic granted. Tracks:", stream.getTracks().map(t => `${t.kind}:${t.label}`));
-        setPermission("granted");
-      } catch (err) {
-        const error = err as DOMException;
-        console.warn(`[WebRTC] Camera/mic failed (${error.name}): ${error.message}`);
+        signalingService.onOffer(async ({ sessionId: payloadSessionId, offer }) => {
+          if (cancelled) return;
+          if (payloadSessionId && payloadSessionId !== sessionId) {
+            console.log(`[Hook] Ignored offer for session ${payloadSessionId}; current session is ${sessionId}`);
+            return;
+          }
 
-        if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
-          console.error("[WebRTC] ❌ Permission denied by user. Please allow camera/mic in browser settings.");
-          setPermission("denied");
-          return;
-        }
+          console.log("[Hook] Received offer");
+          const answer = await manager.handleOffer(offer);
 
-        // Fallback: audio only
-        console.log("[WebRTC] Trying audio only...");
-        try {
-          stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
-          console.log("[WebRTC] ✓ Audio only granted. Tracks:", stream.getTracks().map(t => `${t.kind}:${t.label}`));
-          setPermission("granted");
-        } catch (audioErr) {
-          const audioError = audioErr as DOMException;
-          console.error(`[WebRTC] ❌ Audio also failed (${audioError.name}): ${audioError.message}`);
-          setPermission("denied");
-          return;
-        }
-      }
-
-      if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
-
-      localStreamRef.current = stream;
-      setLocalStream(stream);
-
-      // ── 3. Create PeerConnection ─────────────────────────
-      console.log(`[WebRTC] Creating PeerConnection (isCaller=${isCaller})`);
-      const pc = new RTCPeerConnection(ICE_SERVERS);
-      pcRef.current = pc;
-
-      stream.getTracks().forEach((track) => {
-        pc.addTrack(track, stream);
-        console.log(`[WebRTC] Added local track: ${track.kind}`);
-      });
-
-      const remote = new MediaStream();
-      setRemoteStream(remote);
-
-      pc.ontrack = (e) => {
-        console.log(`[WebRTC] Received remote track: ${e.track.kind}`);
-        const tracks = e.streams[0]?.getTracks() ?? [e.track];
-        tracks.forEach((t) => {
-          if (!remote.getTracks().find(existing => existing.id === t.id)) {
-            remote.addTrack(t);
-            console.log(`[WebRTC] Added remote ${t.kind} track to stream`);
+          if (answer && !cancelled) {
+            signalingService.emitAnswer(sessionId, answer);
+            console.log("[Hook] Answer sent");
           }
         });
-        // Force re-render bằng counter — addtrack event không reliable trên mọi browser
-        setRemoteTrackCount((c) => c + 1);
-      };
 
-      pc.onicecandidate = (e) => {
-        if (e.candidate && sessionId) {
-          console.log("[WebRTC] Sending ICE candidate:", e.candidate.type);
-          socketService.emitIceCandidate(sessionId, e.candidate.toJSON());
-        }
-      };
+        signalingService.onAnswer(async ({ sessionId: payloadSessionId, answer }) => {
+          if (cancelled) return;
+          if (payloadSessionId && payloadSessionId !== sessionId) {
+            console.log(`[Hook] Ignored answer for session ${payloadSessionId}; current session is ${sessionId}`);
+            return;
+          }
 
-      pc.onconnectionstatechange = () => {
-        console.log(`[WebRTC] Connection state: ${pc.connectionState}`);
-        setIsConnected(pc.connectionState === "connected");
-      };
+          console.log("[Hook] Received answer");
+          answerReceived = true;
+          if (offerRetryId !== null) {
+            window.clearInterval(offerRetryId);
+            offerRetryId = null;
+          }
+          await manager.handleAnswer(answer);
+        });
 
-      pc.onicegatheringstatechange = () => {
-        console.log(`[WebRTC] ICE gathering state: ${pc.iceGatheringState}`);
-      };
+        signalingService.onIceCandidate(async ({ sessionId: payloadSessionId, candidate }) => {
+          if (cancelled) return;
+          if (payloadSessionId && payloadSessionId !== sessionId) {
+            console.log(`[Hook] Ignored ICE candidate for session ${payloadSessionId}; current session is ${sessionId}`);
+            return;
+          }
 
-      pc.onsignalingstatechange = () => {
-        console.log(`[WebRTC] Signaling state: ${pc.signalingState}`);
-      };
+          console.log("[Hook] Received ICE candidate");
+          await manager.addIceCandidate(candidate);
+        });
 
-      // ── 4. Signaling ─────────────────────────────────────
-      const handleOffer = async (offer: RTCSessionDescriptionInit) => {
-        console.log("[WebRTC] Processing offer, creating answer...");
-        if (!pcRef.current || pcRef.current.signalingState === "closed") return;
-        await pcRef.current.setRemoteDescription(new RTCSessionDescription(offer));
-        const answer = await pcRef.current.createAnswer();
-        await pcRef.current.setLocalDescription(answer);
-        if (sessionId) {
-          socketService.emitAnswer(sessionId, answer);
-          console.log("[WebRTC] Answer sent");
-        }
-      };
+        const bufferedAnswer = await manager.init();
 
-      // Xử lý offer đến sớm (trước khi pc sẵn sàng)
-      if (pendingOfferRef.current) {
-        console.log("[WebRTC] Processing buffered offer...");
-        await handleOffer(pendingOfferRef.current);
-        pendingOfferRef.current = null;
-      }
-
-      socketService.onOffer(async ({ offer }) => {
-        console.log("[WebRTC] Received offer");
-        if (!pcRef.current) {
-          console.log("[WebRTC] PC not ready, buffering offer...");
-          pendingOfferRef.current = offer;
+        if (cancelled) {
+          manager.cleanup();
           return;
         }
-        await handleOffer(offer);
-      });
 
-      socketService.onAnswer(async ({ answer }) => {
-        console.log("[WebRTC] Received answer, setting remote description...");
-        if (!pcRef.current || pcRef.current.signalingState === "closed") return;
-        await pcRef.current.setRemoteDescription(new RTCSessionDescription(answer));
-        console.log("[WebRTC] Remote description set from answer");
-      });
+        dispatch({ type: "SET_PERMISSION", payload: "granted" });
 
-      socketService.onIceCandidate(async ({ candidate }) => {
-        console.log("[WebRTC] Received ICE candidate");
-        if (!pcRef.current || pcRef.current.signalingState === "closed") return;
-        try {
-          await pcRef.current.addIceCandidate(new RTCIceCandidate(candidate));
-        } catch (err) {
-          console.warn("[WebRTC] Failed to add ICE candidate:", err);
+        if (bufferedAnswer) {
+          signalingService.emitAnswer(sessionId, bufferedAnswer);
+          console.log("[Hook] Buffered answer sent");
         }
-      });
 
-      // ── 5. Caller creates offer ──────────────────────────
-      if (isCaller) {
-        console.log("[WebRTC] Creating offer as caller...");
-        const offer = await pc.createOffer();
-        await pc.setLocalDescription(offer);
-        socketService.emitOffer(sessionId, offer);
-        console.log("[WebRTC] Offer sent");
-      } else {
-        console.log("[WebRTC] Waiting for offer as callee...");
+        // ── 2. Setup signaling listeners ──────────────────
+        signalingService.onOffer(async ({ sessionId: payloadSessionId, offer }) => {
+          if (cancelled) return;
+          if (payloadSessionId && payloadSessionId !== sessionId) {
+            console.log(`[Hook] Ignored offer for session ${payloadSessionId}; current session is ${sessionId}`);
+            return;
+          }
+
+          console.log("[Hook] Received offer");
+          const answer = await manager.handleOffer(offer);
+
+          if (answer && !cancelled) {
+            signalingService.emitAnswer(sessionId, answer);
+            console.log("[Hook] Answer sent");
+          }
+        });
+
+        signalingService.onAnswer(async ({ sessionId: payloadSessionId, answer }) => {
+          if (cancelled) return;
+          if (payloadSessionId && payloadSessionId !== sessionId) {
+            console.log(`[Hook] Ignored answer for session ${payloadSessionId}; current session is ${sessionId}`);
+            return;
+          }
+
+          console.log("[Hook] Received answer");
+          answerReceived = true;
+          if (offerRetryId !== null) {
+            window.clearInterval(offerRetryId);
+            offerRetryId = null;
+          }
+          await manager.handleAnswer(answer);
+        });
+
+        signalingService.onIceCandidate(async ({ sessionId: payloadSessionId, candidate }) => {
+          if (cancelled) return;
+          if (payloadSessionId && payloadSessionId !== sessionId) {
+            console.log(`[Hook] Ignored ICE candidate for session ${payloadSessionId}; current session is ${sessionId}`);
+            return;
+          }
+
+          console.log("[Hook] Received ICE candidate");
+          await manager.addIceCandidate(candidate);
+        });
+
+        // ── 3. Create offer if caller ────────────────────
+        if (isCaller) {
+          const offer = await manager.createOffer();
+          let offerRetryCount = 0;
+          const emitOffer = () => {
+            signalingService.emitOffer(sessionId, offer);
+            console.log(`[Hook] Offer sent${offerRetryCount > 0 ? ` (retry ${offerRetryCount})` : ""}`);
+          };
+
+          emitOffer();
+          offerRetryId = window.setInterval(() => {
+            if (cancelled || answerReceived || offerRetryCount >= 10) {
+              if (offerRetryId !== null) {
+                window.clearInterval(offerRetryId);
+                offerRetryId = null;
+              }
+              return;
+            }
+
+            offerRetryCount += 1;
+            emitOffer();
+          }, 1000);
+        } else {
+          console.log("[Hook] Waiting for offer as callee...");
+        }
+      } catch (err) {
+        if (cancelled) return;
+
+        const error = err as DOMException;
+
+        if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
+          dispatch({ type: "SET_PERMISSION", payload: "denied" });
+        } else {
+          dispatch({
+            type: "SET_ERROR",
+            payload: error.message || "Failed to initialize WebRTC",
+          });
+        }
       }
     };
 
     init();
-    return () => { cancelled = true; cleanup(); };
-  }, [sessionId]); // isCaller không đưa vào deps — giá trị cố định từ mount, tránh re-init
+    return () => {
+      cancelled = true;
+      if (offerRetryId !== null) {
+        window.clearInterval(offerRetryId);
+      }
+      dispose(false);
+    };
+  }, [sessionId, isCaller, dispose]);
 
   const toggleMute = useCallback(() => {
-    const stream = localStreamRef.current;
-    if (!stream) return;
-    stream.getAudioTracks().forEach((t) => { t.enabled = !t.enabled; });
-    setIsMuted((v) => {
-      console.log(`[WebRTC] Mic ${!v ? "muted" : "unmuted"}`);
-      return !v;
-    });
-  }, []);
+    const nextMuted = !state.isMuted;
+    managerRef.current?.setMuted(nextMuted);
+    dispatch({ type: "SET_MUTED", payload: nextMuted });
+  }, [state.isMuted]);
 
   const toggleCamera = useCallback(() => {
-    const stream = localStreamRef.current;
-    if (!stream) return;
-    stream.getVideoTracks().forEach((t) => { t.enabled = !t.enabled; });
-    setIsCameraOff((v) => {
-      console.log(`[WebRTC] Camera ${!v ? "off" : "on"}`);
-      return !v;
-    });
-  }, []);
+    const nextCameraOff = !state.isCameraOff;
+    managerRef.current?.setCameraOff(nextCameraOff);
+    dispatch({ type: "SET_CAMERA_OFF", payload: nextCameraOff });
+  }, [state.isCameraOff]);
 
-  return { localStream, remoteStream, remoteTrackCount, isConnected, isMuted, isCameraOff, permission, toggleMute, toggleCamera, cleanup };
+  return {
+    localStream: state.localStream,
+    remoteStream: state.remoteStream,
+    remoteTrackCount: state.remoteTrackCount,
+    isConnected: state.connectionState === "connected",
+    isMuted: state.isMuted,
+    isCameraOff: state.isCameraOff,
+    permission: state.permission,
+    toggleMute,
+    toggleCamera,
+    cleanup,
+  };
 }

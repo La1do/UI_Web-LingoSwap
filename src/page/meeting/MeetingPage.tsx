@@ -1,5 +1,5 @@
 // MeetingPage.tsx — Layout chính của màn hình video call
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
@@ -11,6 +11,12 @@ import ChatPanel from "./ChatPanel";
 import { socketService } from "../../services/socket.service";
 import { useWebRTC } from "../../hook/useWebRTC";
 import ReportModal from "../review/component/ReportModal";
+import AppLoader from "../component/AppLoader";
+
+type CallConfig = {
+  sessionId: string;
+  isCaller: boolean;
+};
 
 export default function MeetingPage() {
   const { theme } = useTheme();
@@ -24,11 +30,20 @@ export default function MeetingPage() {
   const sessionId = searchParams.get("session");
   const partnerId = searchParams.get("partner");
   const callType = searchParams.get("type"); // "direct" | null
-  const startTimeRef = useRef(Date.now());
+  const [startTime] = useState(() => Date.now());
 
-  // Tính isCaller một lần duy nhất khi mount — dùng ref để tránh re-trigger useEffect trong useWebRTC
-  const isCallerRef = useRef<boolean>(!!user && !!partnerId && user.id > partnerId);
-  const isCaller = isCallerRef.current;
+  const callConfig = useMemo<CallConfig | null>(() => {
+    if (!user?.id || !partnerId || !sessionId) {
+      return null;
+    }
+
+    return {
+      sessionId,
+      isCaller: comparePeerIds(String(user.id), partnerId) > 0,
+    };
+  }, [partnerId, sessionId, user?.id]);
+
+  const isCaller = callConfig?.isCaller ?? false;
 
   console.log(`[Meeting] userId=${user?.id} | partnerId=${partnerId} | isCaller=${isCaller}`);
 
@@ -43,13 +58,13 @@ export default function MeetingPage() {
     toggleMute,
     toggleCamera,
     cleanup,
-  } = useWebRTC(sessionId, isCaller);
+  } = useWebRTC(callConfig?.sessionId ?? null, isCaller);
 
-  const endCall = (replace = false) => {
+  const endCall = useCallback((replace = false) => {
     console.log("[endCall] triggered | sessionId:", sessionId, "| partnerId:", partnerId);
     cleanup();
     socketService.leaveQueue();
-    const duration = Math.floor((Date.now() - startTimeRef.current) / 1000);
+    const duration = Math.floor((Date.now() - startTime) / 1000);
     if (callType === "direct") {
       const params = new URLSearchParams({
         partner: partnerId ?? "",
@@ -59,7 +74,7 @@ export default function MeetingPage() {
     } else {
       navigate(`/review?session=${sessionId}&partner=${partnerId}&duration=${duration}`, { replace });
     }
-  };
+  }, [callType, cleanup, navigate, partnerId, sessionId, startTime]);
 
   useEffect(() => {
     socketService.onPartnerDisconnected(() => {
@@ -68,7 +83,11 @@ export default function MeetingPage() {
     return () => {
       socketService.offMatchingEvents();
     };
-  }, []);
+  }, [endCall]);
+
+  if (!callConfig) {
+    return <AppLoader />;
+  }
 
   return (
     <>
@@ -221,6 +240,17 @@ export default function MeetingPage() {
       )}
     </>
   );
+}
+
+function comparePeerIds(a: string, b: string): number {
+  const aNumber = Number(a);
+  const bNumber = Number(b);
+
+  if (Number.isFinite(aNumber) && Number.isFinite(bNumber)) {
+    return aNumber - bNumber;
+  }
+
+  return a.localeCompare(b);
 }
 
 // --- Small helper for control buttons ---
