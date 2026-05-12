@@ -91,7 +91,6 @@ src/
 │   │   └── component/    # ProfileCard, ProfileForm, ChangePasswordForm, SettingsForm
 │   ├── review/           # ReviewPage
 │   │   └── component/    # StreakCelebration, ReportModal
-│   ├── streak-demo/      # StreakDemoPage (test animation)
 │   └── waiting/          # WaitingPage (matching queue)
 ├── router/
 │   ├── routes.tsx        # Route definitions (nested, errorElement)
@@ -102,6 +101,7 @@ src/
 │   ├── chat.service.ts   # Get messages, upload image
 │   ├── notification.service.ts # Notifications
 │   ├── socket.service.ts # Socket.IO singleton
+│   ├── webrtc/           # WebRTC manager, media, ICE, signaling helpers
 │   └── user.service.ts   # Profile, friends, matches, reports, appeal
 └── theme/
     └── theme.ts          # Color tokens (lightTheme, darkTheme, AppTheme interface)
@@ -128,7 +128,6 @@ src/
 | `/review` | ReviewPage | ✅ | user |
 | `/profile` | ProfilePage | ✅ | user |
 | `/messages` | MessagesPage | ✅ | user |
-| `/streak-demo` | StreakDemoPage | ✅ | user |
 | `/admin` | AdminPage | ✅ | admin |
 | `*` | NotFoundPage | Public | — |
 
@@ -163,6 +162,25 @@ src/
 **Socket Singleton** — `socketService` duy trì 1 connection, tránh duplicate khi navigate.
 
 **WebRTC thuần** — `useWebRTC` hook: `getUserMedia` → `RTCPeerConnection` → signaling qua socket → P2P stream. Không dùng thư viện ngoài.
+
+**WebRTC Refactor** — `useWebRTC` chỉ giữ lifecycle React/state. Core call logic nằm trong `src/services/webrtc/`:
+
+- `webrtc-manager.ts`: quản lý `RTCPeerConnection`, local/remote streams, offer/answer, ICE queue, cleanup.
+- `media.ts`: xin quyền camera/mic, fallback audio-only, bật/tắt audio/video track, stop stream.
+- `peer-connection.ts`: tạo peer connection và gắn ICE/track/connection state events.
+- `ice.ts`: safe add ICE candidate.
+- `signaling.service.ts`: wrapper WebRTC signaling qua `socketService`.
+- `reducer.ts`, `actions.ts`, `types.ts`: WebRTC UI state.
+
+Lưu ý signaling:
+
+- `MeetingPage` chờ đủ `user.id`, `sessionId`, `partnerId` trước khi start WebRTC.
+- Caller retry cùng một offer trong thời gian ngắn cho tới khi nhận answer.
+- ICE candidates được buffer cho tới khi remote description sẵn sàng.
+- `socketService.connect()` phải reuse socket instance hiện có, kể cả khi socket đang connecting.
+- Backend hiện có thể forward WebRTC events không kèm `sessionId`; frontend chấp nhận missing `sessionId` và chỉ reject khi payload có `sessionId` khác session hiện tại.
+
+Backend nên cải thiện: forward `webrtc_offer`, `webrtc_answer`, `webrtc_ice_candidate` kèm `sessionId` rõ ràng, tốt nhất scope theo call room/session.
 
 **Chat Status** — Text message qua socket (check `connected` trước, failed ngay nếu offline). Image qua API upload (sending → sent/failed).
 
@@ -204,5 +222,6 @@ Máy khác truy cập `https://192.168.x.x:5173` (chấp nhận self-signed cert
 - **Page structure** — `src/page/{kebab-case}/`, components con trong `component/`
 - **API calls** — qua `useApi()` hook + service configs trong `src/services/`
 - **Naming** — folder: kebab-case, component file: PascalCase, hook/service: camelCase
+- **Markdown docs** — `.gitignore` ignore mọi `*.md` trừ `README.md`; các note local như `WEBRTC_REFACTOR_NOTES.md` không được track.
 
 Chi tiết đầy đủ trong `.kiro/steering/project-conventions.md`.

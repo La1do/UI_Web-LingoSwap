@@ -9,7 +9,6 @@ import ReviewPage from "../page/review/ReviewPage";
 import ProfilePage from "../page/profile/ProfilePage";
 import AdminPage from "../page/admin/AdminPage";
 import AdminLoginPage from "../page/admin/AdminLoginPage";
-import StreakDemoPage from "../page/streak-demo/StreakDemoPage";
 import DirectCallPage from "../page/direct-call/DirectCallPage";
 import CallEndedPage from "../page/call-ended/CallEndedPage";
 import ForgotPasswordPage from "../page/forgot-password/ForgotPasswordPage";
@@ -57,7 +56,6 @@ export const router = createBrowserRouter([
       { path: "review",           element: user(<ReviewPage />) },
       { path: "profile",          element: user(<ProfilePage />) },
       { path: "messages",         element: user(<MessagesPage />) },
-      { path: "streak-demo",      element: user(<StreakDemoPage />) },
 
       // ── Admin protected ───────────────────────────────────
       { path: "admin",            element: admin(<AdminPage />) },
