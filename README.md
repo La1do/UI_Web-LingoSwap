@@ -102,6 +102,16 @@ src/
 │   ├── notification.service.ts # Notifications
 │   ├── socket.service.ts # Socket.IO singleton
 │   ├── webrtc/           # WebRTC manager, media, ICE, signaling helpers
+│   │   ├── actions.ts
+│   │   ├── constants.ts
+│   │   ├── ice.ts
+│   │   ├── index.ts
+│   │   ├── media.ts
+│   │   ├── peer-connection.ts
+│   │   ├── reducer.ts
+│   │   ├── signaling.service.ts
+│   │   ├── types.ts
+│   │   └── webrtc-manager.ts
 │   └── user.service.ts   # Profile, friends, matches, reports, appeal
 └── theme/
     └── theme.ts          # Color tokens (lightTheme, darkTheme, AppTheme interface)
