@@ -41,6 +41,29 @@ function StarRating({ value, onChange, size = "lg" }: {
   );
 }
 
+function getLastStreakUpdate(me: MeResponse): string | null {
+  return me.stats?.lastStreakUpdate ?? null;
+}
+
+function isToday(value: string | null): boolean {
+  if (!value) return false;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value.slice(0, 10) === formatDateKey(new Date());
+  }
+
+  return formatDateKey(date) === formatDateKey(new Date());
+}
+
+function formatDateKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 // ─── Partner Card ─────────────────────────────────────────────
 function PartnerCard({ partner, onAddFriend, onReport }: {
   partner: PublicProfile | null;
@@ -150,6 +173,7 @@ export default function ReviewPage() {
   const [submitError, setSubmitError] = useState("");
   const [newStreak, setNewStreak] = useState<number | null>(null);
   const [newCalendar, setNewCalendar] = useState<Record<string, number> | null>(null);
+  const [lastStreakUpdate, setLastStreakUpdate] = useState<string | null>(null);
   const [showReport, setShowReport] = useState(false);
 
   // Fetch partner profile
@@ -172,6 +196,7 @@ export default function ReviewPage() {
       if (me) {
         setUserFromMe(me);
         setNewStreak(me.stats?.streak ?? 0);
+        setLastStreakUpdate(getLastStreakUpdate(me));
         const rawCal = me.stats?.learningCalendar;
         const cal: Record<string, number> = Array.isArray(rawCal)
           ? Object.fromEntries((rawCal as string[]).map((d) => [d, 1]))
@@ -189,6 +214,7 @@ export default function ReviewPage() {
     if (me) {
       setUserFromMe(me);
       const streak = me.stats?.streak ?? 0;
+      setLastStreakUpdate(getLastStreakUpdate(me));
       if (streak > 0) {
         setNewStreak(streak);
         const rawCal = me.stats?.learningCalendar;
@@ -208,8 +234,24 @@ export default function ReviewPage() {
     return `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
   };
 
+  const shouldSkipStreakCelebration =
+    submitted &&
+    newStreak !== null &&
+    newStreak > 0 &&
+    isToday(lastStreakUpdate);
+
+  useEffect(() => {
+    if (shouldSkipStreakCelebration) {
+      navigate("/home", { replace: true });
+    }
+  }, [navigate, shouldSkipStreakCelebration]);
+
   // ─── Show streak celebration ──────────────────────────────
   if (submitted) {
+    if (shouldSkipStreakCelebration) {
+      return null;
+    }
+
     if (newStreak !== null && newStreak > 0) {
       return (
         <StreakCelebration
