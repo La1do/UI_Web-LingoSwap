@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
+import { useToast } from "../../../context/ToastContext";
 import { userService } from "../../../services/user.service";
 import { useFriends, type Friend, type FriendStatus } from "../../../context/FriendContext";
 // ─── Types ───────────────────────────────────────────────────
@@ -45,6 +46,7 @@ export default function FriendList({ onViewProfile, onOpenChat }: FriendListProp
   const navigate = useNavigate();
   const { friends, isLoading, removeFriend } = useFriends();
   const { execute: unfriendExec } = useApi();
+  const toast = useToast();
   const [filter, setFilter] = useState<"all" | "online">("all");
   const [confirmUnfriend, setConfirmUnfriend] = useState<string | null>(null);
 
@@ -163,6 +165,7 @@ export default function FriendList({ onViewProfile, onOpenChat }: FriendListProp
                           unfriendExec(userService.unfriend(friend.id)).then(() => {
                             removeFriend(friend.id);
                             setConfirmUnfriend(null);
+                            toast.success(t.home.unfriend);
                           });
                         }}
                         className="flex-1 py-1 rounded-lg text-xs font-semibold hover:opacity-80"

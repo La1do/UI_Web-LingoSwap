@@ -53,7 +53,6 @@ export const socketService = {
   disconnect(): void {
     if (socket) {
       socket.disconnect();
-      console.log("nesssssssssssssssssssss")
       socket = null;
     }
   },
@@ -123,6 +122,7 @@ export const socketService = {
   },
 
   onPartnerDisconnected(cb: (payload: PartnerDisconnectedPayload) => void): void {
+    // Dùng off+on để tránh duplicate — đây là event 1-1 per session
     socket?.off("partner_disconnected");
     socket?.on("partner_disconnected", (data) => {
       console.log("[Socket] partner_disconnected:", data);
@@ -144,6 +144,7 @@ export const socketService = {
     socket?.emit("send_message", payload);
   },
 
+  // KHÔNG dùng blanket off — caller tự quản lý handler reference
   onReceiveMessage(cb: (msg: {
     _id: string;
     senderId: string;
@@ -152,13 +153,26 @@ export const socketService = {
     createdAt: string;
     conversationId: string;
   }) => void): void {
-    socket?.off("receive_message");
     socket?.on("receive_message", cb);
   },
 
-  onMessageSentSuccess(cb: (msg: { _id: string; content: string; createdAt: string }) => void): void {
-    socket?.off("message_sent_success");
+  offReceiveMessage(cb: (msg: {
+    _id: string;
+    senderId: string;
+    content: string;
+    type: string;
+    createdAt: string;
+    conversationId: string;
+  }) => void): void {
+    socket?.off("receive_message", cb);
+  },
+
+  onMessageSentSuccess(cb: (msg: { _id: string; content: string; createdAt: string; conversationId?: string }) => void): void {
     socket?.on("message_sent_success", cb);
+  },
+
+  offMessageSentSuccess(cb: (msg: { _id: string; content: string; createdAt: string; conversationId?: string }) => void): void {
+    socket?.off("message_sent_success", cb);
   },
 
   offChatEvents(): void {
@@ -180,19 +194,29 @@ export const socketService = {
     socket?.emit("webrtc_ice_candidate", { sessionId, candidate });
   },
 
+  // KHÔNG dùng blanket off — caller tự quản lý handler reference
   onOffer(cb: (payload: { sessionId?: string; offer: RTCSessionDescriptionInit }) => void): void {
-    socket?.off("webrtc_offer");
     socket?.on("webrtc_offer", cb);
   },
 
+  offOffer(cb: (payload: { sessionId?: string; offer: RTCSessionDescriptionInit }) => void): void {
+    socket?.off("webrtc_offer", cb);
+  },
+
   onAnswer(cb: (payload: { sessionId?: string; answer: RTCSessionDescriptionInit }) => void): void {
-    socket?.off("webrtc_answer");
     socket?.on("webrtc_answer", cb);
   },
 
+  offAnswer(cb: (payload: { sessionId?: string; answer: RTCSessionDescriptionInit }) => void): void {
+    socket?.off("webrtc_answer", cb);
+  },
+
   onIceCandidate(cb: (payload: { sessionId?: string; candidate: RTCIceCandidateInit }) => void): void {
-    socket?.off("webrtc_ice_candidate");
     socket?.on("webrtc_ice_candidate", cb);
+  },
+
+  offIceCandidate(cb: (payload: { sessionId?: string; candidate: RTCIceCandidateInit }) => void): void {
+    socket?.off("webrtc_ice_candidate", cb);
   },
 
   offWebRTCEvents(): void {
@@ -214,6 +238,7 @@ export const socketService = {
   },
 
   onDirectCallOffer(cb: (payload: { callerId: string; message: string }) => void): void {
+    // Direct call offer là 1-1 per session — off+on ổn
     socket?.off("direct_match_offer");
     socket?.on("direct_match_offer", (data) => {
       console.log("[Socket] direct_match_offer:", data);
@@ -245,6 +270,7 @@ export const socketService = {
 
   // ── Notification realtime ────────────────────────────────
 
+  // KHÔNG dùng blanket off — caller tự quản lý handler reference
   onNewNotification(cb: (payload: {
     _id: string;
     type: string;
@@ -253,7 +279,6 @@ export const socketService = {
     senderId?: { _id: string; profile: { fullName: string; avatar: string } };
     metadata?: Record<string, unknown>;
   }) => void): void {
-    socket?.off("new_notification");
     socket?.on("new_notification", (data) => {
       console.log("[Socket] new_notification:", data);
       cb(data);
@@ -272,8 +297,8 @@ export const socketService = {
 
   // ── Friend presence ──────────────────────────────────────
 
+  // KHÔNG dùng blanket off — caller tự quản lý handler reference
   onFriendStatusChange(cb: (payload: { userId: string; status: "online" | "offline" }) => void): void {
-    socket?.off("friend_status_change");
     socket?.on("friend_status_change", (data) => {
       console.log("[Socket] friend_status_change:", data);
       cb(data);

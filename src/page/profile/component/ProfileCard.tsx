@@ -3,6 +3,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { useAuth } from "../../../context/AuthContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
+import { useToast } from "../../../context/ToastContext";
 import { userService } from "../../../services/user.service";
 
 export default function ProfileCard() {
@@ -10,6 +11,7 @@ export default function ProfileCard() {
   const { user, updateUser } = useAuth();
   const { t } = useI18n();
   const { execute } = useApi<{ avatarUrl: string }>();
+  const toast = useToast();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -45,8 +47,10 @@ export default function ProfileCard() {
       setCacheBust(Date.now());
       setPreview(null);
       setPendingFile(null);
+      toast.success(t.profile.saveSuccess);
     } else {
       setError(t.profile.errorUploadFailed);
+      toast.error(t.profile.errorUploadFailed);
     }
     setUploading(false);
   };

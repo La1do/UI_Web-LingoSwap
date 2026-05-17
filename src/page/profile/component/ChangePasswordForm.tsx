@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
+import { useToast } from "../../../context/ToastContext";
 import { authService } from "../../../services/auth.service";
 import { validateForm, required, minLength, mustMatch } from "../../../library/validation";
 
@@ -15,6 +16,7 @@ export default function ChangePasswordForm() {
   const { theme } = useTheme();
   const { t } = useI18n();
   const { execute, isLoading } = useApi();
+  const toast = useToast();
 
   const [values, setValues] = useState<ChangePasswordFields>({
     currentPassword: "",
@@ -22,7 +24,6 @@ export default function ChangePasswordForm() {
     confirmNewPassword: "",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof ChangePasswordFields, string>>>({});
-  const [success, setSuccess] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
@@ -46,7 +47,6 @@ export default function ChangePasswordForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    setSuccess(false);
 
     const { errors: newErrors, isValid } = validateForm(values, getRules(values));
     setErrors(newErrors);
@@ -58,10 +58,9 @@ export default function ChangePasswordForm() {
     }));
 
     if (result !== null) {
-      setSuccess(true);
       setValues({ currentPassword: "", newPassword: "", confirmNewPassword: "" });
       setSubmitted(false);
-      setTimeout(() => setSuccess(false), 3000);
+      toast.success(t.profile.passwordUpdateSuccess);
     }
   };
 
@@ -121,11 +120,6 @@ export default function ChangePasswordForm() {
         >
           {isLoading ? t.profile.updatingPassword : t.profile.updatePassword}
         </button>
-        {success && (
-          <span className="text-sm" style={{ color: theme.text.success }}>
-            ✓ {t.profile.passwordUpdateSuccess}
-          </span>
-        )}
       </div>
     </form>
   );

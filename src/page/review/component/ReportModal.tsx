@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
+import { useToast } from "../../../context/ToastContext";
 import { userService } from "../../../services/user.service";
 
 interface ReportModalProps {
@@ -22,6 +23,7 @@ export default function ReportModal({
   const { theme } = useTheme();
   const { t } = useI18n();
   const { execute: submitReport, isLoading } = useApi();
+  const toast = useToast();
 
   const [selectedReason, setSelectedReason] = useState("");
   const [done, setDone] = useState(false);
@@ -47,9 +49,11 @@ export default function ReportModal({
       })
     );
     if (result !== null) {
+      toast.success(t.report.success);
       setDone(true);
     } else {
       setError(t.report.error);
+      toast.error(t.report.error);
     }
   };
 

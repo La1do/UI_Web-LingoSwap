@@ -3,6 +3,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useAuth } from "../../../context/AuthContext";
 import { useApi } from "../../../hook/useApi";
+import { useToast } from "../../../context/ToastContext";
 import { userService } from "../../../services/user.service";
 import { localeLabels, type Locale } from "../../../context/I18nContext";
 import { lightTheme, darkTheme } from "../../../theme/theme";
@@ -28,6 +29,7 @@ export default function SettingsForm() {
   const { locale, setLocale, t } = useI18n();
   const { user, updateUser } = useAuth();
   const { execute, isLoading } = useApi();
+  const toast = useToast();
 
   // Init từ settings của user (server) hoặc fallback về current state
   const [selectedTheme, setSelectedTheme] = useState<"light" | "dark">(
@@ -36,13 +38,10 @@ export default function SettingsForm() {
   const [selectedLang, setSelectedLang] = useState<Locale>(
     (user?.settings?.uiLanguage as Locale) ?? locale
   );
-  const [success, setSuccess] = useState(false);
 
   const label = t.profile.settings;
 
   const handleSave = async () => {
-    setSuccess(false);
-    // Apply ngay lập tức
     if (selectedTheme !== mode) setMode(selectedTheme);
     if (selectedLang !== locale) setLocale(selectedLang);
 
@@ -53,8 +52,9 @@ export default function SettingsForm() {
 
     if (result !== null) {
       updateUser({ settings: { theme: selectedTheme, uiLanguage: selectedLang } });
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast.success(t.profile.settings.saved);
+    } else {
+      toast.error(t.profile.settings.save);
     }
   };
 
@@ -166,11 +166,6 @@ export default function SettingsForm() {
         >
           {isLoading ? label.saving : label.save}
         </button>
-        {success && (
-          <span className="text-sm" style={{ color: theme.text.success }}>
-            ✓ {label.saved}
-          </span>
-        )}
       </div>
     </div>
   );

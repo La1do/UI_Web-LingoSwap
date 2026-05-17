@@ -4,6 +4,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
 import { useApi } from "../../hook/useApi";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
 import { userService } from "../../services/user.service";
 import type { MeResponse } from "../../context/AuthContext";
 import StreakCelebration from "./component/StreakCelebration";
@@ -74,6 +75,7 @@ function PartnerCard({ partner, onAddFriend, onReport }: {
   const { t } = useI18n();
   const { execute: sendRequest, isLoading: sending } = useApi();
   const { execute: checkStatus } = useApi<{ status: string; friendshipId: string | null }>();
+  const toast = useToast();
   const [sent, setSent] = useState(false);
   const [friendStatus, setFriendStatus] = useState<string | null>(null);
 
@@ -93,6 +95,7 @@ function PartnerCard({ partner, onAddFriend, onReport }: {
     if (result !== null) {
       setSent(true);
       onAddFriend();
+      toast.success(t.home.sendRequest);
     }
   };
 
@@ -161,6 +164,7 @@ export default function ReviewPage() {
   const { execute: submitReview, isLoading: submitting } = useApi();
   const { execute: fetchMe } = useApi<MeResponse>();
   const { setUserFromMe } = useAuth();
+  const toast = useToast();
 
   const sessionId = searchParams.get("session");
   const partnerId = searchParams.get("partner");
@@ -206,6 +210,7 @@ export default function ReviewPage() {
       setSubmitted(true);
     } else {
       setSubmitError(t.review.errorSubmit);
+      toast.error(t.review.errorSubmit);
     }
   };
 

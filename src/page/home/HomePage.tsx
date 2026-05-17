@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
@@ -9,12 +9,13 @@ import MatchModal from "./component/MatchModal";
 import IncomingCallModal from "./component/IncomingCallModal";
 import StreakCard from "./component/StreakCard";
 import ChatWindow from "./component/ChatWindow";
-import type { Friend } from "../../context/FriendContext";
+import { useFriends, type Friend } from "../../context/FriendContext";
 
 export default function HomePage() {
   const { theme } = useTheme();
   const { t } = useI18n();
   const navigate = useNavigate();
+  const { friends, incomingMessageFriendId, incomingMessage, clearIncomingMessage } = useFriends();
   const [modalOpen, setModalOpen] = useState(false);
   const [openChats, setOpenChats] = useState<Friend[]>([]);
 
@@ -29,6 +30,17 @@ export default function HomePage() {
   const handleCloseChat = (friendId: string) => {
     setOpenChats((prev) => prev.filter((f) => f.id !== friendId));
   };
+
+  // Tự động mở ChatWindow khi nhận tin nhắn mới từ bạn bè
+  // Không clear ngay — để ChatWindow nhận được pendingMessage prop trước
+  useEffect(() => {
+    if (!incomingMessageFriendId) return;
+    const friend = friends.find((f) => f.id === incomingMessageFriendId);
+    if (friend) handleOpenChat(friend);
+    // Clear sau 1 tick để ChatWindow kịp mount và nhận pendingMessage
+    const timer = setTimeout(() => clearIncomingMessage(), 0);
+    return () => clearTimeout(timer);
+  }, [incomingMessageFriendId]);
 
   const handleStartMatch = (language: string) => {
     setModalOpen(false);
@@ -110,6 +122,7 @@ export default function HomePage() {
           friend={friend}
           onClose={() => handleCloseChat(friend.id)}
           offsetIndex={openChats.length - 1 - i}
+          pendingMessage={incomingMessage?.senderId === friend.id ? incomingMessage : undefined}
         />
       ))}
     </div>

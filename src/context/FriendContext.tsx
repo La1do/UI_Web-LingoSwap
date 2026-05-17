@@ -27,6 +27,15 @@ interface ApiFriend {
   conversationId?: string | null;
 }
 
+export interface IncomingMessagePayload {
+  _id: string;
+  senderId: string;
+  content: string;
+  type: string;
+  createdAt: string;
+  conversationId: string;
+}
+
 interface FriendContextValue {
   friends: Friend[];
   isLoading: boolean;
@@ -34,6 +43,9 @@ interface FriendContextValue {
   updateFriendStatus: (userId: string, status: FriendStatus) => void;
   removeFriend: (friendId: string) => void;
   updateConversationId: (friendId: string, conversationId: string) => void;
+  incomingMessageFriendId: string | null;
+  incomingMessage: IncomingMessagePayload | null;
+  clearIncomingMessage: () => void;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────
@@ -63,14 +75,19 @@ const FriendContext = createContext<FriendContextValue>({
   updateFriendStatus: () => {},
   removeFriend: () => {},
   updateConversationId: () => {},
+  incomingMessageFriendId: null,
+  incomingMessage: null,
+  clearIncomingMessage: () => {},
 });
 
 // ─── Provider ────────────────────────────────────────────────
 
 export function FriendProvider({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [friends, setFriends] = useState<Friend[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [incomingMessageFriendId, setIncomingMessageFriendId] = useState<string | null>(null);
+  const [incomingMessage, setIncomingMessage] = useState<IncomingMessagePayload | null>(null);
   const fetchRef = useRef(0);
 
   const fetchFriends = useCallback(async () => {
@@ -120,6 +137,11 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     );
   }, []);
 
+  const clearIncomingMessage = useCallback(() => {
+    setIncomingMessageFriendId(null);
+    setIncomingMessage(null);
+  }, []);
+
   // Fetch + setup socket khi user đã authenticated
   useEffect(() => {
     if (!isAuthenticated) {
@@ -160,7 +182,7 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     const registerListener = () => {
       const s = socketService.getSocket();
       if (!s) return;
-      s.off("friend_status_change").on("friend_status_change", handler);
+      s.off("friend_status_change", handler).on("friend_status_change", handler);
     };
 
     // Đăng ký ngay nếu socket đã sẵn sàng, hoặc chờ
@@ -177,8 +199,41 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     };
   }, [isAuthenticated, updateFriendStatus]);
 
+  // Realtime incoming message — tự động mở ChatWindow khi nhận tin nhắn mới
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const handler = (msg: { senderId: string; conversationId: string; _id: string; content: string; type: string; createdAt: string }) => {
+      // Chỉ trigger khi là tin nhắn từ người khác gửi đến mình
+      if (msg.senderId && msg.senderId !== user?.id) {
+        setIncomingMessageFriendId(msg.senderId);
+        setIncomingMessage(msg);
+      }
+    };
+
+    const registerListener = () => {
+      const s = socketService.getSocket();
+      if (!s) return;
+      // off trước để tránh duplicate khi reconnect
+      s.off("receive_message", handler);
+      s.on("receive_message", handler);
+    };
+
+    socketService.onReady(registerListener);
+
+    socketService.onReady((s) => {
+      s.on("connect", registerListener);
+    });
+
+    return () => {
+      const s = socketService.getSocket();
+      s?.off("receive_message", handler);
+      s?.off("connect", registerListener);
+    };
+  }, [isAuthenticated, user?.id]);
+
   return (
-    <FriendContext.Provider value={{ friends, isLoading, refetchFriends, updateFriendStatus, removeFriend, updateConversationId }}>
+    <FriendContext.Provider value={{ friends, isLoading, refetchFriends, updateFriendStatus, removeFriend, updateConversationId, incomingMessageFriendId, incomingMessage, clearIncomingMessage }}>
       {children}
     </FriendContext.Provider>
   );

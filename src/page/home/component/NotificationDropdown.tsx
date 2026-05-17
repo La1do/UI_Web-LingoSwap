@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
+import { useToast } from "../../../context/ToastContext";
 import { userService } from "../../../services/user.service";
 import { notificationService, type Notification } from "../../../services/notification.service";
 import { socketService } from "../../../services/socket.service";
@@ -32,6 +33,7 @@ function NotificationCard({
   const { execute: respondExec, isLoading } = useApi();
   const { execute: markExec } = useApi();
   const { refetchFriends } = useFriends();
+  const toast = useToast();
   const [done, setDone] = useState<"accept" | "reject" | null>(null);
 
   const sender = notification.senderId;
@@ -49,7 +51,12 @@ function NotificationCard({
     setDone(status);
     onRespond(notification._id, status);
     onMarkRead(notification._id);
-    if (status === "accept") refetchFriends();
+    if (status === "accept") {
+      refetchFriends();
+      toast.success(t.home.accepted);
+    } else {
+      toast.info(t.home.rejected);
+    }
   };
 
   return (
@@ -154,7 +161,7 @@ export default function NotificationDropdown() {
 
     // Dùng onReady để đảm bảo socket đã connected trước khi đăng ký listener
     socketService.onReady((s) => {
-      s.off("new_notification").on("new_notification", handler);
+      s.off("new_notification", handler).on("new_notification", handler);
     });
 
     return () => {

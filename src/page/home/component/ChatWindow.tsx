@@ -4,7 +4,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useAuth } from "../../../context/AuthContext";
 import { useApi } from "../../../hook/useApi";
-import { useFriends, type Friend } from "../../../context/FriendContext";
+import { useFriends, type Friend, type IncomingMessagePayload } from "../../../context/FriendContext";
 import { chatService, type ChatMessage, type UploadImageResponse } from "../../../services/chat.service";
 import { socketService } from "../../../services/socket.service";
 
@@ -12,6 +12,7 @@ interface ChatWindowProps {
   friend: Friend;
   onClose: () => void;
   offsetIndex: number;
+  pendingMessage?: IncomingMessagePayload;
 }
 
 // ─── Status indicator (chỉ cho image) ────────────────────────
@@ -45,7 +46,7 @@ function ImageStatus({ status, onRetry }: { status?: ChatMessage["status"]; onRe
 
 // ─── Main component ───────────────────────────────────────────
 
-export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowProps) {
+export default function ChatWindow({ friend, onClose, offsetIndex, pendingMessage }: ChatWindowProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
   const { user } = useAuth();
@@ -69,6 +70,28 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
     });
   }, [friend.conversationId]);
 
+  // Khi ChatWindow vừa mount do nhận tin nhắn đầu tiên — add message đó vào UI ngay
+  useEffect(() => {
+    if (!pendingMessage) return;
+    // Cập nhật convId nếu chưa có
+    if (pendingMessage.conversationId && !convIdRef.current) {
+      convIdRef.current = pendingMessage.conversationId;
+      updateConversationId(friend.id, pendingMessage.conversationId);
+    }
+    const newMsg: ChatMessage = {
+      _id: pendingMessage._id,
+      conversationId: pendingMessage.conversationId,
+      senderId: pendingMessage.senderId,
+      content: pendingMessage.content,
+      type: pendingMessage.type as "text" | "image",
+      createdAt: pendingMessage.createdAt,
+    };
+    setMessages((prev) => {
+      if (prev.find((m) => m._id === newMsg._id)) return prev;
+      return [...prev, newMsg];
+    });
+  }, [pendingMessage?._id]);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -81,30 +104,64 @@ export default function ChatWindow({ friend, onClose, offsetIndex }: ChatWindowP
       _id: string; senderId: string; content: string;
       type: string; createdAt: string; conversationId: string;
     }) => {
+      // Lọc: chỉ xử lý tin nhắn liên quan đến conversation này
       if (msg.senderId !== friend.id && msg.senderId !== user?.id) return;
       if (convIdRef.current && msg.conversationId !== convIdRef.current) return;
 
-      const newMsg: ChatMessage = {
-        _id: msg._id, conversationId: msg.conversationId,
-        senderId: msg.senderId, content: msg.content,
-        type: msg.type as "text" | "image", createdAt: msg.createdAt,
-      };
-      setMessages((prev) => {
-        if (prev.find((m) => m._id === msg._id)) return prev;
-        return [...prev, newMsg];
-      });
+      if (msg.senderId === user?.id) {
+        // Tin nhắn của chính mình phản hồi lại từ server
+        // Không add mới — chỉ replace temp message hoặc bỏ qua nếu đã có
+        setMessages((prev) => {
+          if (prev.find((m) => m._id === msg._id)) return prev; // đã có _id thật rồi
+          const tempIdx = prev.findIndex(
+            (m) => m._id.startsWith("temp-") && m.senderId === user?.id && m.content === msg.content
+          );
+          if (tempIdx !== -1) {
+            const updated = [...prev];
+            updated[tempIdx] = {
+              ...updated[tempIdx],
+              _id: msg._id,
+              conversationId: msg.conversationId,
+              createdAt: msg.createdAt,
+            };
+            return updated;
+          }
+          return prev; // không add nếu không tìm được temp tương ứng
+        });
+      } else {
+        // Tin nhắn từ đối phương — add vào UI
+        const newMsg: ChatMessage = {
+          _id: msg._id, conversationId: msg.conversationId,
+          senderId: msg.senderId, content: msg.content,
+          type: msg.type as "text" | "image", createdAt: msg.createdAt,
+        };
+        setMessages((prev) => {
+          if (prev.find((m) => m._id === msg._id)) return prev;
+          return [...prev, newMsg];
+        });
+      }
 
+      // Cập nhật convId nếu đây là conversation đầu tiên
       if (!convIdRef.current && msg.conversationId) {
         convIdRef.current = msg.conversationId;
         updateConversationId(friend.id, msg.conversationId);
       }
     };
 
-    const sentHandler = (msg: { conversationId?: string }) => {
+    const sentHandler = (msg: { _id: string; content: string; createdAt: string; conversationId?: string }) => {
+      // Cập nhật convId nếu đây là conversation đầu tiên
       if (msg.conversationId && !convIdRef.current) {
         convIdRef.current = msg.conversationId;
         updateConversationId(friend.id, msg.conversationId);
       }
+      // Replace temp message bằng message thật từ server (dùng _id thật)
+      setMessages((prev) =>
+        prev.map((m) =>
+          m._id.startsWith("temp-") && m.senderId === user?.id && m.content === msg.content
+            ? { ...m, _id: msg._id, conversationId: msg.conversationId ?? m.conversationId, createdAt: msg.createdAt }
+            : m
+        )
+      );
     };
 
     s.on("receive_message", handler);

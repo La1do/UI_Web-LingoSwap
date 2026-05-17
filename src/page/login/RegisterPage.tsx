@@ -10,6 +10,7 @@ import { AuthInput } from "./AuthInput";
 import PageShell from "../../layout/PageShell";
 import GoogleSignInButton from "../component/GoogleSignInButton";
 import { useApi } from "../../hook/useApi";
+import { useToast } from "../../context/ToastContext";
 import { authService, type RegisterResponse } from "../../services/auth.service";
 import {
   validateForm,
@@ -103,6 +104,7 @@ export default function RegisterPage() {
   const { t, locale } = useI18n();
   const navigate = useNavigate();
   const { execute, isLoading, isError, error: apiError } = useApi<RegisterResponse>();
+  const toast = useToast();
 
   const [values, setValues] = useState<RegisterFields>({
     fullName: "",
@@ -154,6 +156,7 @@ export default function RegisterPage() {
     }));
 
     if (result) {
+      toast.success(t.auth.registerSuccess);
       navigate("/");
     }
   };

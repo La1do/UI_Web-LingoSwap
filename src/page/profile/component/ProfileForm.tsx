@@ -3,6 +3,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useAuth } from "../../../context/AuthContext";
 import { useApi } from "../../../hook/useApi";
+import { useToast } from "../../../context/ToastContext";
 import { userService } from "../../../services/user.service";
 
 const COUNTRIES = [
@@ -20,15 +21,14 @@ export default function ProfileForm() {
   const { t } = useI18n();
   const { user, updateUser } = useAuth();
   const { execute, isLoading } = useApi<{ message: string; user: { profile: { fullName: string; bio: string; country: string } } }>();
+  const toast = useToast();
 
   const [fullName, setFullName] = useState(user?.fullName ?? "");
   const [bio, setBio] = useState(user?.bio ?? "");
   const [country, setCountry] = useState(user?.country ?? "");
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccess(false);
     const result = await execute(userService.updateProfile({ fullName, bio, country }));
     if (result !== null) {
       updateUser({
@@ -36,8 +36,9 @@ export default function ProfileForm() {
         bio: result.user.profile.bio,
         country: result.user.profile.country,
       });
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast.success(t.profile.saveSuccess);
+    } else {
+      toast.error(t.profile.saving);
     }
   };
 
@@ -132,11 +133,6 @@ export default function ProfileForm() {
         >
           {isLoading ? t.profile.saving : t.profile.saveChanges}
         </button>
-        {success && (
-          <span className="text-sm" style={{ color: theme.text.success }}>
-            ✓ {t.profile.saveSuccess}
-          </span>
-        )}
       </div>
     </form>
   );

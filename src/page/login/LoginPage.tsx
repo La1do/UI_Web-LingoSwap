@@ -10,6 +10,7 @@ import PageShell from "../../layout/PageShell";
 import GoogleSignInButton from "../component/GoogleSignInButton";
 import { useApi } from "../../hook/useApi";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
 import { authService, type LoginResponse } from "../../services/auth.service";
 import { userService } from "../../services/user.service";
 import type { MeResponse } from "../../context/AuthContext";
@@ -47,6 +48,7 @@ export default function LoginPage() {
   const { execute, isLoading, isError, error: apiError } = useApi<LoginResponse>();
   const { execute: executeMe } = useApi<MeResponse>();
   const { setUserFromResponse, setUserFromMe, logout } = useAuth();
+  const toast = useToast();
 
   const [values, setValues] = useState<LoginFields>({ email: "", password: "" });
   const [errors, setErrors] = useState<FormErrors<LoginFields>>({});
@@ -103,6 +105,7 @@ export default function LoginPage() {
         }
       }
       socketService.connect();
+      toast.success(t.auth.loginSuccess);
       navigate("/home");
     }
   };
