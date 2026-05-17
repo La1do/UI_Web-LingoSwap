@@ -43,8 +43,9 @@ export const adminService = {
   }),
 
   banUser: (id: string): AxiosRequestConfig => ({
-    method: "PUT",
-    url: `/api/admin/users/${id}/ban`,
+    method: "PATCH",
+    url: `/api/admin/users/${id}/status`,
+    data: { status: "banned" },
   }),
 
   deleteUser: (id: string): AxiosRequestConfig => ({
@@ -64,8 +65,8 @@ export const adminService = {
   }),
 
   resolveAppeal: (id: string, data: { status: "approved" | "rejected"; adminNotes?: string }): AxiosRequestConfig => ({
-    method: "PUT",
-    url: `/api/admin/appeals/${id}/resolve`,
+    method: "PATCH",
+    url: `/api/admin/appeals/${id}/status`,
     data,
   }),
 

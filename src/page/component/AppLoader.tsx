@@ -1,9 +1,10 @@
 import { useTheme } from "../../context/ThemeContext";
+import logoUrl from "../../assets/logo.png";
 
 // ─── Thay đường dẫn này khi có logo thật ─────────────────────
 // Đặt file logo vào src/assets/logo.png rồi đổi dòng dưới thành:
 // import logoUrl from "../../assets/logo.png";
-const LOGO_URL: string | null = null; // null = dùng placeholder chữ "L"
+const LOGO_URL = logoUrl;
 
 export default function AppLoader() {
   const { theme } = useTheme();

@@ -1,5 +1,7 @@
-import { GoogleLogin } from "@react-oauth/google";
+import { useState } from "react";
+import { useGoogleLogin, useGoogleOAuth } from "@react-oauth/google";
 import { useTheme } from "../../context/ThemeContext";
+import { useI18n } from "../../context/I18nContext";
 import { useApi } from "../../hook/useApi";
 import { authService, type LoginResponse } from "../../services/auth.service";
 import { userService } from "../../services/user.service";
@@ -9,21 +11,24 @@ import { useAuth } from "../../context/AuthContext";
 import { socketService } from "../../services/socket.service";
 
 interface GoogleSignInButtonProps {
-  label?: string;
+  intent: "signin" | "signup";
 }
 
-export default function GoogleSignInButton({ label }: GoogleSignInButtonProps) {
-  const { mode, setMode } = useTheme();
+export default function GoogleSignInButton({ intent }: GoogleSignInButtonProps) {
+  const { theme, setMode } = useTheme();
+  const { t } = useI18n();
   const navigate = useNavigate();
-  const { execute } = useApi<LoginResponse>();
+  const { execute, isLoading } = useApi<LoginResponse>();
   const { execute: executeMe } = useApi<MeResponse>();
   const { setUserFromResponse, setUserFromMe } = useAuth();
+  const { scriptLoadedSuccessfully } = useGoogleOAuth();
+  const [isAuthorizing, setIsAuthorizing] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const label = intent === "signup" ? t.auth.googleSignUp : t.auth.googleSignIn;
+  const disabled = isAuthorizing || isLoading || !scriptLoadedSuccessfully;
+  const isInteractiveHover = isHovered && !disabled;
 
-  const handleSuccess = async (credentialResponse: { credential?: string }) => {
-    const idToken = credentialResponse.credential;
-    if (!idToken) return;
-
-    const result = await execute(authService.googleLogin(idToken));
+  const handleLoginResult = async (result: LoginResponse | null) => {
     if (result?.token) {
       setUserFromResponse(result);
       const me = await executeMe(userService.getMe());
@@ -38,21 +43,70 @@ export default function GoogleSignInButton({ label }: GoogleSignInButtonProps) {
     }
   };
 
+  const loginWithGoogle = useGoogleLogin({
+    flow: "auth-code",
+    onSuccess: async ({ code }) => {
+      if (!code) {
+        setIsAuthorizing(false);
+        return;
+      }
+
+      try {
+        const result = await execute(authService.googleCallback(code));
+        await handleLoginResult(result);
+      } finally {
+        setIsAuthorizing(false);
+      }
+    },
+    onError: () => {
+      console.error("Google login failed");
+      setIsAuthorizing(false);
+    },
+    onNonOAuthError: () => {
+      console.error("Google login popup failed");
+      setIsAuthorizing(false);
+    },
+  });
+
+  const handleClick = () => {
+    if (disabled) return;
+    setIsAuthorizing(true);
+    loginWithGoogle();
+  };
+
   return (
-    <div
-      className="w-full flex justify-center"
+    <button
+      type="button"
+      onClick={handleClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      disabled={disabled}
+      aria-label={label}
+      className="w-full h-10 rounded-md flex items-center justify-center gap-3 text-sm font-medium transition-all"
       style={{
-        colorScheme: mode,
+        background: isInteractiveHover ? theme.background.input : theme.background.card,
+        border: `1px solid ${isInteractiveHover ? theme.border.focused : theme.border.default}`,
+        boxShadow: isInteractiveHover ? theme.shadow.input : "none",
+        color: isInteractiveHover ? theme.text.accent : theme.text.primary,
+        cursor: disabled ? "not-allowed" : "pointer",
+        opacity: disabled ? 0.65 : 1,
+        transform: isInteractiveHover ? "translateY(-1px)" : "translateY(0)",
       }}
     >
-      <GoogleLogin
-        onSuccess={handleSuccess}
-        onError={() => console.error("Google login failed")}
-        text={label?.toLowerCase().includes("up") ? "signup_with" : "signin_with"}
-        shape="rectangular"
-        width="100%"
-        useOneTap={false}
-      />
-    </div>
+      <span
+        className="h-5 w-5 flex items-center justify-center rounded-full text-xs font-semibold"
+        aria-hidden="true"
+        style={{
+          border: `1px solid ${isInteractiveHover ? theme.border.focused : theme.border.default}`,
+          color: theme.text.accent,
+          pointerEvents: "none",
+        }}
+      >
+        G
+      </span>
+      <span style={{ pointerEvents: "none" }}>
+        {isAuthorizing || isLoading || !scriptLoadedSuccessfully ? t.common.loading : label}
+      </span>
+    </button>
   );
 }

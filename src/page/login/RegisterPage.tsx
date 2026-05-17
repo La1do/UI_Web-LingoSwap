@@ -363,7 +363,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="fade-up fade-up-6 mb-5">
-              <GoogleSignInButton label={t.auth.googleSignUp} />
+              <GoogleSignInButton intent="signup" />
             </div>
 
             <p className="text-center text-sm fade-up fade-up-6" style={{ color: theme.text.secondary }}>

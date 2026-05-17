@@ -7,6 +7,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { ThemeToggle } from "../../component/ThemeToggle";
 import { LanguageToggle } from "../../component/LanguageToggle";
 import NotificationDropdown from "./NotificationDropdown";
+import logoUrl from "../../../assets/logo.png";
 
 interface HeaderProps {
   onSearch?: (query: string) => void;
@@ -193,12 +194,7 @@ export default function Header({
     >
       {/* Logo */}
       <div className="flex items-center gap-2 shrink-0">
-        <div
-          className="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm"
-          style={{ background: theme.button.bg, color: theme.button.text }}
-        >
-          L
-        </div>
+        <img src={logoUrl} alt="LingoSwap" className="w-8 h-8 rounded-xl object-contain" />
         <span className="font-semibold text-sm hidden sm:block" style={{ color: theme.text.primary }}>
           LingoSwap
         </span>

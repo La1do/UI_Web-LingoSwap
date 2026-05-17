@@ -1,8 +1,9 @@
 import { useTheme } from "../../context/ThemeContext";
+import logoUrl from "../../assets/logo.png";
 
 // ─── Logo placeholder — thay bằng import thật khi có logo ────
 // import logoUrl from "../../assets/logo.png";
-const LOGO_URL: string | null = null;
+const LOGO_URL = logoUrl;
 
 interface ErrorLayoutProps {
   code: string;

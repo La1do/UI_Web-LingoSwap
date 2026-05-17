@@ -77,7 +77,7 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     const id = ++fetchRef.current;
     try {
-      const res = await axios.get<ApiFriend[]>("/api/user/friends/friends");
+      const res = await axios.get<ApiFriend[]>("/api/user/friends");
       if (id !== fetchRef.current) return;
 
       const mapped = res.data.map(mapApiFriend);
@@ -85,7 +85,7 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
 
       // Merge online status từ API riêng
       try {
-        const onlineRes = await axios.get<{ onlineFriendIds: string[] }>("/api/user/friends/online-friends");
+        const onlineRes = await axios.get<{ onlineFriendIds: string[] }>("/api/user/friends/online");
         const onlineSet = new Set(onlineRes.data.onlineFriendIds ?? []);
         setFriends(mapped.map((f) =>
           onlineSet.has(f.id) ? { ...f, status: "online" as FriendStatus } : f

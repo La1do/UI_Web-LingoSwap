@@ -26,7 +26,11 @@ let failedQueue: QueueItem[] = [];
 
 const processQueue = (error: unknown, token: string | null = null): void => {
   failedQueue.forEach((item) => {
-    error ? item.reject(error) : item.resolve(token as string);
+    if (error) {
+      item.reject(error);
+    } else {
+      item.resolve(token as string);
+    }
   });
   failedQueue = [];
 };
@@ -76,7 +80,7 @@ instance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await instance.post<RefreshTokenResponse>("/refresh-token");
+        const res = await instance.post<RefreshTokenResponse>("/api/auth/refresh-token");
         const newAccessToken = res.data.accessToken;
 
         localStorage.setItem("access_token", newAccessToken);

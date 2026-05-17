@@ -28,16 +28,16 @@ export const notificationService = {
 
   getUnreadCount: (): AxiosRequestConfig => ({
     method: "GET",
-    url: "/api/user/notifications/unread-count",
+    url: "/api/user/notifications/unread/count",
   }),
 
   markRead: (notificationId: string): AxiosRequestConfig => ({
     method: "PATCH",
-    url: `/api/user/notifications/${notificationId}/read`,
+    url: `/api/user/notifications/${notificationId}/status`,
   }),
 
   markAllRead: (): AxiosRequestConfig => ({
     method: "PATCH",
-    url: "/api/user/notifications/mark-all-read",
+    url: "/api/user/notifications",
   }),
 };

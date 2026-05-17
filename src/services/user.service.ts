@@ -40,28 +40,28 @@ export const userService = {
 
   sendFriendRequest: (recipientId: string): AxiosRequestConfig => ({
     method: "POST",
-    url: `/api/user/friends/friends/${recipientId}/request`,
+    url: `/api/user/friends/${recipientId}/requests`,
   }),
 
   getFriends: (): AxiosRequestConfig => ({
     method: "GET",
-    url: "/api/user/friends/friends",
+    url: "/api/user/friends",
   }),
 
   getFriendRequests: (): AxiosRequestConfig => ({
     method: "GET",
-    url: "/api/user/friends/friends/requests",
+    url: "/api/user/friends/requests",
   }),
 
   respondFriendRequest: (requestId: string, status: "accept" | "reject"): AxiosRequestConfig => ({
     method: "PATCH",
-    url: `/api/user/friends/friends/${requestId}/response`,
+    url: `/api/user/friends/requests/${requestId}`,
     data: { status },
   }),
 
   uploadAvatar: (formData: FormData): AxiosRequestConfig => ({
-    method: "POST",
-    url: "/api/users/avatar",
+    method: "PUT",
+    url: "/api/users/me/avatar",
     data: formData,
     headers: { "Content-Type": "multipart/form-data" },
   }),
@@ -87,23 +87,23 @@ export const userService = {
 
   reviewMatch: (sessionId: string, data: { rating: number; comment?: string }): AxiosRequestConfig => ({
     method: "POST",
-    url: `/api/user/matches/${sessionId}/review`,
+    url: `/api/user/matches/${sessionId}/reviews`,
     data,
   }),
 
   getOnlineFriends: (): AxiosRequestConfig => ({
     method: "GET",
-    url: "/api/user/friends/online-friends",
+    url: "/api/user/friends/online",
   }),
 
   unfriend: (friendId: string): AxiosRequestConfig => ({
     method: "DELETE",
-    url: `/api/user/friends/friends/${friendId}`,
+    url: `/api/user/friends/${friendId}`,
   }),
 
   checkFriendStatus: (targetUserId: string): AxiosRequestConfig => ({
     method: "GET",
-    url: `/api/user/friends/friends/${targetUserId}/status`,
+    url: `/api/user/friends/${targetUserId}/status`,
   }),
 
   reportUser: (data: {
@@ -120,7 +120,7 @@ export const userService = {
 
   submitAppeal: (data: { appealToken: string; reason: string }): AxiosRequestConfig => ({
     method: "POST",
-    url: "/api/users/appeal",
+    url: "/api/users/appeals",
     data,
   }),
 };

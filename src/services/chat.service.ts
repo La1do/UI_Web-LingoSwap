@@ -37,7 +37,7 @@ export const chatService = {
     if (matchSessionId) formData.append("matchSessionId", matchSessionId);
     return {
       method: "POST",
-      url: "/api/user/conversations/upload-image",
+      url: "/api/user/conversations/images",
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     };
