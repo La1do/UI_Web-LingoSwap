@@ -22,7 +22,9 @@ interface ApiMatch {
       language?: string;
     };
   };
-  rating?: 1 | 2 | 3 | 4 | 5;
+  myReview: {
+    rating: 1 | 2 | 3 | 4 | 5;
+  } | null;
   language?: string;
 }
 
@@ -56,7 +58,7 @@ function mapApiMatch(m: ApiMatch): Match {
     avatarUrl: m.partner.profile.avatar !== "default_avatar.png" ? m.partner.profile.avatar : undefined,
     language: m.language || m.partner.profile.language,
     duration: formatDuration(m.durationSeconds),
-    rating: m.rating,
+    rating: m.myReview?.rating,
   };
 }
 
@@ -64,13 +66,13 @@ function mapApiMatch(m: ApiMatch): Match {
 
 function Stars({ rating }: { rating?: number }) {
   const { theme } = useTheme();
-  if (!rating) return null;
+  const value = rating ?? 0;
   return (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((i) => (
         <svg key={i} viewBox="0 0 24 24" className="w-3 h-3"
-          fill={i <= rating ? theme.star : "none"}
-          stroke={i <= rating ? theme.star : theme.starEmpty}
+          fill={i <= value ? theme.star : "none"}
+          stroke={i <= value ? theme.star : theme.starEmpty}
           strokeWidth={1.5}>
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
         </svg>

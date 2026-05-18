@@ -183,6 +183,7 @@ export interface Translation {
     unfriendNo: string;
     streak: string;
     streakDays: string;
+    weeklyStreak: string;
     totalHours: string;
     totalSessions: string;
     daysThisMonth: string;

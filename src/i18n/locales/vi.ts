@@ -175,6 +175,7 @@ export const vi: Translation = {
     unfriendNo: "Không",
     streak: "Chuỗi ngày",
     streakDays: "ngày",
+    weeklyStreak: "Tuần này",
     totalHours: "Tổng giờ học",
     totalSessions: "Tổng phiên",
     daysThisMonth: "Ngày học tháng này",

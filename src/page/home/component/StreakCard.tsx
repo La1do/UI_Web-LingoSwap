@@ -19,6 +19,37 @@ function toLocalDateStr(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
+function getWeekStart(date: Date): Date {
+  const start = new Date(date);
+  const day = start.getDay();
+  const mondayOffset = day === 0 ? -6 : 1 - day;
+  start.setDate(start.getDate() + mondayOffset);
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
+
+function getCurrentWeekDays(calendar: Record<string, number>, dayLabels: string[]) {
+  const today = new Date();
+  const todayKey = toLocalDateStr(today);
+  const weekStart = getWeekStart(today);
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(weekStart);
+    date.setDate(weekStart.getDate() + index);
+    const key = toLocalDateStr(date);
+    const sessions = calendar[key] ?? 0;
+
+    return {
+      key,
+      label: dayLabels[index] ?? "",
+      dayNumber: date.getDate(),
+      sessions,
+      isActive: sessions > 0,
+      isToday: key === todayKey,
+    };
+  });
+}
+
 export default function StreakCard() {
   const { theme } = useTheme();
   const { t } = useI18n();
@@ -30,6 +61,7 @@ export default function StreakCard() {
   const totalSessions = user?.stats?.totalSessions ?? 0;
   const calendar = user?.stats?.learningCalendar ?? {};
   const lastStreakUpdate = user?.stats?.lastStreakUpdate;
+  const weekDays = getCurrentWeekDays(calendar, t.streak.dayLabels);
 
   // Lửa sáng nếu lastStreakUpdate là ngày hôm nay
   const isUpdatedToday = lastStreakUpdate
@@ -89,6 +121,57 @@ export default function StreakCard() {
             <p className="text-xs mt-0.5" style={{ color: isUpdatedToday ? flameColor : theme.text.placeholder }}>
               {t.home.streak}
             </p>
+          </div>
+        </div>
+
+        {/* Weekly streak */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-medium" style={{ color: theme.text.secondary }}>
+              {t.home.weeklyStreak}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-7 gap-2">
+            {weekDays.map((day) => (
+              <div
+                key={day.key}
+                className="min-w-0 rounded-xl px-1.5 py-2 flex flex-col items-center gap-1"
+                style={{
+                  background: day.isActive ? `${theme.star}18` : theme.background.input,
+                  border: day.isActive
+                    ? `1px solid ${theme.star}`
+                    : day.isToday
+                      ? `1px solid ${theme.border.focused}`
+                      : `1px solid ${theme.border.default}`,
+                  boxShadow: day.isActive ? `0 0 0 2px ${theme.star}18` : "none",
+                }}
+              >
+                <span className="text-[10px] font-semibold leading-none" style={{ color: theme.text.placeholder }}>
+                  {day.label}
+                </span>
+
+                <span
+                  className="h-6 w-6 rounded-full flex items-center justify-center text-sm"
+                  style={{
+                    background: day.isActive ? `${theme.star}22` : "transparent",
+                    color: day.isActive ? theme.star : theme.starEmpty,
+                    filter: day.isActive ? "none" : "grayscale(1)",
+                  }}
+                >
+                  {day.isActive ? "🔥" : (
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: theme.starEmpty }}
+                    />
+                  )}
+                </span>
+
+                <span className="text-[10px] leading-none" style={{ color: day.isToday ? theme.text.accent : theme.text.secondary }}>
+                  {day.dayNumber}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
