@@ -329,6 +329,9 @@ export interface Translation {
       hate: string;
       other: string;
     };
+    otherLabel: string;
+    otherPlaceholder: string;
+    otherRequired: string;
     submit: string;
     submitting: string;
     cancel: string;

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import axios from "../library/axios.customize";
-import { socketService } from "../services/socket.service";
+import { socketService, type FriendRequestRespondedPayload } from "../services/socket.service";
 import { useAuth } from "./AuthContext";
 
 // ─── Types ───────────────────────────────────────────────────
@@ -151,7 +151,7 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     // Reconnect socket nếu chưa connected (ví dụ sau F5)
     socketService.connect();
     fetchFriends();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchFriends]);
 
   // Heartbeat mỗi 30s — chỉ khi authenticated
   useEffect(() => {
@@ -198,6 +198,32 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
       socketService.getSocket()?.off("connect", registerListener);
     };
   }, [isAuthenticated, updateFriendStatus]);
+
+  // Realtime friendship response - refetch để UI hết trạng thái pending/chuyển sang bạn bè
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const handler = (payload: FriendRequestRespondedPayload) => {
+      console.log("[Socket] friend_request_responded:", payload);
+      fetchFriends();
+    };
+
+    const registerListener = () => {
+      socketService.offFriendRequestResponded(handler);
+      socketService.onFriendRequestResponded(handler);
+    };
+
+    socketService.onReady(registerListener);
+
+    socketService.onReady((s) => {
+      s.on("connect", registerListener);
+    });
+
+    return () => {
+      socketService.offFriendRequestResponded(handler);
+      socketService.getSocket()?.off("connect", registerListener);
+    };
+  }, [isAuthenticated, fetchFriends]);
 
   // Realtime incoming message — tự động mở ChatWindow khi nhận tin nhắn mới
   useEffect(() => {
