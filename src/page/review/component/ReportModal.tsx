@@ -13,6 +13,8 @@ interface ReportModalProps {
   onClose: () => void;
 }
 
+type ReportReasonId = "spam" | "harassment" | "inappropriate" | "hate" | "other";
+
 export default function ReportModal({
   reportedUserId,
   reportedUserName,
@@ -26,24 +28,32 @@ export default function ReportModal({
   const toast = useToast();
 
   const [selectedReason, setSelectedReason] = useState("");
+  const [selectedReasonId, setSelectedReasonId] = useState<ReportReasonId | "">("");
+  const [otherReason, setOtherReason] = useState("");
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
 
-  const reasons = [
-    { key: "Spam", label: t.report.reasons.spam },
-    { key: "Quấy rối", label: t.report.reasons.harassment },
-    { key: "Nội dung không phù hợp", label: t.report.reasons.inappropriate },
-    { key: "Ngôn ngữ thù địch", label: t.report.reasons.hate },
-    { key: "Khác", label: t.report.reasons.other },
+  const reasons: Array<{ id: ReportReasonId; key: string; label: string }> = [
+    { id: "spam", key: "Spam", label: t.report.reasons.spam },
+    { id: "harassment", key: "Quấy rối", label: t.report.reasons.harassment },
+    { id: "inappropriate", key: "Nội dung không phù hợp", label: t.report.reasons.inappropriate },
+    { id: "hate", key: "Ngôn ngữ thù địch", label: t.report.reasons.hate },
+    { id: "other", key: "Khác", label: t.report.reasons.other },
   ];
 
   const handleSubmit = async () => {
     if (!selectedReason) return;
     setError("");
+    const trimmedOtherReason = otherReason.trim();
+    if (selectedReasonId === "other" && trimmedOtherReason.length < 5) {
+      setError(t.report.otherRequired);
+      return;
+    }
+
     const result = await submitReport(
       userService.reportUser({
         reportedUserId,
-        reason: selectedReason,
+        reason: selectedReasonId === "other" ? trimmedOtherReason : selectedReason,
         matchSessionId: matchSessionId ?? null,
         conversationId: conversationId ?? null,
       })
@@ -120,12 +130,17 @@ export default function ReportModal({
               <p className="text-xs font-medium" style={{ color: theme.text.secondary }}>
                 {t.report.subtitle}
               </p>
-              {reasons.map(({ key, label }) => {
+              {reasons.map(({ id, key, label }) => {
                 const isSelected = selectedReason === key;
                 return (
                   <button
                     key={key}
-                    onClick={() => setSelectedReason(key)}
+                    onClick={() => {
+                      setSelectedReason(key);
+                      setSelectedReasonId(id);
+                      setError("");
+                      if (id !== "other") setOtherReason("");
+                    }}
                     className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-left transition-all"
                     style={{
                       background: isSelected ? `${theme.button.bg}15` : theme.background.input,
@@ -151,6 +166,37 @@ export default function ReportModal({
               })}
             </div>
 
+            {selectedReasonId === "other" && (
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium" style={{ color: theme.text.secondary }}>
+                  {t.report.otherLabel}
+                </label>
+                <textarea
+                  value={otherReason}
+                  onChange={(e) => {
+                    setOtherReason(e.target.value);
+                    if (error) setError("");
+                  }}
+                  placeholder={t.report.otherPlaceholder}
+                  rows={3}
+                  className="w-full resize-none rounded-xl px-3 py-2 text-sm outline-none transition-all"
+                  style={{
+                    background: theme.background.input,
+                    border: `1px solid ${theme.border.default}`,
+                    color: theme.text.primary,
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = theme.border.focused;
+                    e.currentTarget.style.boxShadow = theme.shadow.input;
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = theme.border.default;
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                />
+              </div>
+            )}
+
             {/* Error */}
             {error && (
               <p className="text-xs text-center" style={{ color: theme.text.error }}>{error}</p>
@@ -171,7 +217,7 @@ export default function ReportModal({
               </button>
               <button
                 onClick={handleSubmit}
-                disabled={!selectedReason || isLoading}
+                disabled={!selectedReason || isLoading || (selectedReasonId === "other" && otherReason.trim().length === 0)}
                 className="flex-1 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
                 style={{ background: theme.text.error, color: theme.button.text }}
               >

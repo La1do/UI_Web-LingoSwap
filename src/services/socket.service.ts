@@ -19,6 +19,12 @@ export interface PartnerDisconnectedPayload {
   message: string;
 }
 
+export interface FriendRequestRespondedPayload {
+  friendshipId: string;
+  recipientId: string;
+  status: "accepted" | "rejected";
+}
+
 // ─── Singleton socket instance ───────────────────────────────
 
 let socket: Socket | null = null;
@@ -307,6 +313,16 @@ export const socketService = {
 
   offFriendStatusChange(): void {
     socket?.off("friend_status_change");
+  },
+
+  // Friendship events
+
+  onFriendRequestResponded(cb: (payload: FriendRequestRespondedPayload) => void): void {
+    socket?.on("friend_request_responded", cb);
+  },
+
+  offFriendRequestResponded(cb: (payload: FriendRequestRespondedPayload) => void): void {
+    socket?.off("friend_request_responded", cb);
   },
 
   // Remove all matching listeners (cleanup)
