@@ -175,6 +175,7 @@ export const en: Translation = {
     unfriendNo: "No",
     streak: "Day streak",
     streakDays: "days",
+    weeklyStreak: "This week",
     totalHours: "Total hours",
     totalSessions: "Total sessions",
     daysThisMonth: "Days this month",
