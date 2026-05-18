@@ -7,6 +7,7 @@ import { useApi } from "../../hook/useApi";
 import { useAuth } from "../../context/AuthContext";
 import PageShell from "../../layout/PageShell";
 import StatsBar from "./component/StatsBar";
+import AdminDashboardCharts from "./component/AdminDashboardCharts";
 import UserTable, { type AdminUser } from "./component/UserTable";
 import ReportList, { type Report, type ResolvePayload, type ApiReport, mapApiReport } from "./component/ReportList";
 import AppealList from "./component/AppealList";
@@ -168,12 +169,12 @@ export default function AdminPage() {
   return (
     <PageShell controlsPosition="top-right">
       <div
-        className="min-h-screen flex"
+        className="min-h-screen flex "
         style={{ background: theme.background.page, fontFamily: "'DM Sans', sans-serif" }}
       >
         {/* ── Sidebar ── */}
         <aside
-          className="w-56 shrink-0 flex flex-col py-6 px-3 gap-1 min-h-screen"
+          className="w-56 shrink-0 flex flex-col py-6 px-3 gap-1 min-h-screen fixed"
           style={{ borderRight: `1px solid ${theme.border.default}`, background: theme.background.card }}
         >
           {/* Logo */}
@@ -233,7 +234,7 @@ export default function AdminPage() {
         </aside>
 
         {/* ── Main content ── */}
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto p-8 ml-56">
           <div className="max-w-5xl mx-auto flex flex-col gap-6">
 
             {/* Section header */}
@@ -246,7 +247,10 @@ export default function AdminPage() {
               loadingDashboard ? (
                 <p className="text-sm" style={{ color: theme.text.placeholder }}>{t.common.loading}</p>
               ) : (
-                <StatsBar {...stats} />
+                <>
+                  <StatsBar {...stats} />
+                  {dashboard && <AdminDashboardCharts dashboard={dashboard} />}
+                </>
               )
             )}
 

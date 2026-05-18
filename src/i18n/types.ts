@@ -372,6 +372,26 @@ export interface Translation {
       totalSessions: string;
       totalMessages: string;
     };
+    dashboardCharts: {
+      userHealth: string;
+      userGrowth: string;
+      activityOverview: string;
+      moderation: string;
+      activeUsers: string;
+      bannedUsers: string;
+      newUsers: string;
+      sessions: string;
+      messages: string;
+      reports: string;
+      pending: string;
+      resolved: string;
+      today: string;
+      thisWeek: string;
+      thisMonth: string;
+      avgDuration: string;
+      totalDuration: string;
+      friendships: string;
+    };
     table: {
       user: string;
       email: string;
