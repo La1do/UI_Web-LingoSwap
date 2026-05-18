@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
+import { useI18n } from "../../context/I18nContext";
 import { useApi } from "../../hook/useApi";
 import { useAuth } from "../../context/AuthContext";
 import { authService, type LoginResponse } from "../../services/auth.service";
@@ -24,6 +25,7 @@ const LockIcon = () => (
 
 export default function AdminLoginPage() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const { execute, isLoading, isError, error: apiError } = useApi<LoginResponse>();
   const { execute: executeMe } = useApi<MeResponse>();
@@ -38,7 +40,7 @@ export default function AdminLoginPage() {
     setError("");
 
     if (!email || !password) {
-      setError("Vui lòng nhập email và mật khẩu.");
+      setError(t.admin.login.missingCredentials);
       return;
     }
 
@@ -46,7 +48,7 @@ export default function AdminLoginPage() {
     if (!result) return;
 
     if (result.role !== "admin") {
-      setError("Tài khoản này không có quyền truy cập admin.");
+      setError(t.admin.login.forbidden);
       return;
     }
 
@@ -72,13 +74,11 @@ export default function AdminLoginPage() {
           padding: "2.5rem 2rem",
         }}
       >
-        {/* Top accent */}
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 h-0.5 w-2/3 rounded-full"
           style={{ background: `linear-gradient(90deg, transparent, ${theme.button.bg}, transparent)` }}
         />
 
-        {/* Header */}
         <div className="mb-8 text-center">
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg mx-auto mb-4"
             style={{ background: theme.button.bg, color: theme.button.text }}>
@@ -88,15 +88,15 @@ export default function AdminLoginPage() {
             LingoSwap
           </p>
           <h1 className="text-2xl font-semibold" style={{ color: theme.text.primary }}>
-            Admin Portal
+            {t.admin.login.title}
           </h1>
         </div>
 
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <AuthInput
-            label="Email"
+            label={t.admin.login.email}
             type="email"
-            placeholder="admin@lingoswap.com"
+            placeholder={t.admin.login.emailPlaceholder}
             autoComplete="email"
             leftIcon={<MailIcon />}
             value={email}
@@ -104,9 +104,9 @@ export default function AdminLoginPage() {
           />
 
           <AuthInput
-            label="Mật khẩu"
+            label={t.admin.login.password}
             type="password"
-            placeholder="••••••••"
+            placeholder={t.admin.login.passwordPlaceholder}
             autoComplete="current-password"
             leftIcon={<LockIcon />}
             value={password}
@@ -125,7 +125,7 @@ export default function AdminLoginPage() {
             className="w-full py-3 rounded-xl text-sm font-semibold mt-2 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ background: theme.button.bg, color: theme.button.text }}
           >
-            {isLoading ? "Đang xử lý…" : "Đăng nhập"}
+            {isLoading ? t.admin.login.processing : t.admin.login.submit}
           </button>
         </form>
       </div>
