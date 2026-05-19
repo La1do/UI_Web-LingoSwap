@@ -7,6 +7,7 @@ import { useApi } from "../../hook/useApi";
 import { useAuth } from "../../context/AuthContext";
 import PageShell from "../../layout/PageShell";
 import StatsBar from "./component/StatsBar";
+import AdminDashboardCharts from "./component/AdminDashboardCharts";
 import UserTable, { type AdminUser } from "./component/UserTable";
 import ReportList, { type Report, type ResolvePayload, type ApiReport, mapApiReport } from "./component/ReportList";
 import AppealList from "./component/AppealList";
@@ -15,6 +16,7 @@ import { adminService, type DashboardStats, type Appeal } from "../../services/a
 // ─── Nav ─────────────────────────────────────────────────────
 
 type AdminSection = "dashboard" | "users" | "reports" | "appeals";
+type LoadedSections = Record<AdminSection, boolean>;
 
 const NAV_ITEMS: { id: AdminSection; labelKey: "dashboardSection" | "usersSection" | "reportsSection" | "appealsSection"; icon: React.ReactNode }[] = [
   {
@@ -76,39 +78,69 @@ export default function AdminPage() {
   const [reports, setReports] = useState<Report[]>([]);
   const [appeals, setAppeals] = useState<Appeal[]>([]);
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
+  const [loadedSections, setLoadedSections] = useState<LoadedSections>({
+    dashboard: false,
+    users: false,
+    reports: false,
+    appeals: false,
+  });
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   // API hooks
-  const { execute: fetchUsers, isLoading: loadingUsers } = useApi<AdminUser[]>();
-  const { execute: fetchDashboard, isLoading: loadingDashboard } = useApi<DashboardStats>();
-  const { execute: fetchAppeals, isLoading: loadingAppeals } = useApi<Appeal[]>();
-  const { execute: fetchReports, isLoading: loadingReports } = useApi<ApiReport[]>();
+  const { execute: fetchUsers, isLoading: loadingUsers, isError: isUsersError, error: usersError } = useApi<AdminUser[]>();
+  const { execute: fetchDashboard, isLoading: loadingDashboard, isError: isDashboardError, error: dashboardError } = useApi<DashboardStats>();
+  const { execute: fetchAppeals, isLoading: loadingAppeals, isError: isAppealsError, error: appealsError } = useApi<Appeal[]>();
+  const { execute: fetchReports, isLoading: loadingReports, isError: isReportsError, error: reportsError } = useApi<ApiReport[]>();
   const { execute: resolveReportExec } = useApi();
+  const { execute: resolveAppealExec } = useApi();
   const { execute: banExec } = useApi();
   const { execute: deleteExec } = useApi();
 
+  const markLoaded = (section: AdminSection) => {
+    setLoadedSections((prev) => ({ ...prev, [section]: true }));
+  };
+
+  const loadDashboard = async () => {
+    const data = await fetchDashboard(adminService.getDashboard());
+    if (data) {
+      setDashboard(data);
+      markLoaded("dashboard");
+    }
+  };
+
+  const loadUsers = async () => {
+    const data = await fetchUsers(adminService.getUsers());
+    if (data) {
+      setUsers(data);
+      markLoaded("users");
+    }
+  };
+
+  const loadAppeals = async () => {
+    const data = await fetchAppeals(adminService.getAppeals());
+    if (data) {
+      setAppeals(data);
+      markLoaded("appeals");
+    }
+  };
+
+  const loadReports = async () => {
+    const data = await fetchReports(adminService.getReports());
+    if (data) {
+      setReports(data.map(mapApiReport));
+      markLoaded("reports");
+    }
+  };
+
   // Fetch on section change
   useEffect(() => {
-    if (activeSection === "dashboard" && !dashboard) {
-      fetchDashboard(adminService.getDashboard()).then((data) => {
-        if (data) setDashboard(data);
-      });
-    }
-    if (activeSection === "users" && users.length === 0) {
-      fetchUsers(adminService.getUsers()).then((data) => {
-        if (data) setUsers(data);
-      });
-    }
-    if (activeSection === "appeals" && appeals.length === 0) {
-      fetchAppeals(adminService.getAppeals()).then((data) => {
-        if (data) setAppeals(data);
-      });
-    }
-    if (activeSection === "reports" && reports.length === 0) {
-      fetchReports(adminService.getReports()).then((data) => {
-        if (data) setReports(data.map(mapApiReport));
-      });
-    }
-  }, [activeSection]);
+    if (loadedSections[activeSection]) return;
+
+    if (activeSection === "dashboard") void loadDashboard();
+    if (activeSection === "users") void loadUsers();
+    if (activeSection === "appeals") void loadAppeals();
+    if (activeSection === "reports") void loadReports();
+  }, [activeSection, loadedSections]);
 
   // Stats — từ dashboard API hoặc tính từ users
   const stats = dashboard
@@ -129,24 +161,42 @@ export default function AdminPage() {
         reports: reports.filter((r) => r.status === "pending").length,
       };
 
-  const handleBan = async (user: AdminUser) => {
-    await banExec(adminService.banUser(user._id));
+  const handleBan = async (user: AdminUser): Promise<boolean> => {
+    setActionLoading(`ban:${user._id}`);
+    const result = await banExec(adminService.banUser(user._id));
+    setActionLoading(null);
+    if (result === null) return false;
+
     setUsers((prev) => prev.map((u) => u._id === user._id ? { ...u, statusAccount: "banned" } : u));
+    return true;
   };
 
-  const handleDelete = async (user: AdminUser) => {
-    await deleteExec(adminService.deleteUser(user._id));
+  const handleDelete = async (user: AdminUser): Promise<boolean> => {
+    setActionLoading(`delete:${user._id}`);
+    const result = await deleteExec(adminService.deleteUser(user._id));
+    setActionLoading(null);
+    if (result === null) return false;
+
     setUsers((prev) => prev.filter((u) => u._id !== user._id));
+    return true;
   };
 
-  const handleResolveAppeal = (appeal: Appeal, status: "approved" | "rejected", adminNotes: string) => {
+  const handleResolveAppeal = async (appeal: Appeal, status: "approved" | "rejected", adminNotes: string): Promise<boolean> => {
+    const result = await resolveAppealExec(adminService.resolveAppeal(appeal._id, { status, adminNotes }));
+    if (result === null) return false;
+
     setAppeals((prev) =>
       prev.map((a) => a._id === appeal._id ? { ...a, status, adminNotes } : a)
     );
+    return true;
   };
 
-  const handleResolveReport = async (report: Report, payload: ResolvePayload) => {
-    await resolveReportExec(adminService.resolveReport(report._id, payload));
+  const handleResolveReport = async (report: Report, payload: ResolvePayload): Promise<boolean> => {
+    setActionLoading(`report:${report._id}`);
+    const result = await resolveReportExec(adminService.resolveReport(report._id, payload));
+    setActionLoading(null);
+    if (result === null) return false;
+
     setReports((prev) =>
       prev.map((r) =>
         r._id === report._id
@@ -154,6 +204,7 @@ export default function AdminPage() {
           : r
       )
     );
+    return true;
   };
 
   const sectionLabel: Record<AdminSection, string> = {
@@ -165,15 +216,75 @@ export default function AdminPage() {
 
   const pendingAppeals = appeals.filter((a) => a.status === "pending").length;
 
+  const retryActiveSection = () => {
+    if (activeSection === "dashboard") void loadDashboard();
+    if (activeSection === "users") void loadUsers();
+    if (activeSection === "appeals") void loadAppeals();
+    if (activeSection === "reports") void loadReports();
+  };
+
+  function AdminLoadingState() {
+    return (
+      <div
+        className="min-h-48 rounded-2xl flex flex-col items-center justify-center gap-3"
+        style={{
+          background: theme.background.card,
+          border: `1px solid ${theme.border.default}`,
+          boxShadow: theme.shadow.card,
+        }}
+      >
+        <div
+          className="w-8 h-8 rounded-full border-4 animate-spin"
+          style={{
+            borderColor: theme.border.default,
+            borderTopColor: theme.button.bg,
+          }}
+        />
+        <p className="text-sm font-medium" style={{ color: theme.text.secondary }}>
+          {t.admin.loadingSection}
+        </p>
+      </div>
+    );
+  }
+
+  function AdminErrorState({ message }: { message: string | null }) {
+    return (
+      <div
+        className="min-h-48 rounded-2xl flex flex-col items-center justify-center gap-3 text-center px-6"
+        style={{
+          background: theme.background.card,
+          border: `1px solid ${theme.border.default}`,
+          boxShadow: theme.shadow.card,
+        }}
+      >
+        <p className="text-sm font-semibold" style={{ color: theme.text.error }}>
+          {t.admin.loadFailed}
+        </p>
+        {message && (
+          <p className="text-xs max-w-md" style={{ color: theme.text.secondary }}>
+            {message}
+          </p>
+        )}
+        <button
+          onClick={retryActiveSection}
+          className="px-4 py-2 rounded-xl text-sm font-semibold hover:opacity-90"
+          style={{ background: theme.button.bg, color: theme.button.text }}
+        >
+          {t.admin.retry}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <PageShell controlsPosition="top-right">
       <div
-        className="min-h-screen flex"
+        className="min-h-screen flex "
         style={{ background: theme.background.page, fontFamily: "'DM Sans', sans-serif" }}
       >
         {/* ── Sidebar ── */}
         <aside
-          className="w-56 shrink-0 flex flex-col py-6 px-3 gap-1 min-h-screen"
+          className="w-56 shrink-0 flex flex-col py-6 px-3 gap-1 min-h-screen fixed"
           style={{ borderRight: `1px solid ${theme.border.default}`, background: theme.background.card }}
         >
           {/* Logo */}
@@ -233,7 +344,7 @@ export default function AdminPage() {
         </aside>
 
         {/* ── Main content ── */}
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto p-8 ml-56">
           <div className="max-w-5xl mx-auto flex flex-col gap-6">
 
             {/* Section header */}
@@ -244,9 +355,14 @@ export default function AdminPage() {
             {/* Dashboard */}
             {activeSection === "dashboard" && (
               loadingDashboard ? (
-                <p className="text-sm" style={{ color: theme.text.placeholder }}>{t.common.loading}</p>
+                <AdminLoadingState />
+              ) : isDashboardError ? (
+                <AdminErrorState message={dashboardError} />
               ) : (
-                <StatsBar {...stats} />
+                <>
+                  <StatsBar {...stats} />
+                  {dashboard && <AdminDashboardCharts dashboard={dashboard} />}
+                </>
               )
             )}
 
@@ -255,9 +371,11 @@ export default function AdminPage() {
               <section className="rounded-2xl p-6 flex flex-col gap-4"
                 style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}>
                 {loadingUsers ? (
-                  <p className="text-sm" style={{ color: theme.text.placeholder }}>{t.common.loading}</p>
+                  <AdminLoadingState />
+                ) : isUsersError ? (
+                  <AdminErrorState message={usersError} />
                 ) : (
-                  <UserTable users={users} onBan={handleBan} onDelete={handleDelete} />
+                  <UserTable users={users} onBan={handleBan} onDelete={handleDelete} actionLoading={actionLoading} />
                 )}
               </section>
             )}
@@ -267,9 +385,11 @@ export default function AdminPage() {
               <section className="rounded-2xl p-6 flex flex-col gap-4"
                 style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}>
                 {loadingReports ? (
-                  <p className="text-sm" style={{ color: theme.text.placeholder }}>{t.common.loading}</p>
+                  <AdminLoadingState />
+                ) : isReportsError ? (
+                  <AdminErrorState message={reportsError} />
                 ) : (
-                  <ReportList reports={reports} onResolve={handleResolveReport} />
+                  <ReportList reports={reports} onResolve={handleResolveReport} actionLoading={actionLoading} />
                 )}
               </section>
             )}
@@ -279,7 +399,9 @@ export default function AdminPage() {
               <section className="rounded-2xl p-6 flex flex-col gap-4"
                 style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}>
                 {loadingAppeals ? (
-                  <p className="text-sm" style={{ color: theme.text.placeholder }}>{t.common.loading}</p>
+                  <AdminLoadingState />
+                ) : isAppealsError ? (
+                  <AdminErrorState message={appealsError} />
                 ) : (
                   <AppealList appeals={appeals} onResolve={handleResolveAppeal} />
                 )}

@@ -362,6 +362,21 @@ export interface Translation {
     reportsSection: string;
     appealsSection: string;
     dashboardSection: string;
+    loadingSection: string;
+    loadFailed: string;
+    retry: string;
+    processing: string;
+    login: {
+      title: string;
+      email: string;
+      emailPlaceholder: string;
+      password: string;
+      passwordPlaceholder: string;
+      missingCredentials: string;
+      forbidden: string;
+      processing: string;
+      submit: string;
+    };
     stats: {
       totalUsers: string;
       active: string;
@@ -371,6 +386,26 @@ export interface Translation {
       newToday: string;
       totalSessions: string;
       totalMessages: string;
+    };
+    dashboardCharts: {
+      userHealth: string;
+      userGrowth: string;
+      activityOverview: string;
+      moderation: string;
+      activeUsers: string;
+      bannedUsers: string;
+      newUsers: string;
+      sessions: string;
+      messages: string;
+      reports: string;
+      pending: string;
+      resolved: string;
+      today: string;
+      thisWeek: string;
+      thisMonth: string;
+      avgDuration: string;
+      totalDuration: string;
+      friendships: string;
     };
     table: {
       user: string;
@@ -383,6 +418,12 @@ export interface Translation {
       searchPlaceholder: string;
       ban: string;
       delete: string;
+    };
+    banDialog: {
+      title: string;
+      description: string;
+      confirm: string;
+      cancel: string;
     };
     deleteDialog: {
       title: string;

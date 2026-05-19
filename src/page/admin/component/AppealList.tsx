@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
-import { useApi } from "../../../hook/useApi";
-import { adminService, type Appeal } from "../../../services/admin.service";
+import type { Appeal } from "../../../services/admin.service";
 
 interface AppealListProps {
   appeals: Appeal[];
-  onResolve: (appeal: Appeal, status: "approved" | "rejected", notes: string) => void;
+  onResolve: (appeal: Appeal, status: "approved" | "rejected", notes: string) => Promise<boolean>;
 }
 
 type FilterStatus = "all" | "pending" | "approved" | "rejected";
@@ -14,7 +13,6 @@ type FilterStatus = "all" | "pending" | "approved" | "rejected";
 export default function AppealList({ appeals, onResolve }: AppealListProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
-  const { execute, isLoading } = useApi();
   const [filter, setFilter] = useState<FilterStatus>("all");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
@@ -37,8 +35,12 @@ export default function AppealList({ appeals, onResolve }: AppealListProps) {
   const handleResolve = async (appeal: Appeal, status: "approved" | "rejected") => {
     setProcessing(appeal._id + status);
     const adminNotes = notes[appeal._id] ?? "";
-    await execute(adminService.resolveAppeal(appeal._id, { status, adminNotes }));
-    onResolve(appeal, status, adminNotes);
+    const ok = await onResolve(appeal, status, adminNotes);
+    if (!ok) {
+      setProcessing(null);
+      return;
+    }
+
     setProcessing(null);
     setExpanded(null);
   };
@@ -176,14 +178,14 @@ export default function AppealList({ appeals, onResolve }: AppealListProps) {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleResolve(appeal, "rejected")}
-                          disabled={isLoading || processing !== null}
+                          disabled={processing !== null}
                           className="px-4 py-2 rounded-xl text-xs font-medium hover:opacity-80 transition-opacity disabled:opacity-50"
                           style={{ background: theme.background.card, color: theme.text.error, border: `1px solid ${theme.text.error}40` }}>
                           {processing === appeal._id + "rejected" ? t.admin.appeals.processing : t.admin.appeals.reject}
                         </button>
                         <button
                           onClick={() => handleResolve(appeal, "approved")}
-                          disabled={isLoading || processing !== null}
+                          disabled={processing !== null}
                           className="px-4 py-2 rounded-xl text-xs font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
                           style={{ background: theme.text.success, color: theme.button.text }}>
                           {processing === appeal._id + "approved" ? t.admin.appeals.processing : t.admin.appeals.approve}

@@ -54,7 +54,8 @@ export interface ResolvePayload {
 
 interface ReportListProps {
   reports: Report[];
-  onResolve: (report: Report, payload: ResolvePayload) => void;
+  onResolve: (report: Report, payload: ResolvePayload) => Promise<boolean>;
+  actionLoading: string | null;
 }
 
 // ─── Resolve Modal ────────────────────────────────────────────
@@ -63,10 +64,12 @@ function ResolveModal({
   report,
   onConfirm,
   onClose,
+  isSubmitting,
 }: {
   report: Report;
-  onConfirm: (payload: ResolvePayload) => void;
+  onConfirm: (payload: ResolvePayload) => Promise<void>;
   onClose: () => void;
+  isSubmitting: boolean;
 }) {
   const { theme } = useTheme();
   const { t } = useI18n();
@@ -110,7 +113,8 @@ function ResolveModal({
             {t.admin.reports.resolveTitle}
           </h3>
           <button onClick={onClose}
-            className="w-7 h-7 rounded-lg flex items-center justify-center hover:opacity-70"
+            disabled={isSubmitting}
+            className="w-7 h-7 rounded-lg flex items-center justify-center hover:opacity-70 disabled:opacity-50"
             style={{ background: theme.background.input, color: theme.text.secondary }}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -131,7 +135,8 @@ function ResolveModal({
         <div className="flex gap-2">
           {(["resolved", "dismissed"] as const).map((a) => (
             <button key={a} onClick={() => setAction(a)}
-              className="flex-1 py-2 rounded-xl text-xs font-semibold transition-all"
+              disabled={isSubmitting}
+              className="flex-1 py-2 rounded-xl text-xs font-semibold transition-all disabled:opacity-50"
               style={{
                 background: action === a
                   ? (a === "resolved" ? theme.text.success : theme.background.input)
@@ -204,13 +209,14 @@ function ResolveModal({
             style={{ background: theme.background.input, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}>
             {t.admin.reports.cancel}
           </button>
-          <button onClick={handleConfirm}
-            className="flex-1 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity"
+          <button onClick={() => void handleConfirm()}
+            disabled={isSubmitting}
+            className="flex-1 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               background: action === "resolved" ? theme.text.success : theme.button.bg,
               color: theme.button.text,
             }}>
-            {t.admin.reports.confirm}
+            {isSubmitting ? t.admin.processing : t.admin.reports.confirm}
           </button>
         </div>
       </div>
@@ -220,7 +226,7 @@ function ResolveModal({
 
 // ─── Main component ───────────────────────────────────────────
 
-export default function ReportList({ reports, onResolve }: ReportListProps) {
+export default function ReportList({ reports, onResolve, actionLoading }: ReportListProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
   const [filter, setFilter] = useState<"all" | ReportStatus>("all");
@@ -359,19 +365,21 @@ export default function ReportList({ reports, onResolve }: ReportListProps) {
                       <div className="flex gap-2 pt-1">
                         <button
                           onClick={(e) => { e.stopPropagation(); setResolving(report); }}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold hover:opacity-80 transition-opacity"
+                          disabled={actionLoading !== null}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                           style={{ background: theme.text.success, color: theme.button.text }}>
                           {t.admin.reports.markResolved}
                         </button>
                         <button
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.stopPropagation();
-                            onResolve(report, { status: "dismissed" });
-                            setExpanded(null);
+                            const ok = await onResolve(report, { status: "dismissed" });
+                            if (ok) setExpanded(null);
                           }}
-                          className="px-3 py-1.5 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity"
+                          disabled={actionLoading !== null}
+                          className="px-3 py-1.5 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                           style={{ background: theme.background.card, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}>
-                          {t.admin.reports.dismiss}
+                          {actionLoading === `report:${report._id}` ? t.admin.processing : t.admin.reports.dismiss}
                         </button>
                       </div>
                     )}
@@ -386,10 +394,13 @@ export default function ReportList({ reports, onResolve }: ReportListProps) {
       {resolving && (
         <ResolveModal
           report={resolving}
-          onConfirm={(payload) => {
-            onResolve(resolving, payload);
-            setResolving(null);
-            setExpanded(null);
+          isSubmitting={actionLoading === `report:${resolving._id}`}
+          onConfirm={async (payload) => {
+            const ok = await onResolve(resolving, payload);
+            if (ok) {
+              setResolving(null);
+              setExpanded(null);
+            }
           }}
           onClose={() => setResolving(null)}
         />

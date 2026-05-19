@@ -14,14 +14,16 @@ export interface AdminUser {
 
 interface UserTableProps {
   users: AdminUser[];
-  onBan: (user: AdminUser) => void;
-  onDelete: (user: AdminUser) => void;
+  onBan: (user: AdminUser) => Promise<boolean>;
+  onDelete: (user: AdminUser) => Promise<boolean>;
+  actionLoading: string | null;
 }
 
-export default function UserTable({ users, onBan, onDelete }: UserTableProps) {
+export default function UserTable({ users, onBan, onDelete, actionLoading }: UserTableProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
   const [search, setSearch] = useState("");
+  const [confirmBan, setConfirmBan] = useState<AdminUser | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<AdminUser | null>(null);
 
   const filtered = users.filter((u) =>
@@ -125,10 +127,12 @@ export default function UserTable({ users, onBan, onDelete }: UserTableProps) {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       {user.statusAccount === "active" && user.role !== "admin" && (
-                        <button onClick={() => onBan(user)}
-                          className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity"
+                        <button
+                          onClick={() => setConfirmBan(user)}
+                          disabled={actionLoading !== null}
+                          className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                           style={{ background: `${theme.text.error}18`, color: theme.text.error }}>
-                          {t.admin.table.ban}
+                          {actionLoading === `ban:${user._id}` ? t.admin.processing : t.admin.table.ban}
                         </button>
                       )}
                       {user.role !== "admin" && (
@@ -146,6 +150,41 @@ export default function UserTable({ users, onBan, onDelete }: UserTableProps) {
           </tbody>
         </table>
       </div>
+
+      {/* Ban confirm dialog */}
+      {confirmBan && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ background: theme.overlay.default }}>
+          <div className="w-80 rounded-2xl p-6 flex flex-col gap-4"
+            style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}>
+            <h3 className="text-base font-semibold" style={{ color: theme.text.primary }}>
+              {t.admin.banDialog.title}
+            </h3>
+            <p className="text-sm" style={{ color: theme.text.secondary }}>
+              {t.admin.banDialog.description.replace("{name}", confirmBan.profile?.fullName ?? confirmBan.email)}
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmBan(null)}
+                disabled={actionLoading !== null}
+                className="flex-1 py-2 rounded-xl text-sm font-medium hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ background: theme.background.input, color: theme.text.secondary }}>
+                {t.admin.banDialog.cancel}
+              </button>
+              <button
+                onClick={async () => {
+                  const ok = await onBan(confirmBan);
+                  if (ok) setConfirmBan(null);
+                }}
+                disabled={actionLoading !== null}
+                className="flex-1 py-2 rounded-xl text-sm font-semibold hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ background: theme.text.error, color: theme.button.text }}>
+                {actionLoading === `ban:${confirmBan._id}` ? t.admin.processing : t.admin.banDialog.confirm}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Delete confirm dialog */}
       {confirmDelete && (
@@ -165,10 +204,15 @@ export default function UserTable({ users, onBan, onDelete }: UserTableProps) {
                 style={{ background: theme.background.input, color: theme.text.secondary }}>
                 {t.admin.deleteDialog.cancel}
               </button>
-              <button onClick={() => { onDelete(confirmDelete); setConfirmDelete(null); }}
-                className="flex-1 py-2 rounded-xl text-sm font-semibold hover:opacity-80"
+              <button
+                onClick={async () => {
+                  const ok = await onDelete(confirmDelete);
+                  if (ok) setConfirmDelete(null);
+                }}
+                disabled={actionLoading !== null}
+                className="flex-1 py-2 rounded-xl text-sm font-semibold hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ background: theme.text.error, color: theme.button.text }}>
-                {t.admin.deleteDialog.confirm}
+                {actionLoading === `delete:${confirmDelete._id}` ? t.admin.processing : t.admin.deleteDialog.confirm}
               </button>
             </div>
           </div>
