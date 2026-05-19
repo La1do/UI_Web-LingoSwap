@@ -4,6 +4,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
 import { useApi } from "../../hook/useApi";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
 import { authService, type LoginResponse } from "../../services/auth.service";
 import { userService } from "../../services/user.service";
 import type { MeResponse } from "../../context/AuthContext";
@@ -26,6 +27,7 @@ const LockIcon = () => (
 export default function AdminLoginPage() {
   const { theme } = useTheme();
   const { t } = useI18n();
+  const toast = useToast();
   const navigate = useNavigate();
   const { execute, isLoading, isError, error: apiError } = useApi<LoginResponse>();
   const { execute: executeMe } = useApi<MeResponse>();
@@ -56,6 +58,7 @@ export default function AdminLoginPage() {
     const me = await executeMe(userService.getMe());
     if (me) setUserFromMe(me);
 
+    toast.success(t.auth.loginSuccess);
     navigate("/admin", { replace: true });
   };
 

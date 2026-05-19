@@ -4,6 +4,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { useEffect } from "react";
 import { useI18n } from "../../../context/I18nContext";
 import { useAuth } from "../../../context/AuthContext";
+import { useToast } from "../../../context/ToastContext";
 import { ThemeToggle } from "../../component/ThemeToggle";
 import { LanguageToggle } from "../../component/LanguageToggle";
 import NotificationDropdown from "./NotificationDropdown";
@@ -66,6 +67,7 @@ function UserDropdown({ username, avatarUrl }: { username: string; avatarUrl?: s
   const { theme } = useTheme();
   const { t } = useI18n();
   const { logout } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -101,7 +103,12 @@ function UserDropdown({ username, avatarUrl }: { username: string; avatarUrl?: s
     {
       icon: <LogoutIcon />,
       label: t.profile.logoutLabel,
-      onClick: () => { setOpen(false); logout(); navigate("/"); },
+      onClick: () => {
+        setOpen(false);
+        toast.info(t.auth.logoutSuccess);
+        logout();
+        navigate("/");
+      },
       danger: true,
     },
   ];

@@ -5,7 +5,9 @@ import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
 import { useApi } from "../../hook/useApi";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
 import PageShell from "../../layout/PageShell";
+import AppLoader from "../component/AppLoader";
 import StatsBar from "./component/StatsBar";
 import AdminDashboardCharts from "./component/AdminDashboardCharts";
 import UserTable, { type AdminUser } from "./component/UserTable";
@@ -71,6 +73,7 @@ export default function AdminPage() {
   const { t } = useI18n();
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const toast = useToast();
   const [activeSection, setActiveSection] = useState<AdminSection>("dashboard");
 
   // Data state
@@ -165,9 +168,13 @@ export default function AdminPage() {
     setActionLoading(`ban:${user._id}`);
     const result = await banExec(adminService.banUser(user._id));
     setActionLoading(null);
-    if (result === null) return false;
+    if (result === null) {
+      toast.error(t.admin.toast.actionFailed);
+      return false;
+    }
 
     setUsers((prev) => prev.map((u) => u._id === user._id ? { ...u, statusAccount: "banned" } : u));
+    toast.success(t.admin.toast.banSuccess);
     return true;
   };
 
@@ -175,19 +182,27 @@ export default function AdminPage() {
     setActionLoading(`delete:${user._id}`);
     const result = await deleteExec(adminService.deleteUser(user._id));
     setActionLoading(null);
-    if (result === null) return false;
+    if (result === null) {
+      toast.error(t.admin.toast.actionFailed);
+      return false;
+    }
 
     setUsers((prev) => prev.filter((u) => u._id !== user._id));
+    toast.success(t.admin.toast.deleteSuccess);
     return true;
   };
 
   const handleResolveAppeal = async (appeal: Appeal, status: "approved" | "rejected", adminNotes: string): Promise<boolean> => {
     const result = await resolveAppealExec(adminService.resolveAppeal(appeal._id, { status, adminNotes }));
-    if (result === null) return false;
+    if (result === null) {
+      toast.error(t.admin.toast.actionFailed);
+      return false;
+    }
 
     setAppeals((prev) =>
       prev.map((a) => a._id === appeal._id ? { ...a, status, adminNotes } : a)
     );
+    toast.success(t.admin.toast.appealResolved);
     return true;
   };
 
@@ -195,7 +210,10 @@ export default function AdminPage() {
     setActionLoading(`report:${report._id}`);
     const result = await resolveReportExec(adminService.resolveReport(report._id, payload));
     setActionLoading(null);
-    if (result === null) return false;
+    if (result === null) {
+      toast.error(t.admin.toast.actionFailed);
+      return false;
+    }
 
     setReports((prev) =>
       prev.map((r) =>
@@ -204,6 +222,7 @@ export default function AdminPage() {
           : r
       )
     );
+    toast.success(t.admin.toast.reportResolved);
     return true;
   };
 
@@ -215,6 +234,10 @@ export default function AdminPage() {
   };
 
   const pendingAppeals = appeals.filter((a) => a.status === "pending").length;
+  const isInitialAdminLoading =
+    activeSection === "dashboard" &&
+    !loadedSections.dashboard &&
+    loadingDashboard;
 
   const retryActiveSection = () => {
     if (activeSection === "dashboard") void loadDashboard();
@@ -222,6 +245,10 @@ export default function AdminPage() {
     if (activeSection === "appeals") void loadAppeals();
     if (activeSection === "reports") void loadReports();
   };
+
+  if (isInitialAdminLoading) {
+    return <AppLoader />;
+  }
 
   function AdminLoadingState() {
     return (
@@ -329,7 +356,11 @@ export default function AdminPage() {
           {/* Logout */}
           <div className="mt-auto pt-4" style={{ borderTop: `1px solid ${theme.border.default}` }}>
             <button
-              onClick={() => { logout(); navigate("/admin/login", { replace: true }); }}
+              onClick={() => {
+                toast.info(t.auth.logoutSuccess);
+                logout();
+                navigate("/admin/login", { replace: true });
+              }}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium w-full text-left hover:opacity-80 transition-opacity"
               style={{ color: theme.text.error }}
             >

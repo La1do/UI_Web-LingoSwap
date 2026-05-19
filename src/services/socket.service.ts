@@ -25,6 +25,10 @@ export interface FriendRequestRespondedPayload {
   status: "accepted" | "rejected";
 }
 
+export interface StreakUpdatePayload {
+  streak: number;
+}
+
 // ─── Singleton socket instance ───────────────────────────────
 
 let socket: Socket | null = null;
@@ -323,6 +327,14 @@ export const socketService = {
 
   offFriendRequestResponded(cb: (payload: FriendRequestRespondedPayload) => void): void {
     socket?.off("friend_request_responded", cb);
+  },
+
+  onStreakUpdate(cb: (payload: StreakUpdatePayload) => void): void {
+    socket?.on("streak_update", cb);
+  },
+
+  offStreakUpdate(cb: (payload: StreakUpdatePayload) => void): void {
+    socket?.off("streak_update", cb);
   },
 
   // Remove all matching listeners (cleanup)

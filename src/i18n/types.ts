@@ -24,6 +24,7 @@ export interface Translation {
     welcomeBack: string;
     login: string;
     loginSuccess: string;
+    logoutSuccess: string;
     loggingIn: string;
     forgotPassword: string;
     noAccount: string;
@@ -176,6 +177,7 @@ export interface Translation {
     accepted: string;
     rejected: string;
     markAllRead: string;
+    markRead: string;
     sendRequest: string;
     unfriend: string;
     unfriendConfirm: string;
@@ -469,6 +471,13 @@ export interface Translation {
       banReason: string;
       appealContent: string;
       processing: string;
+    };
+    toast: {
+      banSuccess: string;
+      deleteSuccess: string;
+      reportResolved: string;
+      appealResolved: string;
+      actionFailed: string;
     };
     logout: string;
   };

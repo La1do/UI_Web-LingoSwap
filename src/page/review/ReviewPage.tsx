@@ -6,6 +6,7 @@ import { useApi } from "../../hook/useApi";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import { userService } from "../../services/user.service";
+import { socketService } from "../../services/socket.service";
 import type { MeResponse } from "../../context/AuthContext";
 import StreakCelebration from "./component/StreakCelebration";
 import ReportModal from "./component/ReportModal";
@@ -42,22 +43,14 @@ function StarRating({ value, onChange, size = "lg" }: {
   );
 }
 
-function getLastStreakUpdate(me: MeResponse): string | null {
-  return me.stats?.lastStreakUpdate ?? null;
-}
+function consumeStreakUpdateMarker(sessionId: string | null): boolean {
+  if (!sessionId) return false;
 
-const STREAK_FRESH_GRACE_MS = 20 * 1000;
-const CLOCK_SKEW_TOLERANCE_MS = 20 * 1000;
+  const key = `streak_update:${sessionId}`;
+  const value = sessionStorage.getItem(key);
+  sessionStorage.removeItem(key);
 
-function isFreshStreakUpdateForMeeting(value: string | null, durationSeconds: number, now = new Date()): boolean {
-  if (!value) return false;
-
-  const updatedAt = new Date(value).getTime();
-  if (Number.isNaN(updatedAt)) return false;
-
-  const durationMs = Math.max(0, durationSeconds) * 1000;
-  const elapsedAfterMeeting = now.getTime() - updatedAt - durationMs;
-  return elapsedAfterMeeting >= -CLOCK_SKEW_TOLERANCE_MS && elapsedAfterMeeting <= STREAK_FRESH_GRACE_MS;
+  return value !== null;
 }
 
 // ─── Partner Card ─────────────────────────────────────────────
@@ -172,7 +165,7 @@ export default function ReviewPage() {
   const [submitError, setSubmitError] = useState("");
   const [newStreak, setNewStreak] = useState<number | null>(null);
   const [newCalendar, setNewCalendar] = useState<Record<string, number> | null>(null);
-  const [lastStreakUpdate, setLastStreakUpdate] = useState<string | null>(null);
+  const [shouldShowStreakCelebration, setShouldShowStreakCelebration] = useState(false);
   const [showReport, setShowReport] = useState(false);
 
   // Fetch partner profile
@@ -182,6 +175,23 @@ export default function ReviewPage() {
       if (data) setPartner(data);
     });
   }, [partnerId]);
+
+  useEffect(() => {
+    if (!sessionId) return;
+
+    const handler = () => {
+      setShouldShowStreakCelebration(true);
+    };
+
+    socketService.onReady(() => {
+      socketService.offStreakUpdate(handler);
+      socketService.onStreakUpdate(handler);
+    });
+
+    return () => {
+      socketService.offStreakUpdate(handler);
+    };
+  }, [sessionId]);
 
   const handleSubmit = async () => {
     if (!sessionId || overallRating === 0) return;
@@ -195,7 +205,8 @@ export default function ReviewPage() {
       if (me) {
         setUserFromMe(me);
         setNewStreak(me.stats?.streak ?? 0);
-        setLastStreakUpdate(getLastStreakUpdate(me));
+        const shouldCelebrate = shouldShowStreakCelebration || consumeStreakUpdateMarker(sessionId);
+        setShouldShowStreakCelebration(shouldCelebrate);
         const rawCal = me.stats?.learningCalendar;
         const cal: Record<string, number> = Array.isArray(rawCal)
           ? Object.fromEntries((rawCal as string[]).map((d) => [d, 1]))
@@ -214,14 +225,15 @@ export default function ReviewPage() {
     if (me) {
       setUserFromMe(me);
       const streak = me.stats?.streak ?? 0;
-      setLastStreakUpdate(getLastStreakUpdate(me));
-      if (streak > 0) {
-        setNewStreak(streak);
-        const rawCal = me.stats?.learningCalendar;
-        const cal: Record<string, number> = Array.isArray(rawCal)
-          ? Object.fromEntries((rawCal as string[]).map((d) => [d, 1]))
-          : (rawCal as Record<string, number>) ?? {};
-        setNewCalendar(cal);
+      const shouldCelebrate = shouldShowStreakCelebration || consumeStreakUpdateMarker(sessionId);
+      setShouldShowStreakCelebration(shouldCelebrate);
+      setNewStreak(streak);
+      const rawCal = me.stats?.learningCalendar;
+      const cal: Record<string, number> = Array.isArray(rawCal)
+        ? Object.fromEntries((rawCal as string[]).map((d) => [d, 1]))
+        : (rawCal as Record<string, number>) ?? {};
+      setNewCalendar(cal);
+      if (streak > 0 && shouldCelebrate) {
         setSubmitted(true);
         return;
       }
@@ -234,26 +246,25 @@ export default function ReviewPage() {
     return `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
   };
 
-  const durationSeconds = Number(duration) || 0;
-  const shouldShowStreakCelebration =
+  const canShowStreakCelebration =
     submitted &&
+    shouldShowStreakCelebration &&
     newStreak !== null &&
-    newStreak > 0 &&
-    isFreshStreakUpdateForMeeting(lastStreakUpdate, durationSeconds);
+    newStreak > 0;
 
   useEffect(() => {
-    if (submitted && newStreak !== null && newStreak > 0 && !shouldShowStreakCelebration) {
+    if (submitted && newStreak !== null && newStreak > 0 && !canShowStreakCelebration) {
       navigate("/home", { replace: true });
     }
-  }, [navigate, newStreak, shouldShowStreakCelebration, submitted]);
+  }, [canShowStreakCelebration, navigate, newStreak, submitted]);
 
   // ─── Show streak celebration ──────────────────────────────
   if (submitted) {
-    if (newStreak !== null && newStreak > 0 && !shouldShowStreakCelebration) {
+    if (newStreak !== null && newStreak > 0 && !canShowStreakCelebration) {
       return null;
     }
 
-    if (shouldShowStreakCelebration) {
+    if (canShowStreakCelebration) {
       return (
         <StreakCelebration
           streak={newStreak}
