@@ -8,7 +8,7 @@ import PageShell from "../../layout/PageShell";
 import RemoteVideo from "./RemoteVideo";
 import LocalVideo from "./LocalVideo";
 import ChatPanel from "./ChatPanel";
-import { socketService } from "../../services/socket.service";
+import { socketService, type StreakUpdatePayload } from "../../services/socket.service";
 import { useWebRTC } from "../../hook/useWebRTC";
 import ReportModal from "../review/component/ReportModal";
 import AppLoader from "../component/AppLoader";
@@ -84,6 +84,26 @@ export default function MeetingPage() {
       socketService.offMatchingEvents();
     };
   }, [endCall]);
+
+  useEffect(() => {
+    if (!sessionId) return;
+
+    const handler = (payload: StreakUpdatePayload) => {
+      sessionStorage.setItem(`streak_update:${sessionId}`, JSON.stringify(payload));
+      socketService.offStreakUpdate(handler);
+    };
+
+    socketService.onReady(() => {
+      socketService.offStreakUpdate(handler);
+      socketService.onStreakUpdate(handler);
+    });
+
+    return () => {
+      window.setTimeout(() => {
+        socketService.offStreakUpdate(handler);
+      }, 5000);
+    };
+  }, [sessionId]);
 
   if (!callConfig) {
     return <AppLoader />;
