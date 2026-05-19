@@ -169,6 +169,7 @@ export const en: Translation = {
     accepted: "Accepted",
     rejected: "Rejected",
     markAllRead: "Mark all as read",
+    markRead: "Mark as read",
     sendRequest: "Add friend",
     unfriend: "Unfriend",
     unfriendConfirm: "Are you sure?",

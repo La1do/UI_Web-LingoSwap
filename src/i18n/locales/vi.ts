@@ -169,6 +169,7 @@ export const vi: Translation = {
     accepted: "Đã chấp nhận",
     rejected: "Đã từ chối",
     markAllRead: "Đánh dấu tất cả đã đọc",
+    markRead: "Đánh dấu đã đọc",
     sendRequest: "Kết bạn",
     unfriend: "Huỷ kết bạn",
     unfriendConfirm: "Xác nhận?",

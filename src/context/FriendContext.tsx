@@ -36,6 +36,15 @@ export interface IncomingMessagePayload {
   conversationId: string;
 }
 
+interface RealtimeNotificationPayload {
+  type: string;
+}
+
+const FRIEND_LIST_NOTIFICATION_TYPES = new Set([
+  "friend_accepted",
+  "friendship_ended",
+]);
+
 interface FriendContextValue {
   friends: Friend[];
   isLoading: boolean;
@@ -222,6 +231,35 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     return () => {
       socketService.offFriendRequestResponded(handler);
       socketService.getSocket()?.off("connect", registerListener);
+    };
+  }, [isAuthenticated, fetchFriends]);
+
+  // Realtime friendship list changes - backend sends these as new_notification events
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const handler = (payload: RealtimeNotificationPayload) => {
+      if (FRIEND_LIST_NOTIFICATION_TYPES.has(payload.type)) {
+        fetchFriends();
+      }
+    };
+
+    const registerListener = () => {
+      const s = socketService.getSocket();
+      if (!s) return;
+      s.off("new_notification", handler).on("new_notification", handler);
+    };
+
+    socketService.onReady(registerListener);
+
+    socketService.onReady((s) => {
+      s.on("connect", registerListener);
+    });
+
+    return () => {
+      const s = socketService.getSocket();
+      s?.off("new_notification", handler);
+      s?.off("connect", registerListener);
     };
   }, [isAuthenticated, fetchFriends]);
 

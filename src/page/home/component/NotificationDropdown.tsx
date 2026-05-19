@@ -31,7 +31,7 @@ function NotificationCard({
   const { theme } = useTheme();
   const { t } = useI18n();
   const { execute: respondExec, isLoading } = useApi();
-  const { execute: markExec } = useApi();
+  const { execute: markExec, isLoading: isMarking } = useApi();
   const { refetchFriends } = useFriends();
   const toast = useToast();
   const [done, setDone] = useState<"accept" | "reject" | null>(null);
@@ -43,6 +43,15 @@ function NotificationCard({
   const isFriendRequest = notification.type === "friend_request";
   const friendshipId = notification.metadata?.friendshipId as string | undefined;
 
+  const handleMarkNotificationRead = async () => {
+    if (notification.isRead) return;
+
+    const result = await markExec(notificationService.markRead(notification._id));
+    if (result !== null) {
+      onMarkRead(notification._id);
+    }
+  };
+
   const handleRespond = async (status: "accept" | "reject") => {
     if (friendshipId) {
       await respondExec(userService.respondFriendRequest(friendshipId, status));
@@ -50,7 +59,6 @@ function NotificationCard({
     await markExec(notificationService.markRead(notification._id));
     setDone(status);
     onRespond(notification._id, status);
-    onMarkRead(notification._id);
     if (status === "accept") {
       refetchFriends();
       toast.success(t.home.accepted);
@@ -83,24 +91,36 @@ function NotificationCard({
           <p className="text-sm" style={{ color: theme.text.primary }}>
             {notification.content}
           </p>
-          {!notification.isRead && (
-            <span className="inline-block w-2 h-2 rounded-full mt-1" style={{ background: theme.button.bg }} />
-          )}
+          <div className="mt-1 flex items-center gap-2">
+            {!notification.isRead && (
+              <>
+                <span className="inline-block w-2 h-2 rounded-full" style={{ background: theme.button.bg }} />
+                <button
+                  onClick={handleMarkNotificationRead}
+                  disabled={isMarking}
+                  className="text-[11px] font-medium hover:opacity-70 transition-opacity disabled:opacity-50"
+                  style={{ color: theme.text.accent }}
+                >
+                  {t.home.markRead}
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Friend request actions — chỉ ẩn khi đã trả lời, không phụ thuộc isRead */}
       {isFriendRequest && !done && (
         <div className="flex gap-2">
-          <button onClick={() => handleRespond("reject")} disabled={isLoading}
+          <button onClick={() => handleRespond("reject")} disabled={isLoading || isMarking}
             className="flex-1 py-1.5 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity disabled:opacity-50"
             style={{ background: theme.background.page, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}>
             {t.home.reject}
           </button>
-          <button onClick={() => handleRespond("accept")} disabled={isLoading}
+          <button onClick={() => handleRespond("accept")} disabled={isLoading || isMarking}
             className="flex-1 py-1.5 rounded-lg text-xs font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
             style={{ background: theme.button.bg, color: theme.button.text }}>
-            {isLoading ? "..." : t.home.accept}
+            {isLoading ? t.common.loading : t.home.accept}
           </button>
         </div>
       )}
@@ -108,7 +128,7 @@ function NotificationCard({
       {done && (
         <p className="text-xs text-center py-0.5 font-medium"
           style={{ color: done === "accept" ? theme.text.success : theme.text.placeholder }}>
-          {done === "accept" ? `✓ ${t.home.accepted}` : t.home.rejected}
+          {done === "accept" ? t.home.accepted : t.home.rejected}
         </p>
       )}
     </div>
@@ -194,17 +214,18 @@ export default function NotificationDropdown() {
     closeTimer.current = setTimeout(() => setOpen(false), 200);
   };
 
-  const handleRespond = (notifId: string) => {
-    setUnreadCount((c) => Math.max(0, c - 1));
+  const handleMarkRead = (notifId: string) => {
+    const target = notifications.find((n) => n._id === notifId);
+    if (!target || target.isRead) return;
+
     setNotifications((prev) =>
       prev.map((n) => n._id === notifId ? { ...n, isRead: true } : n)
     );
+    setUnreadCount((c) => Math.max(0, c - 1));
   };
 
-  const handleMarkRead = (notifId: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => n._id === notifId ? { ...n, isRead: true } : n)
-    );
+  const handleRespond = (notifId: string) => {
+    handleMarkRead(notifId);
   };
 
   const handleMarkAllRead = async () => {

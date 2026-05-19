@@ -177,6 +177,7 @@ export interface Translation {
     accepted: string;
     rejected: string;
     markAllRead: string;
+    markRead: string;
     sendRequest: string;
     unfriend: string;
     unfriendConfirm: string;
