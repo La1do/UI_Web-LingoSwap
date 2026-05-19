@@ -7,6 +7,7 @@ import { useApi } from "../../hook/useApi";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import PageShell from "../../layout/PageShell";
+import AppLoader from "../component/AppLoader";
 import StatsBar from "./component/StatsBar";
 import AdminDashboardCharts from "./component/AdminDashboardCharts";
 import UserTable, { type AdminUser } from "./component/UserTable";
@@ -233,6 +234,10 @@ export default function AdminPage() {
   };
 
   const pendingAppeals = appeals.filter((a) => a.status === "pending").length;
+  const isInitialAdminLoading =
+    activeSection === "dashboard" &&
+    !loadedSections.dashboard &&
+    loadingDashboard;
 
   const retryActiveSection = () => {
     if (activeSection === "dashboard") void loadDashboard();
@@ -240,6 +245,10 @@ export default function AdminPage() {
     if (activeSection === "appeals") void loadAppeals();
     if (activeSection === "reports") void loadReports();
   };
+
+  if (isInitialAdminLoading) {
+    return <AppLoader />;
+  }
 
   function AdminLoadingState() {
     return (
