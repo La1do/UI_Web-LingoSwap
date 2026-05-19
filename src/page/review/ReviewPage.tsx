@@ -46,23 +46,18 @@ function getLastStreakUpdate(me: MeResponse): string | null {
   return me.stats?.lastStreakUpdate ?? null;
 }
 
-function isToday(value: string | null): boolean {
+const STREAK_FRESH_GRACE_MS = 20 * 1000;
+const CLOCK_SKEW_TOLERANCE_MS = 20 * 1000;
+
+function isFreshStreakUpdateForMeeting(value: string | null, durationSeconds: number, now = new Date()): boolean {
   if (!value) return false;
 
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return value.slice(0, 10) === formatDateKey(new Date());
-  }
+  const updatedAt = new Date(value).getTime();
+  if (Number.isNaN(updatedAt)) return false;
 
-  return formatDateKey(date) === formatDateKey(new Date());
-}
-
-function formatDateKey(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
+  const durationMs = Math.max(0, durationSeconds) * 1000;
+  const elapsedAfterMeeting = now.getTime() - updatedAt - durationMs;
+  return elapsedAfterMeeting >= -CLOCK_SKEW_TOLERANCE_MS && elapsedAfterMeeting <= STREAK_FRESH_GRACE_MS;
 }
 
 // ─── Partner Card ─────────────────────────────────────────────
@@ -239,25 +234,26 @@ export default function ReviewPage() {
     return `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
   };
 
-  const shouldSkipStreakCelebration =
+  const durationSeconds = Number(duration) || 0;
+  const shouldShowStreakCelebration =
     submitted &&
     newStreak !== null &&
     newStreak > 0 &&
-    isToday(lastStreakUpdate);
+    isFreshStreakUpdateForMeeting(lastStreakUpdate, durationSeconds);
 
   useEffect(() => {
-    if (shouldSkipStreakCelebration) {
+    if (submitted && newStreak !== null && newStreak > 0 && !shouldShowStreakCelebration) {
       navigate("/home", { replace: true });
     }
-  }, [navigate, shouldSkipStreakCelebration]);
+  }, [navigate, newStreak, shouldShowStreakCelebration, submitted]);
 
   // ─── Show streak celebration ──────────────────────────────
   if (submitted) {
-    if (shouldSkipStreakCelebration) {
+    if (newStreak !== null && newStreak > 0 && !shouldShowStreakCelebration) {
       return null;
     }
 
-    if (newStreak !== null && newStreak > 0) {
+    if (shouldShowStreakCelebration) {
       return (
         <StreakCelebration
           streak={newStreak}
