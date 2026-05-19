@@ -9,7 +9,7 @@ import MatchModal from "./component/MatchModal";
 import IncomingCallModal from "./component/IncomingCallModal";
 import StreakCard from "./component/StreakCard";
 import ChatWindow from "./component/ChatWindow";
-import { useFriends, type Friend } from "../../context/FriendContext";
+import { useFriends, type Friend, type IncomingMessagePayload } from "../../context/FriendContext";
 
 export default function HomePage() {
   const { theme } = useTheme();
@@ -18,6 +18,7 @@ export default function HomePage() {
   const { friends, incomingMessageFriendId, incomingMessage, clearIncomingMessage } = useFriends();
   const [modalOpen, setModalOpen] = useState(false);
   const [openChats, setOpenChats] = useState<Friend[]>([]);
+  const [pendingMessagesByFriend, setPendingMessagesByFriend] = useState<Record<string, IncomingMessagePayload[]>>({});
 
   const handleOpenChat = (friend: Friend) => {
     setOpenChats((prev) => {
@@ -32,15 +33,24 @@ export default function HomePage() {
   };
 
   // Tự động mở ChatWindow khi nhận tin nhắn mới từ bạn bè
-  // Không clear ngay — để ChatWindow nhận được pendingMessage prop trước
   useEffect(() => {
-    if (!incomingMessageFriendId) return;
+    if (!incomingMessageFriendId || !incomingMessage) return;
     const friend = friends.find((f) => f.id === incomingMessageFriendId);
-    if (friend) handleOpenChat(friend);
-    // Clear sau 1 tick để ChatWindow kịp mount và nhận pendingMessage
-    const timer = setTimeout(() => clearIncomingMessage(), 0);
-    return () => clearTimeout(timer);
-  }, [incomingMessageFriendId]);
+    if (!friend) return;
+
+    setPendingMessagesByFriend((prev) => {
+      const current = prev[friend.id] ?? [];
+      if (current.find((m) => m._id === incomingMessage._id)) return prev;
+
+      return {
+        ...prev,
+        [friend.id]: [...current, incomingMessage],
+      };
+    });
+
+    handleOpenChat(friend);
+    clearIncomingMessage();
+  }, [clearIncomingMessage, friends, incomingMessage, incomingMessageFriendId]);
 
   const handleStartMatch = (language: string) => {
     setModalOpen(false);
@@ -122,7 +132,13 @@ export default function HomePage() {
           friend={friend}
           onClose={() => handleCloseChat(friend.id)}
           offsetIndex={openChats.length - 1 - i}
-          pendingMessage={incomingMessage?.senderId === friend.id ? incomingMessage : undefined}
+          pendingMessages={pendingMessagesByFriend[friend.id] ?? []}
+          onPendingMessageConsumed={(messageId) => {
+            setPendingMessagesByFriend((prev) => ({
+              ...prev,
+              [friend.id]: (prev[friend.id] ?? []).filter((m) => m._id !== messageId),
+            }));
+          }}
         />
       ))}
     </div>

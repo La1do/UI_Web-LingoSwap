@@ -12,7 +12,8 @@ interface ChatWindowProps {
   friend: Friend;
   onClose: () => void;
   offsetIndex: number;
-  pendingMessage?: IncomingMessagePayload;
+  pendingMessages?: IncomingMessagePayload[];
+  onPendingMessageConsumed?: (messageId: string) => void;
 }
 
 // ─── Status indicator (chỉ cho image) ────────────────────────
@@ -46,7 +47,13 @@ function ImageStatus({ status, onRetry }: { status?: ChatMessage["status"]; onRe
 
 // ─── Main component ───────────────────────────────────────────
 
-export default function ChatWindow({ friend, onClose, offsetIndex, pendingMessage }: ChatWindowProps) {
+export default function ChatWindow({
+  friend,
+  onClose,
+  offsetIndex,
+  pendingMessages = [],
+  onPendingMessageConsumed,
+}: ChatWindowProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
   const { user } = useAuth();
@@ -70,27 +77,34 @@ export default function ChatWindow({ friend, onClose, offsetIndex, pendingMessag
     });
   }, [friend.conversationId]);
 
-  // Khi ChatWindow vừa mount do nhận tin nhắn đầu tiên — add message đó vào UI ngay
+  // Khi ChatWindow vừa mount do nhận tin nhắn đầu tiên — add pending messages vào UI ngay
   useEffect(() => {
-    if (!pendingMessage) return;
-    // Cập nhật convId nếu chưa có
-    if (pendingMessage.conversationId && !convIdRef.current) {
-      convIdRef.current = pendingMessage.conversationId;
-      updateConversationId(friend.id, pendingMessage.conversationId);
-    }
-    const newMsg: ChatMessage = {
-      _id: pendingMessage._id,
-      conversationId: pendingMessage.conversationId,
-      senderId: pendingMessage.senderId,
-      content: pendingMessage.content,
-      type: pendingMessage.type as "text" | "image",
-      createdAt: pendingMessage.createdAt,
-    };
+    if (pendingMessages.length === 0) return;
+
     setMessages((prev) => {
-      if (prev.find((m) => m._id === newMsg._id)) return prev;
-      return [...prev, newMsg];
+      const existingIds = new Set(prev.map((m) => m._id));
+      const nextMessages = pendingMessages
+        .filter((msg) => !existingIds.has(msg._id))
+        .map((msg): ChatMessage => ({
+          _id: msg._id,
+          conversationId: msg.conversationId,
+          senderId: msg.senderId,
+          content: msg.content,
+          type: msg.type as "text" | "image",
+          createdAt: msg.createdAt,
+        }));
+
+      return nextMessages.length > 0 ? [...prev, ...nextMessages] : prev;
     });
-  }, [pendingMessage?._id]);
+
+    for (const msg of pendingMessages) {
+      if (msg.conversationId && !convIdRef.current) {
+        convIdRef.current = msg.conversationId;
+        updateConversationId(friend.id, msg.conversationId);
+      }
+      onPendingMessageConsumed?.(msg._id);
+    }
+  }, [friend.id, onPendingMessageConsumed, pendingMessages, updateConversationId]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
