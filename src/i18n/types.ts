@@ -219,6 +219,7 @@ export interface Translation {
     sent: string;
     failed: string;
     retry: string;
+    forbiddenMessage: string;
   };
 
   // Direct call waiting
@@ -364,6 +365,7 @@ export interface Translation {
     reportsSection: string;
     appealsSection: string;
     dashboardSection: string;
+    blacklistKeywordsSection: string;
     loadingSection: string;
     loadFailed: string;
     retry: string;
@@ -472,11 +474,39 @@ export interface Translation {
       appealContent: string;
       processing: string;
     };
+    blacklistKeywords: {
+      searchPlaceholder: string;
+      search: string;
+      addPlaceholder: string;
+      add: string;
+      emptyKeyword: string;
+      total: string;
+      pageInfo: string;
+      keyword: string;
+      createdBy: string;
+      email: string;
+      status: string;
+      active: string;
+      inactive: string;
+      createdAt: string;
+      actions: string;
+      delete: string;
+      noKeywords: string;
+      previous: string;
+      next: string;
+      deleteTitle: string;
+      deleteDescription: string;
+      cancel: string;
+      unknownCreator: string;
+      emptyValue: string;
+    };
     toast: {
       banSuccess: string;
       deleteSuccess: string;
       reportResolved: string;
       appealResolved: string;
+      blacklistKeywordAdded: string;
+      blacklistKeywordDeleted: string;
       actionFailed: string;
     };
     logout: string;

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useAuth } from "../../../context/AuthContext";
+import { useToast } from "../../../context/ToastContext";
 import { useApi } from "../../../hook/useApi";
 import { useFriends, type Friend } from "../../../context/FriendContext";
 import { chatService, type ChatMessage, type UploadImageResponse } from "../../../services/chat.service";
@@ -47,6 +48,7 @@ export default function ChatArea({ friend }: ChatAreaProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
   const { user } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const { updateConversationId } = useFriends();
   const { execute: fetchMessages } = useApi<ChatMessage[]>();
@@ -58,6 +60,7 @@ export default function ChatArea({ friend }: ChatAreaProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const convIdRef = useRef<string | null>(friend.conversationId ?? null);
+  const pendingTextRef = useRef<string[]>([]);
 
   useEffect(() => {
     setMessages([]);
@@ -132,22 +135,41 @@ export default function ChatArea({ friend }: ChatAreaProps) {
         updateConversationId(friend.id, msg.conversationId);
       }
       // Replace temp message bằng message thật từ server
-      setMessages((prev) =>
-        prev.map((m) =>
-          m._id.startsWith("temp-") && m.senderId === user?.id && m.content === msg.content
-            ? { ...m, _id: msg._id, conversationId: msg.conversationId ?? m.conversationId, createdAt: msg.createdAt }
-            : m
-        )
-      );
+      const pendingIndex = pendingTextRef.current.findIndex((content) => content === msg.content);
+      if (pendingIndex === -1) return;
+
+      pendingTextRef.current.splice(pendingIndex, 1);
+      setMessages((prev) => {
+        if (prev.find((m) => m._id === msg._id)) return prev;
+        return [
+          ...prev,
+          {
+            _id: msg._id,
+            conversationId: msg.conversationId ?? convIdRef.current ?? "",
+            senderId: user?.id ?? "",
+            content: msg.content,
+            type: "text",
+            createdAt: msg.createdAt,
+          },
+        ];
+      });
+    };
+
+    const errorHandler = () => {
+      if (pendingTextRef.current.length === 0) return;
+      pendingTextRef.current.shift();
+      toast.error(t.chat.forbiddenMessage);
     };
 
     s.on("receive_message", handler);
     s.on("message_sent_success", sentHandler);
+    s.on("error", errorHandler);
     return () => {
       s.off("receive_message", handler);
       s.off("message_sent_success", sentHandler);
+      s.off("error", errorHandler);
     };
-  }, [friend.id, user?.id]);
+  }, [friend.id, t.chat.forbiddenMessage, toast, updateConversationId, user?.id]);
 
   // Text: socket — check connected, không có loading state
   const handleSend = useCallback(() => {
@@ -170,25 +192,21 @@ export default function ChatArea({ friend }: ChatAreaProps) {
       type: "text",
       createdAt: { full: "", friendly: "" },
     };
-    setMessages((prev) => [...prev, tempMsg]);
-
     if (!isConnected) {
-      setMessages((prev) =>
-        prev.map((m) => m._id === tempMsg._id ? { ...m, status: "failed" as const } : m)
-      );
+      toast.error(t.chat.failed);
       return;
     }
 
-    socketService.sendMessage({ partnerId: friend.id, content: text, matchSessionId: null });
-  }, [input, friend.id, user?.id]);
+    pendingTextRef.current.push(tempMsg.content);
+    socketService.sendMessage({ partnerId: friend.id, content: tempMsg.content, matchSessionId: null });
+  }, [input, friend.id, t.chat.failed, toast, user?.id]);
 
   const handleRetryText = useCallback((msg: ChatMessage) => {
     const socket = socketService.getSocket();
     if (!socket?.connected) return;
 
     setMessages((prev) => prev.filter((m) => m._id !== msg._id));
-    const retryMsg: ChatMessage = { ...msg, _id: `temp-${Date.now()}`, status: undefined };
-    setMessages((prev) => [...prev, retryMsg]);
+    pendingTextRef.current.push(msg.content);
     socketService.sendMessage({ partnerId: friend.id, content: msg.content, matchSessionId: null });
   }, [friend.id]);
 
