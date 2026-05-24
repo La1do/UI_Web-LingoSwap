@@ -1,0 +1,1210 @@
+{
+  "title": "LingoSwap Frontend Test Case Checklist",
+  "statusLegend": [
+    "PASS",
+    "FAIL",
+    "OPEN",
+    "PLANNED"
+  ],
+  "cases": [
+    {
+      "id": "FE01",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "fullName bỏ trống",
+      "expected": "Hiển thị lỗi required cho họ tên",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE02",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "fullName quá ngắn",
+      "expected": "Hiển thị lỗi min length",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE03",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "fullName hợp lệ",
+      "expected": "Không có lỗi validation",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE04",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "email bỏ trống",
+      "expected": "Hiển thị lỗi required cho email",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE05",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "email sai định dạng",
+      "expected": "Hiển thị lỗi invalid email",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE06",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "email hợp lệ",
+      "expected": "Không có lỗi validation",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE07",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "password bỏ trống",
+      "expected": "Hiển thị lỗi required cho password",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE08",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "password dưới 8 ký tự",
+      "expected": "Hiển thị lỗi độ dài tối thiểu",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE09",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "password thiếu chữ hoa",
+      "expected": "Hiển thị lỗi password chưa đủ mạnh",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE10",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "password thiếu số",
+      "expected": "Hiển thị lỗi password chưa đủ mạnh",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE11",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "password hợp lệ",
+      "expected": "Không có lỗi validation",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE12",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "confirm password bỏ trống",
+      "expected": "Hiển thị lỗi required",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE13",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "confirm password không khớp",
+      "expected": "Hiển thị lỗi password không khớp",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE14",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "confirm password khớp",
+      "expected": "Không có lỗi validation",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE15",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "country bỏ trống",
+      "expected": "Hiển thị lỗi required cho quốc gia",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE16",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "country hợp lệ",
+      "expected": "Không có lỗi validation",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE17",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "form đăng ký hợp lệ",
+      "expected": "Không có lỗi validation",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE18",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "fullName, email, password bỏ trống",
+      "expected": "Hiển thị lỗi cả 3 field",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE19",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "email bỏ trống, password hợp lệ",
+      "expected": "Chỉ hiển thị lỗi email",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE20",
+      "feature": "Register Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "password bỏ trống, email hợp lệ",
+      "expected": "Chỉ hiển thị lỗi password",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE21",
+      "feature": "OTP Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "OTP bỏ trống",
+      "expected": "Hiển thị lỗi OTP không được để trống",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE22",
+      "feature": "OTP Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "OTP không đủ 6 chữ số",
+      "expected": "Hiển thị lỗi OTP phải đủ 6 ký tự",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE23",
+      "feature": "OTP Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "OTP chứa ký tự không phải số",
+      "expected": "Hiển thị lỗi OTP chỉ được nhập số",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE24",
+      "feature": "OTP Validation",
+      "tool": "Playwright UI Smoke",
+      "case": "OTP hợp lệ",
+      "expected": "Không có lỗi validation",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "auth-validation.spec.ts",
+      "playwrightTest": "FE01-FE24 Auth and OTP validation"
+    },
+    {
+      "id": "FE25",
+      "feature": "Matching Queue",
+      "tool": "Manual UI Testing",
+      "case": "Join queue thành công",
+      "expected": "Hiện trạng thái Đang tìm kiếm",
+      "status": "PASS"
+    },
+    {
+      "id": "FE26",
+      "feature": "Matching Queue",
+      "tool": "Manual UI Testing",
+      "case": "Join khi chưa chọn language",
+      "expected": "Không cho join hoặc báo lỗi",
+      "status": "PASS"
+    },
+    {
+      "id": "FE27",
+      "feature": "Matching Queue",
+      "tool": "Manual UI Testing",
+      "case": "Join lại khi đã trong queue",
+      "expected": "Hiện thông báo đã trong hàng chờ",
+      "status": "PASS"
+    },
+    {
+      "id": "FE28",
+      "feature": "Matching Queue",
+      "tool": "Manual UI Testing",
+      "case": "Match thành công",
+      "expected": "Chuyển sang màn chat/cuộc gọi",
+      "status": "PASS"
+    },
+    {
+      "id": "FE29",
+      "feature": "Matching Queue",
+      "tool": "Manual UI Testing",
+      "case": "Timeout queue",
+      "expected": "Hiện thông báo retry",
+      "status": "PASS"
+    },
+    {
+      "id": "FE30",
+      "feature": "Matching Queue",
+      "tool": "Manual UI Testing",
+      "case": "Partner rời phòng",
+      "expected": "Hiện thông báo partner_disconnected",
+      "status": "PASS"
+    },
+    {
+      "id": "FE31",
+      "feature": "Matching Queue",
+      "tool": "Manual UI Testing",
+      "case": "Leave queue",
+      "expected": "Rời hàng chờ thành công",
+      "status": "PASS"
+    },
+    {
+      "id": "FE32",
+      "feature": "Friend / Review / Report",
+      "tool": "Manual UI Testing",
+      "case": "Gửi lời mời kết bạn",
+      "expected": "Hiện trạng thái đã gửi",
+      "status": "PASS"
+    },
+    {
+      "id": "FE33",
+      "feature": "Friend / Review / Report",
+      "tool": "Manual UI Testing",
+      "case": "Gửi lời mời khi đã gửi trước đó",
+      "expected": "Báo đã gửi trước đó hoặc giữ trạng thái pending",
+      "status": "PASS"
+    },
+    {
+      "id": "FE34",
+      "feature": "Friend / Review / Report",
+      "tool": "Manual UI Testing",
+      "case": "Chấp nhận lời mời",
+      "expected": "Cập nhật thành bạn bè",
+      "status": "PASS"
+    },
+    {
+      "id": "FE35",
+      "feature": "Friend / Review / Report",
+      "tool": "Manual UI Testing",
+      "case": "Từ chối lời mời",
+      "expected": "Lời mời biến mất hoặc chuyển rejected",
+      "status": "PASS"
+    },
+    {
+      "id": "FE36",
+      "feature": "Friend / Review / Report",
+      "tool": "Manual UI Testing",
+      "case": "Xóa bạn bè",
+      "expected": "Xóa khỏi danh sách bạn bè",
+      "status": "PASS"
+    },
+    {
+      "id": "FE37",
+      "feature": "Friend / Review / Report",
+      "tool": "Manual UI Testing",
+      "case": "Xem danh sách bạn",
+      "expected": "Hiển thị danh sách bạn bè",
+      "status": "PASS"
+    },
+    {
+      "id": "FE38",
+      "feature": "Friend / Review / Report",
+      "tool": "Manual UI Testing",
+      "case": "Đánh giá user",
+      "expected": "Submit review thành công",
+      "status": "PASS"
+    },
+    {
+      "id": "FE39",
+      "feature": "Friend / Review / Report",
+      "tool": "Manual UI Testing",
+      "case": "Report user",
+      "expected": "Hiện thông báo report thành công",
+      "status": "PASS"
+    },
+    {
+      "id": "FE40",
+      "feature": "Friend / Review / Report",
+      "tool": "Manual UI Testing",
+      "case": "Report thiếu lý do",
+      "expected": "Báo lỗi validation",
+      "status": "PASS"
+    },
+    {
+      "id": "FE41",
+      "feature": "Admin UI",
+      "tool": "Manual UI Testing",
+      "case": "Thêm từ khóa nhạy cảm",
+      "expected": "Hiện keyword trong blacklist",
+      "status": "PASS"
+    },
+    {
+      "id": "FE42",
+      "feature": "Admin UI",
+      "tool": "Manual UI Testing",
+      "case": "Xóa từ khóa",
+      "expected": "Keyword biến mất",
+      "status": "PASS"
+    },
+    {
+      "id": "FE43",
+      "feature": "Admin UI",
+      "tool": "Manual UI Testing",
+      "case": "Thêm keyword rỗng",
+      "expected": "Báo lỗi validation",
+      "status": "PASS"
+    },
+    {
+      "id": "FE44",
+      "feature": "Admin UI",
+      "tool": "Manual UI Testing",
+      "case": "Bật ngôn ngữ tìm kiếm",
+      "expected": "Hiện trạng thái active",
+      "status": "PASS"
+    },
+    {
+      "id": "FE45",
+      "feature": "Admin UI",
+      "tool": "Manual UI Testing",
+      "case": "Tắt ngôn ngữ tìm kiếm",
+      "expected": "Hiện trạng thái inactive",
+      "status": "PASS"
+    },
+    {
+      "id": "FE46",
+      "feature": "Admin UI",
+      "tool": "Manual UI Testing",
+      "case": "Đọc báo cáo user",
+      "expected": "Hiện chi tiết tố cáo",
+      "status": "PASS"
+    },
+    {
+      "id": "FE47",
+      "feature": "Admin UI",
+      "tool": "Manual UI Testing",
+      "case": "Ra quyết định xử lý",
+      "expected": "Cập nhật trạng thái xử lý",
+      "status": "PASS"
+    },
+    {
+      "id": "FE48",
+      "feature": "Admin UI",
+      "tool": "Manual UI Testing",
+      "case": "Khóa tài khoản",
+      "expected": "Hiện status suspended/banned",
+      "status": "PASS"
+    },
+    {
+      "id": "FE49",
+      "feature": "Admin UI",
+      "tool": "Manual UI Testing",
+      "case": "Mở khóa tài khoản",
+      "expected": "Hiện status active",
+      "status": "PASS"
+    },
+    {
+      "id": "FE50",
+      "feature": "WebRTC / Video Call",
+      "tool": "Manual UI Testing",
+      "case": "Cho phép camera/mic khi vào MeetingPage",
+      "expected": "Local video hiển thị, permission = granted",
+      "status": "PASS"
+    },
+    {
+      "id": "FE51",
+      "feature": "WebRTC / Video Call",
+      "tool": "Manual UI Testing",
+      "case": "Từ chối camera/mic",
+      "expected": "Hiển thị cảnh báo quyền bị từ chối",
+      "status": "PASS"
+    },
+    {
+      "id": "FE52",
+      "feature": "WebRTC / Video Call",
+      "tool": "Manual UI Testing",
+      "case": "Camera lỗi nhưng mic còn dùng được",
+      "expected": "Fallback audio-only, không crash",
+      "status": "PASS"
+    },
+    {
+      "id": "FE53",
+      "feature": "WebRTC / Video Call",
+      "tool": "Manual UI Testing",
+      "case": "Caller tạo offer WebRTC",
+      "expected": "Socket emit webrtc_offer",
+      "status": "PASS"
+    },
+    {
+      "id": "FE54",
+      "feature": "WebRTC / Video Call",
+      "tool": "Manual UI Testing",
+      "case": "Callee nhận offer và gửi answer",
+      "expected": "Socket emit webrtc_answer",
+      "status": "PASS"
+    },
+    {
+      "id": "FE55",
+      "feature": "WebRTC / Video Call",
+      "tool": "Manual UI Testing",
+      "case": "ICE candidate đến trước remote description",
+      "expected": "Candidate được queue và xử lý sau",
+      "status": "PASS"
+    },
+    {
+      "id": "FE56",
+      "feature": "WebRTC / Video Call",
+      "tool": "Manual UI Testing",
+      "case": "Toggle mute",
+      "expected": "Mic track disabled/enabled, UI đổi trạng thái",
+      "status": "PASS"
+    },
+    {
+      "id": "FE57",
+      "feature": "WebRTC / Video Call",
+      "tool": "Manual UI Testing",
+      "case": "Toggle camera",
+      "expected": "Video track disabled/enabled, UI đổi trạng thái",
+      "status": "PASS"
+    },
+    {
+      "id": "FE58",
+      "feature": "WebRTC / Video Call",
+      "tool": "Manual UI Testing",
+      "case": "End call",
+      "expected": "Cleanup stream/peer connection, chuyển Review/CallEnded",
+      "status": "PASS"
+    },
+    {
+      "id": "FE59",
+      "feature": "WebRTC / Video Call",
+      "tool": "Manual UI Testing",
+      "case": "Partner disconnect",
+      "expected": "Nhận partner_disconnected, tự kết thúc call",
+      "status": "PASS"
+    },
+    {
+      "id": "FE60",
+      "feature": "Direct Call",
+      "tool": "Manual UI Testing",
+      "case": "Gọi trực tiếp bạn bè online",
+      "expected": "Người nhận thấy incoming call modal",
+      "status": "PASS"
+    },
+    {
+      "id": "FE61",
+      "feature": "Direct Call",
+      "tool": "Manual UI Testing",
+      "case": "Người nhận accept direct call",
+      "expected": "Cả hai vào MeetingPage",
+      "status": "PASS"
+    },
+    {
+      "id": "FE62",
+      "feature": "Direct Call",
+      "tool": "Manual UI Testing",
+      "case": "Người nhận reject direct call",
+      "expected": "Caller thấy trạng thái bị từ chối",
+      "status": "PASS"
+    },
+    {
+      "id": "FE63",
+      "feature": "Direct Call",
+      "tool": "Manual UI Testing",
+      "case": "Direct call timeout/no response",
+      "expected": "Caller thấy thông báo timeout",
+      "status": "PASS"
+    },
+    {
+      "id": "FE64",
+      "feature": "Direct Call",
+      "tool": "Manual UI Testing",
+      "case": "Gọi khi bạn offline",
+      "expected": "Không cho gọi hoặc báo lỗi phù hợp",
+      "status": "PASS"
+    },
+    {
+      "id": "FE65",
+      "feature": "Notification Realtime",
+      "tool": "Playwright UI Smoke",
+      "case": "Nhận new_notification",
+      "expected": "Dropdown thêm notification mới, badge tăng",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "notification-ui.spec.ts",
+      "playwrightTest": "FE65-FE70 notification UI"
+    },
+    {
+      "id": "FE66",
+      "feature": "Notification Realtime",
+      "tool": "Playwright UI Smoke",
+      "case": "Mark read 1 notification",
+      "expected": "Notification chuyển read, unread count giảm 1",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "notification-ui.spec.ts",
+      "playwrightTest": "FE65-FE70 notification UI"
+    },
+    {
+      "id": "FE67",
+      "feature": "Notification Realtime",
+      "tool": "Playwright UI Smoke",
+      "case": "Mark all read",
+      "expected": "Tất cả read, unread count = 0",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "notification-ui.spec.ts",
+      "playwrightTest": "FE65-FE70 notification UI"
+    },
+    {
+      "id": "FE68",
+      "feature": "Notification Realtime",
+      "tool": "Playwright UI Smoke",
+      "case": "Friend request notification",
+      "expected": "Hiển thị Accept/Reject",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "notification-ui.spec.ts",
+      "playwrightTest": "FE65-FE70 notification UI"
+    },
+    {
+      "id": "FE69",
+      "feature": "Notification Realtime",
+      "tool": "Playwright UI Smoke",
+      "case": "Accept friend request từ notification",
+      "expected": "Friend list cập nhật",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "notification-ui.spec.ts",
+      "playwrightTest": "FE65-FE70 notification UI"
+    },
+    {
+      "id": "FE70",
+      "feature": "Notification Realtime",
+      "tool": "Playwright UI Smoke",
+      "case": "Reject friend request từ notification",
+      "expected": "Notification chuyển trạng thái rejected",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "notification-ui.spec.ts",
+      "playwrightTest": "FE65-FE70 notification UI"
+    },
+    {
+      "id": "FE71",
+      "feature": "Notification Realtime",
+      "tool": "Manual UI Testing",
+      "case": "Nhận friend_accepted notification",
+      "expected": "Friend list refetch realtime",
+      "status": "PASS"
+    },
+    {
+      "id": "FE72",
+      "feature": "Notification Realtime",
+      "tool": "Manual UI Testing",
+      "case": "Nhận friendship_ended notification",
+      "expected": "Friend bị xóa khỏi list realtime",
+      "status": "PASS"
+    },
+    {
+      "id": "FE73",
+      "feature": "Notification Realtime",
+      "tool": "Manual UI Testing",
+      "case": "Reconnect socket",
+      "expected": "Không duplicate notification listener",
+      "status": "PASS"
+    },
+    {
+      "id": "FE74",
+      "feature": "Popup Chat / Messages",
+      "tool": "Manual UI Testing",
+      "case": "Tin nhắn đầu tiên từ người khác",
+      "expected": "Popup tự mở và hiển thị tin đầu tiên",
+      "status": "PASS"
+    },
+    {
+      "id": "FE75",
+      "feature": "Popup Chat / Messages",
+      "tool": "Manual UI Testing",
+      "case": "Popup đang mở nhận message mới",
+      "expected": "Message append vào đúng popup",
+      "status": "PASS"
+    },
+    {
+      "id": "FE76",
+      "feature": "Popup Chat / Messages",
+      "tool": "Manual UI Testing",
+      "case": "Nhận message trùng _id",
+      "expected": "Không hiển thị duplicate",
+      "status": "PASS"
+    },
+    {
+      "id": "FE77",
+      "feature": "Popup Chat / Messages",
+      "tool": "Manual UI Testing",
+      "case": "Gửi text khi socket connected",
+      "expected": "Message hiển thị optimistic và được confirm",
+      "status": "PASS"
+    },
+    {
+      "id": "FE78",
+      "feature": "Popup Chat / Messages",
+      "tool": "Manual UI Testing",
+      "case": "Gửi text khi socket offline",
+      "expected": "Message hiện failed",
+      "status": "PASS"
+    },
+    {
+      "id": "FE79",
+      "feature": "Popup Chat / Messages",
+      "tool": "Manual UI Testing",
+      "case": "Retry message failed",
+      "expected": "Gửi lại thành công hoặc vẫn failed đúng trạng thái",
+      "status": "PASS"
+    },
+    {
+      "id": "FE80",
+      "feature": "Popup Chat / Messages",
+      "tool": "Manual UI Testing",
+      "case": "Upload ảnh thành công",
+      "expected": "Ảnh hiển thị sent",
+      "status": "PASS"
+    },
+    {
+      "id": "FE81",
+      "feature": "Popup Chat / Messages",
+      "tool": "Manual UI Testing",
+      "case": "Upload ảnh thất bại",
+      "expected": "Ảnh hiển thị failed",
+      "status": "PASS"
+    },
+    {
+      "id": "FE82",
+      "feature": "Popup Chat / Messages",
+      "tool": "Manual UI Testing",
+      "case": "Chat lần đầu chưa có conversationId",
+      "expected": "conversationId được cập nhật sau message đầu",
+      "status": "PASS"
+    },
+    {
+      "id": "FE83",
+      "feature": "Review / Streak",
+      "tool": "Playwright UI Smoke",
+      "case": "Submit review hợp lệ",
+      "expected": "Gửi review, fetch /api/users/me",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE83-FE89 review and streak UI"
+    },
+    {
+      "id": "FE84",
+      "feature": "Review / Streak",
+      "tool": "Playwright UI Smoke",
+      "case": "Submit review thiếu rating",
+      "expected": "Disable submit hoặc không gửi",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE83-FE89 review and streak UI"
+    },
+    {
+      "id": "FE85",
+      "feature": "Review / Streak",
+      "tool": "Playwright UI Smoke",
+      "case": "Submit review fail",
+      "expected": "Hiển thị lỗi",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE83-FE89 review and streak UI"
+    },
+    {
+      "id": "FE86",
+      "feature": "Review / Streak",
+      "tool": "Playwright UI Smoke",
+      "case": "Nhận streak_update sau call",
+      "expected": "ReviewPage show StreakCelebration",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE83-FE89 review and streak UI"
+    },
+    {
+      "id": "FE87",
+      "feature": "Review / Streak",
+      "tool": "Playwright UI Smoke",
+      "case": "Không nhận streak_update",
+      "expected": "Không show celebration",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE83-FE89 review and streak UI"
+    },
+    {
+      "id": "FE88",
+      "feature": "Review / Streak",
+      "tool": "Playwright UI Smoke",
+      "case": "Skip review nhưng có streak_update",
+      "expected": "Vẫn show celebration",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE83-FE89 review and streak UI"
+    },
+    {
+      "id": "FE89",
+      "feature": "Review / Streak",
+      "tool": "Playwright UI Smoke",
+      "case": "Skip review không có streak_update",
+      "expected": "Về Home",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE83-FE89 review and streak UI"
+    },
+    {
+      "id": "FE90",
+      "feature": "Review / Streak",
+      "tool": "Manual UI Testing",
+      "case": "learningCalendar dạng array",
+      "expected": "Normalize đúng và render calendar",
+      "status": "PASS"
+    },
+    {
+      "id": "FE91",
+      "feature": "Review / Streak",
+      "tool": "Manual UI Testing",
+      "case": "learningCalendar dạng object",
+      "expected": "Render đúng calendar",
+      "status": "PASS"
+    },
+    {
+      "id": "FE92",
+      "feature": "Review / Streak",
+      "tool": "Manual UI Testing",
+      "case": "Streak Monday slide",
+      "expected": "Animation chuyển tuần đúng",
+      "status": "PASS"
+    },
+    {
+      "id": "FE93",
+      "feature": "Auth / Route Guard",
+      "tool": "Playwright UI Smoke",
+      "case": "Chưa login vào /home",
+      "expected": "Redirect login",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "route-guard.spec.ts",
+      "playwrightTest": "FE93-FE100 route guard"
+    },
+    {
+      "id": "FE94",
+      "feature": "Auth / Route Guard",
+      "tool": "Playwright UI Smoke",
+      "case": "User thường vào /admin",
+      "expected": "Logout/redirect đúng",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "route-guard.spec.ts",
+      "playwrightTest": "FE93-FE100 route guard"
+    },
+    {
+      "id": "FE95",
+      "feature": "Auth / Route Guard",
+      "tool": "Playwright UI Smoke",
+      "case": "Admin vào route user",
+      "expected": "Bị chặn theo role",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "route-guard.spec.ts",
+      "playwrightTest": "FE93-FE100 route guard"
+    },
+    {
+      "id": "FE96",
+      "feature": "Auth / Route Guard",
+      "tool": "Playwright UI Smoke",
+      "case": "Token còn hạn khi reload",
+      "expected": "AppLoader verify xong vào app",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "route-guard.spec.ts",
+      "playwrightTest": "FE93-FE100 route guard"
+    },
+    {
+      "id": "FE97",
+      "feature": "Auth / Route Guard",
+      "tool": "Playwright UI Smoke",
+      "case": "Token hết hạn, refresh thành công",
+      "expected": "Request tiếp tục",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "route-guard.spec.ts",
+      "playwrightTest": "FE93-FE100 route guard"
+    },
+    {
+      "id": "FE98",
+      "feature": "Auth / Route Guard",
+      "tool": "Playwright UI Smoke",
+      "case": "Refresh token fail",
+      "expected": "Logout và về login",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "route-guard.spec.ts",
+      "playwrightTest": "FE93-FE100 route guard"
+    },
+    {
+      "id": "FE99",
+      "feature": "Auth / Route Guard",
+      "tool": "Playwright UI Smoke",
+      "case": "Google callback thành công",
+      "expected": "Lưu token và vào home/admin đúng role",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "route-guard.spec.ts",
+      "playwrightTest": "FE93-FE100 route guard"
+    },
+    {
+      "id": "FE100",
+      "feature": "Auth / Route Guard",
+      "tool": "Playwright UI Smoke",
+      "case": "Google callback lỗi",
+      "expected": "Hiển thị lỗi/redirect login",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "route-guard.spec.ts",
+      "playwrightTest": "FE93-FE100 route guard"
+    },
+    {
+      "id": "FE101",
+      "feature": "Profile / Settings",
+      "tool": "Playwright UI Smoke",
+      "case": "Upload avatar hợp lệ",
+      "expected": "Avatar cập nhật",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "user-pages.spec.ts",
+      "playwrightTest": "FE101-FE109 profile and messages UI"
+    },
+    {
+      "id": "FE102",
+      "feature": "Profile / Settings",
+      "tool": "Playwright UI Smoke",
+      "case": "Upload file không phải ảnh",
+      "expected": "Báo lỗi",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "user-pages.spec.ts",
+      "playwrightTest": "FE101-FE109 profile and messages UI"
+    },
+    {
+      "id": "FE103",
+      "feature": "Profile / Settings",
+      "tool": "Playwright UI Smoke",
+      "case": "Upload ảnh > 2MB",
+      "expected": "Báo lỗi",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "user-pages.spec.ts",
+      "playwrightTest": "FE101-FE109 profile and messages UI"
+    },
+    {
+      "id": "FE104",
+      "feature": "Profile / Settings",
+      "tool": "Playwright UI Smoke",
+      "case": "Upload avatar API fail",
+      "expected": "Báo lỗi",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "user-pages.spec.ts",
+      "playwrightTest": "FE101-FE109 profile and messages UI"
+    },
+    {
+      "id": "FE105",
+      "feature": "Profile / Settings",
+      "tool": "Playwright UI Smoke",
+      "case": "Đổi theme",
+      "expected": "UI đổi theme và sync localStorage/server",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "user-pages.spec.ts",
+      "playwrightTest": "FE101-FE109 profile and messages UI"
+    },
+    {
+      "id": "FE106",
+      "feature": "Profile / Settings",
+      "tool": "Playwright UI Smoke",
+      "case": "Đổi ngôn ngữ UI",
+      "expected": "Text/validation đổi theo locale",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "user-pages.spec.ts",
+      "playwrightTest": "FE101-FE109 profile and messages UI"
+    },
+    {
+      "id": "FE107",
+      "feature": "Profile / Settings",
+      "tool": "Playwright UI Smoke",
+      "case": "Đổi mật khẩu thành công",
+      "expected": "Toast success",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "user-pages.spec.ts",
+      "playwrightTest": "FE101-FE109 profile and messages UI"
+    },
+    {
+      "id": "FE108",
+      "feature": "Profile / Settings",
+      "tool": "Playwright UI Smoke",
+      "case": "Đổi mật khẩu sai current password",
+      "expected": "Báo lỗi",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "user-pages.spec.ts",
+      "playwrightTest": "FE101-FE109 profile and messages UI"
+    },
+    {
+      "id": "FE109",
+      "feature": "Profile / Settings",
+      "tool": "Playwright UI Smoke",
+      "case": "Update profile hợp lệ",
+      "expected": "Lưu profile thành công",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "user-pages.spec.ts",
+      "playwrightTest": "FE101-FE109 profile and messages UI"
+    },
+    {
+      "id": "FE110",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Admin login thành công",
+      "expected": "Vào dashboard",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE111",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Tài khoản user login admin",
+      "expected": "Báo forbidden",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE112",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Load dashboard stats",
+      "expected": "Hiển thị số liệu",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE113",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Load users list",
+      "expected": "Hiển thị bảng users",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE114",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Ban user 3/7/30 ngày",
+      "expected": "User chuyển banned đúng duration",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE115",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Ban permanent",
+      "expected": "User bị khóa vĩnh viễn",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE116",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Delete user",
+      "expected": "User bị xóa khỏi bảng",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE117",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Load reports",
+      "expected": "Hiển thị danh sách report",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE118",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Resolve report không ban",
+      "expected": "Report chuyển resolved",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE119",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Resolve report kèm ban",
+      "expected": "Report resolved, user banned",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE120",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Dismiss report",
+      "expected": "Report chuyển dismissed",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE121",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Load appeals",
+      "expected": "Hiển thị danh sách appeals",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE122",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Approve appeal",
+      "expected": "Appeal approved, user unbanned",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE123",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "Reject appeal",
+      "expected": "Appeal rejected",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    },
+    {
+      "id": "FE124",
+      "feature": "Admin UI",
+      "tool": "Playwright UI Smoke",
+      "case": "API admin fail",
+      "expected": "Hiển thị error/retry",
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE110-FE124 admin UI"
+    }
+  ]
+}

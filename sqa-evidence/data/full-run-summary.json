@@ -1,0 +1,42 @@
+{
+  "title": "LingoSwap Full SQA Run Summary",
+  "status": "FAIL",
+  "startedAt": "2026-05-24T07:07:36.183Z",
+  "finishedAt": "2026-05-24T07:08:18.696Z",
+  "totalSteps": 2,
+  "passedSteps": 1,
+  "failedSteps": 1,
+  "results": [
+    {
+      "name": "Frontend static/build checks",
+      "command": "node.exe sqa-evidence\\scripts\\run-frontend-checks.mjs",
+      "status": "FAIL",
+      "exitCode": 1,
+      "durationMs": 25148,
+      "startedAt": "2026-05-24T07:07:36.191Z",
+      "finishedAt": "2026-05-24T07:08:01.339Z"
+    },
+    {
+      "name": "Playwright UI checks",
+      "command": "node.exe sqa-evidence\\scripts\\run-playwright-ui.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 17353,
+      "startedAt": "2026-05-24T07:08:01.341Z",
+      "finishedAt": "2026-05-24T07:08:18.694Z"
+    }
+  ],
+  "frontend": {
+    "status": "FAIL",
+    "total": 3,
+    "passed": 2,
+    "failed": 1
+  },
+  "playwright": {
+    "status": "PASS",
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0
+  }
+}

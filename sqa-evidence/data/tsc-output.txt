@@ -1,0 +1,11 @@
+$ npx.cmd tsc --noEmit
+Started: 2026-05-24T07:07:36.318Z
+Finished: 2026-05-24T07:07:38.015Z
+Duration: 1697ms
+Exit code: 0
+
+STDOUT:
+(empty)
+
+STDERR:
+(empty)

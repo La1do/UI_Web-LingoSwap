@@ -1,0 +1,701 @@
+$ npx.cmd eslint src
+Started: 2026-05-24T07:07:38.017Z
+Finished: 2026-05-24T07:07:51.289Z
+Duration: 13272ms
+Exit code: 1
+
+STDOUT:
+
+D:\UI-LingoSwap\src\context\AuthContext.tsx
+  126:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\context\AuthContext.tsx:126:7
+  124 |     const token = localStorage.getItem("access_token");
+  125 |     if (!token) {
+> 126 |       setIsInitializing(false);
+      |       ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  127 |       return;
+  128 |     }
+  129 |     axiosInstance  react-hooks/set-state-in-effect
+  244:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-refresh/only-export-components
+
+D:\UI-LingoSwap\src\context\FriendContext.tsx
+  308:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\UI-LingoSwap\src\context\I18nContext.tsx
+  12:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  49:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\UI-LingoSwap\src\context\ThemeContext.tsx
+  42:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\UI-LingoSwap\src\context\ToastContext.tsx
+  70:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx
+  191:45  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:191:45
+  189 |     if (loadedSections[activeSection]) return;
+  190 |
+> 191 |     if (activeSection === "dashboard") void loadDashboard();
+      |                                             ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  192 |     if (activeSection === "users") void loadUsers();
+  193 |     if (activeSection === "appeals") void loadAppeals();
+  194 |     if (activeSection === "reports") void loadReports();  react-hooks/set-state-in-effect
+  196:6   warning  React Hook useEffect has missing dependencies: 'loadAppeals', 'loadBlacklistKeywords', 'loadDashboard', 'loadReports', and 'loadUsers'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/exhaustive-deps
+  480:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:480:18
+  478 |             {activeSection === "dashboard" && (
+  479 |               loadingDashboard ? (
+> 480 |                 <AdminLoadingState />
+      |                  ^^^^^^^^^^^^^^^^^ This component is created during render
+  481 |               ) : isDashboardError ? (
+  482 |                 <AdminErrorState message={dashboardError} />
+  483 |               ) : (
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:344:3
+  342 |   }
+  343 |
+> 344 |   function AdminLoadingState() {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 345 |     return (
+      | ^^^^^^^^^^^^
+> 346 |       <div
+      …
+      | ^^^^^^^^^^^^
+> 365 |     );
+      | ^^^^^^^^^^^^
+> 366 |   }
+      | ^^^^ The component is created during render here
+  367 |
+  368 |   function AdminErrorState({ message }: { message: string | null }) {
+  369 |     return (                                                                                                                                       react-hooks/static-components
+  482:18  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:482:18
+  480 |                 <AdminLoadingState />
+  481 |               ) : isDashboardError ? (
+> 482 |                 <AdminErrorState message={dashboardError} />
+      |                  ^^^^^^^^^^^^^^^ This component is created during render
+  483 |               ) : (
+  484 |                 <>
+  485 |                   <StatsBar {...stats} />
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:368:3
+  366 |   }
+  367 |
+> 368 |   function AdminErrorState({ message }: { message: string | null }) {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 369 |     return (
+      | ^^^^^^^^^^^^
+> 370 |       <div
+      …
+      | ^^^^^^^^^^^^
+> 394 |     );
+      | ^^^^^^^^^^^^
+> 395 |   }
+      | ^^^^ The component is created during render here
+  396 |
+  397 |   return (
+  398 |     <PageShell controlsPosition="top-right">                                                                                                                react-hooks/static-components
+  496:20  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:496:20
+  494 |                 style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}>
+  495 |                 {loadingUsers ? (
+> 496 |                   <AdminLoadingState />
+      |                    ^^^^^^^^^^^^^^^^^ This component is created during render
+  497 |                 ) : isUsersError ? (
+  498 |                   <AdminErrorState message={usersError} />
+  499 |                 ) : (
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:344:3
+  342 |   }
+  343 |
+> 344 |   function AdminLoadingState() {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 345 |     return (
+      | ^^^^^^^^^^^^
+> 346 |       <div
+      …
+      | ^^^^^^^^^^^^
+> 365 |     );
+      | ^^^^^^^^^^^^
+> 366 |   }
+      | ^^^^ The component is created during render here
+  367 |
+  368 |   function AdminErrorState({ message }: { message: string | null }) {
+  369 |     return (                                                                          react-hooks/static-components
+  498:20  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:498:20
+  496 |                   <AdminLoadingState />
+  497 |                 ) : isUsersError ? (
+> 498 |                   <AdminErrorState message={usersError} />
+      |                    ^^^^^^^^^^^^^^^ This component is created during render
+  499 |                 ) : (
+  500 |                   <UserTable users={users} onBan={handleBan} onDelete={handleDelete} actionLoading={actionLoading} />
+  501 |                 )}
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:368:3
+  366 |   }
+  367 |
+> 368 |   function AdminErrorState({ message }: { message: string | null }) {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 369 |     return (
+      | ^^^^^^^^^^^^
+> 370 |       <div
+      …
+      | ^^^^^^^^^^^^
+> 394 |     );
+      | ^^^^^^^^^^^^
+> 395 |   }
+      | ^^^^ The component is created during render here
+  396 |
+  397 |   return (
+  398 |     <PageShell controlsPosition="top-right">                                  react-hooks/static-components
+  510:20  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:510:20
+  508 |                 style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}>
+  509 |                 {loadingReports ? (
+> 510 |                   <AdminLoadingState />
+      |                    ^^^^^^^^^^^^^^^^^ This component is created during render
+  511 |                 ) : isReportsError ? (
+  512 |                   <AdminErrorState message={reportsError} />
+  513 |                 ) : (
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:344:3
+  342 |   }
+  343 |
+> 344 |   function AdminLoadingState() {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 345 |     return (
+      | ^^^^^^^^^^^^
+> 346 |       <div
+      …
+      | ^^^^^^^^^^^^
+> 365 |     );
+      | ^^^^^^^^^^^^
+> 366 |   }
+      | ^^^^ The component is created during render here
+  367 |
+  368 |   function AdminErrorState({ message }: { message: string | null }) {
+  369 |     return (                                                                    react-hooks/static-components
+  512:20  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:512:20
+  510 |                   <AdminLoadingState />
+  511 |                 ) : isReportsError ? (
+> 512 |                   <AdminErrorState message={reportsError} />
+      |                    ^^^^^^^^^^^^^^^ This component is created during render
+  513 |                 ) : (
+  514 |                   <ReportList reports={reports} onResolve={handleResolveReport} actionLoading={actionLoading} />
+  515 |                 )}
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:368:3
+  366 |   }
+  367 |
+> 368 |   function AdminErrorState({ message }: { message: string | null }) {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 369 |     return (
+      | ^^^^^^^^^^^^
+> 370 |       <div
+      …
+      | ^^^^^^^^^^^^
+> 394 |     );
+      | ^^^^^^^^^^^^
+> 395 |   }
+      | ^^^^ The component is created during render here
+  396 |
+  397 |   return (
+  398 |     <PageShell controlsPosition="top-right">                                   react-hooks/static-components
+  524:20  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:524:20
+  522 |                 style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}>
+  523 |                 {loadingAppeals ? (
+> 524 |                   <AdminLoadingState />
+      |                    ^^^^^^^^^^^^^^^^^ This component is created during render
+  525 |                 ) : isAppealsError ? (
+  526 |                   <AdminErrorState message={appealsError} />
+  527 |                 ) : (
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:344:3
+  342 |   }
+  343 |
+> 344 |   function AdminLoadingState() {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 345 |     return (
+      | ^^^^^^^^^^^^
+> 346 |       <div
+      …
+      | ^^^^^^^^^^^^
+> 365 |     );
+      | ^^^^^^^^^^^^
+> 366 |   }
+      | ^^^^ The component is created during render here
+  367 |
+  368 |   function AdminErrorState({ message }: { message: string | null }) {
+  369 |     return (                                                                    react-hooks/static-components
+  526:20  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:526:20
+  524 |                   <AdminLoadingState />
+  525 |                 ) : isAppealsError ? (
+> 526 |                   <AdminErrorState message={appealsError} />
+      |                    ^^^^^^^^^^^^^^^ This component is created during render
+  527 |                 ) : (
+  528 |                   <AppealList appeals={appeals} onResolve={handleResolveAppeal} />
+  529 |                 )}
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:368:3
+  366 |   }
+  367 |
+> 368 |   function AdminErrorState({ message }: { message: string | null }) {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 369 |     return (
+      | ^^^^^^^^^^^^
+> 370 |       <div
+      …
+      | ^^^^^^^^^^^^
+> 394 |     );
+      | ^^^^^^^^^^^^
+> 395 |   }
+      | ^^^^ The component is created during render here
+  396 |
+  397 |   return (
+  398 |     <PageShell controlsPosition="top-right">                                                                 react-hooks/static-components
+  538:20  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:538:20
+  536 |                 style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}>
+  537 |                 {loadingBlacklistKeywords ? (
+> 538 |                   <AdminLoadingState />
+      |                    ^^^^^^^^^^^^^^^^^ This component is created during render
+  539 |                 ) : isBlacklistKeywordsError ? (
+  540 |                   <AdminErrorState message={blacklistKeywordsError} />
+  541 |                 ) : (
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:344:3
+  342 |   }
+  343 |
+> 344 |   function AdminLoadingState() {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 345 |     return (
+      | ^^^^^^^^^^^^
+> 346 |       <div
+      …
+      | ^^^^^^^^^^^^
+> 365 |     );
+      | ^^^^^^^^^^^^
+> 366 |   }
+      | ^^^^ The component is created during render here
+  367 |
+  368 |   function AdminErrorState({ message }: { message: string | null }) {
+  369 |     return (                                      react-hooks/static-components
+  540:20  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:540:20
+  538 |                   <AdminLoadingState />
+  539 |                 ) : isBlacklistKeywordsError ? (
+> 540 |                   <AdminErrorState message={blacklistKeywordsError} />
+      |                    ^^^^^^^^^^^^^^^ This component is created during render
+  541 |                 ) : (
+  542 |                   <BlacklistKeywordList
+  543 |                     keywords={blacklistKeywords}
+
+D:\UI-LingoSwap\src\page\admin\AdminPage.tsx:368:3
+  366 |   }
+  367 |
+> 368 |   function AdminErrorState({ message }: { message: string | null }) {
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 369 |     return (
+      | ^^^^^^^^^^^^
+> 370 |       <div
+      …
+      | ^^^^^^^^^^^^
+> 394 |     );
+      | ^^^^^^^^^^^^
+> 395 |   }
+      | ^^^^ The component is created during render here
+  396 |
+  397 |   return (
+  398 |     <PageShell controlsPosition="top-right">                                                          react-hooks/static-components
+
+D:\UI-LingoSwap\src\page\admin\component\ReportList.tsx
+  32:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+D:\UI-LingoSwap\src\page\call-ended\CallEndedPage.tsx
+  29:6  warning  React Hook useEffect has a missing dependency: 'execute'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\UI-LingoSwap\src\page\direct-call\DirectCallPage.tsx
+  72:6  warning  React Hook useEffect has missing dependencies: 'navigate' and 'targetId'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\UI-LingoSwap\src\page\forgot-password\component\OtpPasswordStep.tsx
+   55:21  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\forgot-password\component\OtpPasswordStep.tsx:55:21
+  53 |   };
+  54 |
+> 55 |   useEffect(() => { startTimer(); return () => { if (timerRef.current) clearInterval(timerRef.current); }; }, []);
+     |                     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  56 |
+  57 |   const formatTime = (s: number) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+  58 |                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/set-state-in-effect
+  167:12  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\forgot-password\component\OtpPasswordStep.tsx:167:12
+  165 |             onBlur={(e) => (e.target.style.borderColor = errors.newPassword ? theme.border.error : theme.border.default)}
+  166 |           />
+> 167 |           <EyeToggle show={showNew} onToggle={() => setShowNew(v => !v)} />
+      |            ^^^^^^^^^ This component is created during render
+  168 |         </div>
+  169 |         {errors.newPassword && <p className="text-xs" style={{ color: theme.text.error }}>{errors.newPassword}</p>}
+  170 |       </div>
+
+D:\UI-LingoSwap\src\page\forgot-password\component\OtpPasswordStep.tsx:100:21
+   98 |   };
+   99 |
+> 100 |   const EyeToggle = ({ show, onToggle }: { show: boolean; onToggle: () => void }) => (
+      |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 101 |     <button type="button" tabIndex={-1} onClick={onToggle}
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 102 |       className="absolute right-3.5 hover:opacity-70 transition-opacity"
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 110 |     </button>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 111 |   );
+      | ^^^^ The component is created during render here
+  112 |
+  113 |   return (
+  114 |     <form onSubmit={handleSubmit} className="flex flex-col gap-5">                      react-hooks/static-components
+  186:12  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\forgot-password\component\OtpPasswordStep.tsx:186:12
+  184 |             onBlur={(e) => (e.target.style.borderColor = errors.confirmPassword ? theme.border.error : theme.border.default)}
+  185 |           />
+> 186 |           <EyeToggle show={showConfirm} onToggle={() => setShowConfirm(v => !v)} />
+      |            ^^^^^^^^^ This component is created during render
+  187 |         </div>
+  188 |         {errors.confirmPassword && <p className="text-xs" style={{ color: theme.text.error }}>{errors.confirmPassword}</p>}
+  189 |       </div>
+
+D:\UI-LingoSwap\src\page\forgot-password\component\OtpPasswordStep.tsx:100:21
+   98 |   };
+   99 |
+> 100 |   const EyeToggle = ({ show, onToggle }: { show: boolean; onToggle: () => void }) => (
+      |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 101 |     <button type="button" tabIndex={-1} onClick={onToggle}
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 102 |       className="absolute right-3.5 hover:opacity-70 transition-opacity"
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 110 |     </button>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 111 |   );
+      | ^^^^ The component is created during render here
+  112 |
+  113 |   return (
+  114 |     <form onSubmit={handleSubmit} className="flex flex-col gap-5">  react-hooks/static-components
+
+D:\UI-LingoSwap\src\page\home\HomePage.tsx
+  41:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\home\HomePage.tsx:41:5
+  39 |     if (!friend) return;
+  40 |
+> 41 |     setPendingMessagesByFriend((prev) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  42 |       const current = prev[friend.id] ?? [];
+  43 |       if (current.find((m) => m._id === incomingMessage._id)) return prev;
+  44 |  react-hooks/set-state-in-effect
+
+D:\UI-LingoSwap\src\page\home\component\ChatWindow.tsx
+  81:6  warning  React Hook useEffect has a missing dependency: 'fetchMessages'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/exhaustive-deps
+  87:5  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\home\component\ChatWindow.tsx:87:5
+  85 |     if (pendingMessages.length === 0) return;
+  86 |
+> 87 |     setMessages((prev) => {
+     |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  88 |       const existingIds = new Set(prev.map((m) => m._id));
+  89 |       const nextMessages = pendingMessages
+  90 |         .filter((msg) => !existingIds.has(msg._id))  react-hooks/set-state-in-effect
+
+D:\UI-LingoSwap\src\page\home\component\IncomingCallModal.tsx
+  49:6  warning  React Hook useEffect has a missing dependency: 'execute'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\UI-LingoSwap\src\page\home\component\NotificationDropdown.tsx
+  190:6   warning  React Hook useEffect has a missing dependency: 'fetchCount'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/exhaustive-deps
+  193:42  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `fetchNotifs`, but the source dependencies were []. Inferred dependency not present in source.
+
+D:\UI-LingoSwap\src\page\home\component\NotificationDropdown.tsx:193:42
+  191 |
+  192 |   // Fetch notifications when dropdown opens (once)
+> 193 |   const fetchNotifications = useCallback(async () => {
+      |                                          ^^^^^^^^^^^^^
+> 194 |     if (hasFetched.current) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 195 |     hasFetched.current = true;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 196 |     const data = await fetchNotifs(notificationService.getNotifications());
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 197 |     if (data) {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 198 |       setNotifications(data);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 199 |       // Recalculate unreadCount từ data thực tế
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 200 |       setUnreadCount(data.filter((n) => !n.isRead).length);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 201 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 202 |   }, []);
+      | ^^^^ Could not preserve existing manual memoization
+  203 |
+  204 |   useEffect(() => {
+  205 |     if (open) fetchNotifications();  react-hooks/preserve-manual-memoization
+  202:6   warning  React Hook useCallback has a missing dependency: 'fetchNotifs'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/exhaustive-deps
+  205:15  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\home\component\NotificationDropdown.tsx:205:15
+  203 |
+  204 |   useEffect(() => {
+> 205 |     if (open) fetchNotifications();
+      |               ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  206 |   }, [open]);
+  207 |
+  208 |   const handleMouseEnter = () => {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/set-state-in-effect
+  206:6   warning  React Hook useEffect has a missing dependency: 'fetchNotifications'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/exhaustive-deps
+
+D:\UI-LingoSwap\src\page\home\component\RecentMatches.tsx
+  122:6  warning  React Hook useEffect has missing dependencies: 'checkStatus' and 'execute'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\UI-LingoSwap\src\page\login\GoogleCallbackPage.tsx
+  66:6  warning  React Hook useEffect has missing dependencies: 'execute', 'executeMe', 'navigate', 'searchParams', 'setMode', 'setUserFromMe', and 'setUserFromResponse'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\UI-LingoSwap\src\page\login\LoginPage.tsx
+  69:7  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\login\LoginPage.tsx:69:7
+  67 |         password: passwordRules(t.auth.login, t.validation),
+  68 |       });
+> 69 |       setErrors(newErrors);
+     |       ^^^^^^^^^ Avoid calling setState() directly within an effect
+  70 |     }
+  71 |   }, [locale]);
+  72 |  react-hooks/set-state-in-effect
+  71:6  warning  React Hook useEffect has missing dependencies: 'submitted', 't.auth.login', 't.validation', and 'values'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/exhaustive-deps
+
+D:\UI-LingoSwap\src\page\login\RegisterPage.tsx
+  130:7  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\login\RegisterPage.tsx:130:7
+  128 |     if (submitted) {
+  129 |       const { errors: newErrors } = validateForm(values, getFieldRules(values));
+> 130 |       setErrors(newErrors);
+      |       ^^^^^^^^^ Avoid calling setState() directly within an effect
+  131 |     }
+  132 |   }, [locale]);
+  133 |  react-hooks/set-state-in-effect
+  132:6  warning  React Hook useEffect has missing dependencies: 'getFieldRules', 'submitted', and 'values'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react-hooks/exhaustive-deps
+
+D:\UI-LingoSwap\src\page\meeting\LocalVideo.tsx
+  30:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\meeting\LocalVideo.tsx:30:7
+  28 |     if (!stream) {
+  29 |       video.srcObject = null;
+> 30 |       setHasStream(false);
+     |       ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  31 |       return;
+  32 |     }
+  33 |  react-hooks/set-state-in-effect
+
+D:\UI-LingoSwap\src\page\meeting\RemoteVideo.tsx
+  33:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\meeting\RemoteVideo.tsx:33:7
+  31 |     } else {
+  32 |       video.srcObject = null;
+> 33 |       setHasVideoTrack(false);
+     |       ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  34 |     }
+  35 |   }, [stream]);
+  36 |                                                                                                                                                                                                                                     react-hooks/set-state-in-effect
+  42:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\meeting\RemoteVideo.tsx:42:5
+  40 |     const hasVid = stream.getVideoTracks().length > 0;
+  41 |     console.log(`[RemoteVideo] trackCount=${trackCount}, videoTracks=${stream.getVideoTracks().length}, hasVid=${hasVid}`);
+> 42 |     setHasVideoTrack(hasVid);
+     |     ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  43 |     // Đảm bảo video đang play
+  44 |     if (hasVid && videoRef.current) {
+  45 |       videoRef.current.play().catch(() => {});  react-hooks/set-state-in-effect
+
+D:\UI-LingoSwap\src\page\messages\MessagesPage.tsx
+  24:16  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\messages\MessagesPage.tsx:24:16
+  22 |     if (!friendId || friends.length === 0) return;
+  23 |     const found = friends.find((f) => f.id === friendId);
+> 24 |     if (found) setSelectedFriend(found);
+     |                ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  25 |   }, [searchParams, friends]);
+  26 |
+  27 |   // Sync selectedFriend khi friends list update (status, conversationId...)  react-hooks/set-state-in-effect
+  31:18  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\messages\MessagesPage.tsx:31:18
+  29 |     if (!selectedFriend) return;
+  30 |     const updated = friends.find((f) => f.id === selectedFriend.id);
+> 31 |     if (updated) setSelectedFriend(updated);
+     |                  ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  32 |   }, [friends]);
+  33 |
+  34 |   return (                                                                                   react-hooks/set-state-in-effect
+  32:6   warning  React Hook useEffect has a missing dependency: 'selectedFriend'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/exhaustive-deps
+
+D:\UI-LingoSwap\src\page\messages\component\ChatArea.tsx
+  66:5  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\UI-LingoSwap\src\page\messages\component\ChatArea.tsx:66:5
+  64 |
+  65 |   useEffect(() => {
+> 66 |     setMessages([]);
+     |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  67 |     setInput("");
+  68 |     convIdRef.current = friend.conversationId ?? null;
+  69 |     if (!friend.conversationId) return;  react-hooks/set-state-in-effect
+  73:6  warning  React Hook useEffect has a missing dependency: 'fetchMessages'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react-hooks/exhaustive-deps
+
+D:\UI-LingoSwap\src\page\review\ReviewPage.tsx
+   75:6  warning  React Hook useEffect has missing dependencies: 'checkStatus' and 'partner'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  177:6  warning  React Hook useEffect has a missing dependency: 'fetchProfile'. Either include it or remove the dependency array                 react-hooks/exhaustive-deps
+
+D:\UI-LingoSwap\src\page\waiting\WaitingPage.tsx
+  45:6  warning  React Hook useEffect has missing dependencies: 'cancelMatching' and 'startMatching'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  54:6  warning  React Hook useEffect has a missing dependency: 'navigate'. Either include it or remove the dependency array                              react-hooks/exhaustive-deps
+
+✖ 52 problems (34 errors, 18 warnings)
+
+
+
+STDERR:
+(empty)

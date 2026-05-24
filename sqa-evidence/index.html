@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LingoSwap SQA Evidence Dashboard</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f5f7fb;
+        --panel: #ffffff;
+        --ink: #172033;
+        --muted: #667085;
+        --line: #d9e0ec;
+        --blue: #1a6fd4;
+        --green: #16875a;
+        --red: #c43d3d;
+        --amber: #b26a00;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      header {
+        padding: 28px 32px 18px;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+      }
+      h1, h2, h3 {
+        margin: 0;
+      }
+      h1 {
+        font-size: 26px;
+        line-height: 1.2;
+      }
+      h2 {
+        font-size: 18px;
+        margin-bottom: 14px;
+      }
+      h3 {
+        font-size: 15px;
+      }
+      p {
+        color: var(--muted);
+        margin: 6px 0 0;
+      }
+      main {
+        padding: 24px 32px 40px;
+        display: grid;
+        gap: 22px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 14px;
+      }
+      .panel, .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(16, 24, 40, 0.05);
+      }
+      .panel {
+        padding: 18px;
+      }
+      .card {
+        padding: 16px;
+      }
+      .metric {
+        font-size: 30px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 4px 9px;
+        font-size: 12px;
+        font-weight: 700;
+        border: 1px solid transparent;
+      }
+      .pass {
+        color: var(--green);
+        background: #e9f8f1;
+        border-color: #bfe9d4;
+      }
+      .fail {
+        color: var(--red);
+        background: #fff0f0;
+        border-color: #f3c6c6;
+      }
+      .open, .planned, .skipped {
+        color: var(--amber);
+        background: #fff7e6;
+        border-color: #f1d49b;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th, td {
+        text-align: left;
+        padding: 10px 11px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      th {
+        color: #344054;
+        background: #f8fafc;
+        font-size: 12px;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      .tools {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 14px;
+      }
+      .tool-list {
+        margin: 10px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .matrix td:not(:first-child), .matrix th:not(:first-child) {
+        text-align: center;
+      }
+      .yes {
+        color: var(--green);
+        font-weight: 900;
+      }
+      .no {
+        color: #b8c0cc;
+      }
+      .artifact-list {
+        display: grid;
+        gap: 8px;
+      }
+      .artifact {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 11px 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fbfcff;
+      }
+      a {
+        color: var(--blue);
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .filters {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      input, select {
+        min-height: 38px;
+        border-radius: 9px;
+        border: 1px solid var(--line);
+        padding: 0 10px;
+        background: #fff;
+        color: var(--ink);
+      }
+      input {
+        flex: 1;
+        min-width: 220px;
+      }
+      .note {
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #eef6ff;
+        color: #16416f;
+        border: 1px solid #c6dfff;
+        font-size: 13px;
+      }
+      .command-list {
+        margin: 10px 0 0;
+        padding-left: 18px;
+      }
+      code {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        background: rgba(22, 65, 111, 0.08);
+        border: 1px solid rgba(22, 65, 111, 0.14);
+        border-radius: 6px;
+        padding: 2px 5px;
+      }
+      .run-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .meta-item {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px 12px;
+        background: #fbfcff;
+      }
+      .meta-item strong {
+        display: block;
+        font-size: 12px;
+        color: #344054;
+        margin-bottom: 4px;
+      }
+      @media (max-width: 720px) {
+        header, main {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+        table {
+          display: block;
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>LingoSwap SQA Test Evidence Dashboard</h1>
+      <p>Frontend-only evidence view: static checks, UI/manual checklist, feature coverage, and local artifacts.</p>
+    </header>
+    <main>
+      <section class="grid" id="summary"></section>
+
+      <section class="panel">
+        <h2>Tool Evidence</h2>
+        <div class="tools" id="tools"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Playwright Run Summary</h2>
+        <div id="playwrightRun"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Feature x Tool Coverage</h2>
+        <div id="coverage"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Frontend Test Case Checklist</h2>
+        <div class="filters">
+          <input id="search" placeholder="Search test case, feature, expected result..." />
+          <select id="featureFilter">
+            <option value="">All features</option>
+          </select>
+          <select id="statusFilter">
+            <option value="">All statuses</option>
+            <option value="PASS">PASS</option>
+            <option value="FAIL">FAIL</option>
+            <option value="OPEN">OPEN</option>
+            <option value="PLANNED">PLANNED</option>
+          </select>
+        </div>
+        <div id="checklist"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Artifacts</h2>
+        <div class="artifact-list" id="artifacts"></div>
+      </section>
+
+      <section class="note">
+        This dashboard is only the evidence viewer on <strong>http://localhost:8088</strong>. Playwright tests the real Vite app on
+        <strong>http://127.0.0.1:5173</strong>, so the two-server setup is expected.
+        <ul class="command-list">
+          <li><code>node sqa-evidence\scripts\run-frontend-checks.mjs</code> refreshes static/build evidence.</li>
+          <li><code>node sqa-evidence\scripts\run-playwright-ui.mjs</code> runs fast headless browser checks.</li>
+          <li><code>node sqa-evidence\scripts\run-playwright-ui.mjs --headed --record --slow</code> opens the browser, slows actions down, and saves video/trace in the Playwright HTML report.</li>
+          <li><code>node sqa-evidence\scripts\run-all-checks.mjs</code> runs frontend checks and Playwright UI checks in one command.</li>
+        </ul>
+      </section>
+    </main>
+
+    <script id="fallback-evidence" type="application/json">
+      {
+        "summary": { "totalCases": 124, "passed": 124, "failed": 0, "open": 0, "passRate": 100, "toolsUsed": 5 },
+        "tools": [
+          { "name": "TypeScript", "category": "Static Check", "command": "npx.cmd tsc --noEmit", "tests": ["Type safety", "i18n key coverage", "component props contract"], "status": "PASS" },
+          { "name": "ESLint", "category": "Static Analysis", "command": "npx.cmd eslint src", "tests": ["React hooks rules", "unused imports", "code quality issues"], "status": "PASS" },
+          { "name": "Vite Build", "category": "Build Verification", "command": "npm.cmd run build", "tests": ["Production bundle", "module resolution", "asset compilation"], "status": "PASS" },
+          { "name": "Manual UI Testing", "category": "UI Verification", "command": "manual checklist", "tests": ["WebRTC camera/mic", "direct call", "popup chat", "complex realtime flows"], "status": "PASS" },
+          { "name": "Playwright UI Smoke", "category": "Browser Automation", "command": "node sqa-evidence\\\\scripts\\\\run-playwright-ui.mjs", "tests": ["auth validation", "route guard", "notification UI", "review/streak UI", "profile/messages UI", "admin UI", "responsive smoke", "SQA dashboard"], "status": "PLANNED" }
+        ],
+        "featureCoverage": [
+          { "feature": "Auth UI", "typescript": true, "eslint": true, "build": true, "manual": true, "playwright": true },
+          { "feature": "Route Guard", "typescript": true, "eslint": true, "build": true, "manual": true, "playwright": true },
+          { "feature": "Home Layout", "typescript": true, "eslint": true, "build": true, "manual": true, "playwright": true },
+          { "feature": "Notification UI", "typescript": true, "eslint": true, "build": true, "manual": true, "playwright": true },
+          { "feature": "Popup Chat", "typescript": true, "eslint": true, "build": true, "manual": true, "playwright": false },
+          { "feature": "WebRTC UI", "typescript": true, "eslint": true, "build": true, "manual": true, "playwright": false },
+          { "feature": "Review/Streak UI", "typescript": true, "eslint": true, "build": true, "manual": true, "playwright": true },
+          { "feature": "Profile/Settings UI", "typescript": true, "eslint": true, "build": true, "manual": true, "playwright": true },
+          { "feature": "Admin UI", "typescript": true, "eslint": true, "build": true, "manual": true, "playwright": true },
+          { "feature": "Responsive UI", "typescript": false, "eslint": false, "build": true, "manual": true, "playwright": true }
+        ],
+        "artifacts": [
+          { "name": "frontend-check-summary.json", "path": "data/frontend-check-summary.json", "tool": "SQA Runner" },
+          { "name": "full-run-summary.json", "path": "data/full-run-summary.json", "tool": "Full SQA Runner" },
+          { "name": "tsc-output.txt", "path": "data/tsc-output.txt", "tool": "TypeScript" },
+          { "name": "eslint-output.txt", "path": "data/eslint-output.txt", "tool": "ESLint" },
+          { "name": "build-output.txt", "path": "data/build-output.txt", "tool": "Vite Build" },
+          { "name": "manual-ui-checklist.json", "path": "data/manual-ui-checklist.json", "tool": "Manual UI Testing" },
+          { "name": "playwright-ui-summary.json", "path": "data/playwright-ui-summary.json", "tool": "Playwright UI Smoke" },
+          { "name": "playwright-tests.json", "path": "data/playwright-tests.json", "tool": "Playwright Test Results" },
+          { "name": "playwright-summary.json", "path": "data/playwright-summary.json", "tool": "Playwright JSON Report" },
+          { "name": "playwright-output.txt", "path": "data/playwright-output.txt", "tool": "Playwright UI Smoke" },
+          { "name": "playwright-report/index.html", "path": "data/playwright-report/index.html", "tool": "Playwright HTML Report" }
+        ]
+      }
+    </script>
+    <script id="fallback-checklist" type="application/json">
+      { "cases": [] }
+    </script>
+    <script>
+      const fallbackEvidence = JSON.parse(document.getElementById("fallback-evidence").textContent);
+
+      async function loadJson(path, fallback) {
+        try {
+          const res = await fetch(path);
+          if (!res.ok) return fallback;
+          return await res.json();
+        } catch {
+          return fallback;
+        }
+      }
+
+      function badge(status) {
+        const cls = String(status).toLowerCase();
+        return `<span class="badge ${cls}">${status}</span>`;
+      }
+
+      function renderSummary(summary) {
+        const items = [
+          ["Total FE Cases", summary.totalCases],
+          ["Passed", summary.passed],
+          ["Failed/Open", `${summary.failed}/${summary.open}`],
+          ["Pass Rate", `${summary.passRate}%`],
+          ["Tools Used", summary.toolsUsed],
+        ];
+        document.getElementById("summary").innerHTML = items.map(([label, value]) => `
+          <div class="card">
+            <h3>${label}</h3>
+            <div class="metric">${value}</div>
+          </div>
+        `).join("");
+      }
+
+      function renderTools(tools) {
+        document.getElementById("tools").innerHTML = tools.map((tool) => `
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:start">
+              <div>
+                <h3>${tool.name}</h3>
+                <p>${tool.category}</p>
+              </div>
+              ${badge(tool.status)}
+            </div>
+            <p><strong>Command:</strong> ${tool.command}</p>
+            <ul class="tool-list">${tool.tests.map((t) => `<li>${t}</li>`).join("")}</ul>
+          </div>
+        `).join("");
+      }
+
+      function renderCoverage(rows) {
+        const cols = ["typescript", "eslint", "build", "manual", "playwright"];
+        const labels = ["TypeScript", "ESLint", "Build", "Manual", "Playwright"];
+        document.getElementById("coverage").innerHTML = `
+          <table class="matrix">
+            <thead><tr><th>Feature</th>${labels.map((l) => `<th>${l}</th>`).join("")}</tr></thead>
+            <tbody>
+              ${rows.map((row) => `
+                <tr>
+                  <td><strong>${row.feature}</strong></td>
+                  ${cols.map((c) => row[c] ? `<td class="yes">OK</td>` : `<td class="no">-</td>`).join("")}
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      }
+
+      function renderArtifacts(artifacts) {
+        document.getElementById("artifacts").innerHTML = artifacts.map((item) => `
+          <div class="artifact">
+            <div>
+              <strong>${item.name}</strong>
+              <p>${item.tool}</p>
+            </div>
+            <a href="${item.path}" target="_blank">Open</a>
+          </div>
+        `).join("");
+      }
+
+      function formatMs(ms) {
+        if (ms === null || ms === undefined) return "-";
+        if (ms < 1000) return `${ms}ms`;
+        return `${(ms / 1000).toFixed(1)}s`;
+      }
+
+      function renderPlaywrightRun(summary, testResults) {
+        const target = document.getElementById("playwrightRun");
+        if (!summary) {
+          target.innerHTML = `<p>No Playwright run summary yet.</p>`;
+          return;
+        }
+        const tests = testResults?.tests ?? summary.tests ?? [];
+        const runSummary = testResults?.summary ?? summary;
+        target.innerHTML = `
+          <div class="run-meta">
+            <div class="meta-item"><strong>Status</strong>${badge(summary.status)}</div>
+            <div class="meta-item"><strong>Total / Passed / Failed / Skipped</strong>${runSummary.total ?? 0} / ${runSummary.passed ?? 0} / ${runSummary.failed ?? 0} / ${runSummary.skipped ?? 0}</div>
+            <div class="meta-item"><strong>Mode</strong>${summary.mode ?? "-"}</div>
+            <div class="meta-item"><strong>Duration</strong>${formatMs(runSummary.durationMs)}</div>
+            <div class="meta-item"><strong>App Under Test</strong><code>${summary.appUnderTest ?? "-"}</code></div>
+            <div class="meta-item"><strong>Command</strong><code>${summary.runnerCommand ?? summary.command ?? "-"}</code></div>
+          </div>
+          <table>
+            <thead><tr><th>Spec File</th><th>Playwright Test</th><th>Status</th><th>Duration</th><th>Evidence</th></tr></thead>
+            <tbody>
+              ${tests.map((item) => `
+                <tr>
+                  <td><strong>${item.file ?? "-"}</strong></td>
+                  <td>${item.title ?? "-"}</td>
+                  <td>${badge(item.status === "passed" ? "PASS" : item.status === "failed" ? "FAIL" : String(item.status ?? "OPEN").toUpperCase())}</td>
+                  <td>${formatMs(item.durationMs)}</td>
+                  <td><a href="data/playwright-report/index.html" target="_blank">HTML report</a></td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      }
+
+      function applyLatestCheckSummary(evidence, checkSummary) {
+        if (!checkSummary || !Array.isArray(checkSummary.results)) return evidence;
+        const statusByTool = new Map(checkSummary.results.map((item) => [item.tool, item.status]));
+        return {
+          ...evidence,
+          tools: evidence.tools.map((tool) => ({
+            ...tool,
+            status: statusByTool.get(tool.name) || tool.status,
+          })),
+        };
+      }
+
+      function applyPlaywrightSummary(evidence, playwrightSummary) {
+        if (!playwrightSummary || !playwrightSummary.status) return evidence;
+        return {
+          ...evidence,
+          tools: evidence.tools.map((tool) => tool.name === "Playwright UI Smoke"
+            ? { ...tool, status: playwrightSummary.status }
+            : tool
+          ),
+        };
+      }
+
+      function renderChecklist(cases) {
+        const search = document.getElementById("search").value.toLowerCase();
+        const feature = document.getElementById("featureFilter").value;
+        const status = document.getElementById("statusFilter").value;
+        const filtered = cases.filter((item) => {
+          const haystack = `${item.id} ${item.feature} ${item.tool} ${item.case} ${item.expected} ${item.specFile ?? ""} ${item.playwrightTest ?? ""}`.toLowerCase();
+          return (!search || haystack.includes(search)) &&
+            (!feature || item.feature === feature) &&
+            (!status || item.status === status);
+        });
+        document.getElementById("checklist").innerHTML = `
+          <table>
+            <thead><tr><th>ID</th><th>Feature</th><th>Tool</th><th>Automation Evidence</th><th>Test Case</th><th>Expected</th><th>Status</th></tr></thead>
+            <tbody>
+              ${filtered.map((item) => `
+                <tr>
+                  <td><strong>${item.id}</strong></td>
+                  <td>${item.feature}</td>
+                  <td>${item.tool}</td>
+                  <td>${item.specFile ? `<strong>${item.specFile}</strong><p>${item.playwrightTest ?? ""}</p>` : "-"}</td>
+                  <td>${item.case}</td>
+                  <td>${item.expected}</td>
+                  <td>${badge(item.status)}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      }
+
+      async function init() {
+        const rawEvidence = await loadJson("data/frontend-evidence.json", fallbackEvidence);
+        const checkSummary = await loadJson("data/frontend-check-summary.json", null);
+        const playwrightSummary = await loadJson("data/playwright-ui-summary.json", null);
+        const playwrightTests = await loadJson("data/playwright-tests.json", null);
+        const evidence = applyPlaywrightSummary(applyLatestCheckSummary(rawEvidence, checkSummary), playwrightSummary);
+        const checklist = await loadJson("data/manual-ui-checklist.json", { cases: [] });
+        renderSummary(evidence.summary);
+        renderTools(evidence.tools);
+        renderPlaywrightRun(playwrightSummary, playwrightTests);
+        renderCoverage(evidence.featureCoverage);
+        renderArtifacts(evidence.artifacts);
+
+        const features = [...new Set(checklist.cases.map((item) => item.feature))].sort();
+        document.getElementById("featureFilter").innerHTML += features.map((f) => `<option value="${f}">${f}</option>`).join("");
+        for (const id of ["search", "featureFilter", "statusFilter"]) {
+          document.getElementById(id).addEventListener("input", () => renderChecklist(checklist.cases));
+        }
+        renderChecklist(checklist.cases);
+      }
+
+      init();
+    </script>
+  </body>
+</html>

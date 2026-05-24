@@ -1,0 +1,37 @@
+$ npx.cmd playwright test --config sqa-evidence/playwright.config.ts
+Started: 2026-05-24T07:08:01.441Z
+Finished: 2026-05-24T07:08:18.670Z
+Mode: headless
+Headed: false
+Record: false
+SlowMo: 0ms
+App under test: http://127.0.0.1:5173
+Evidence dashboard: http://localhost:8088
+Exit code: 0
+
+STDOUT:
+
+Running 16 tests using 6 workers
+
+  ✓   4 [chromium] › sqa-evidence\tests\route-guard.spec.ts:5:3 › FE93-FE100 route guard › FE93 redirects anonymous user from /home to /login (4.1s)
+  ✓   1 [chromium] › sqa-evidence\tests\responsive.spec.ts:4:3 › Responsive UI smoke › login page renders on mobile viewport (4.2s)
+  ✓   3 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:5:3 › FE110-FE124 admin UI › admin login page validates missing credentials (4.1s)
+  ✓   5 [chromium] › sqa-evidence\tests\notification-ui.spec.ts:5:3 › FE65-FE70 notification UI › notification dropdown renders unread notification and supports mark read (4.2s)
+  ✓   6 [chromium] › sqa-evidence\tests\auth-validation.spec.ts:4:3 › FE01-FE24 Auth and OTP validation › FE01-FE20 register form blocks empty and weak inputs (4.3s)
+  ✓   2 [chromium] › sqa-evidence\tests\review-streak.spec.ts:5:3 › FE83-FE89 review and streak UI › submit button is disabled until rating is selected (4.1s)
+  ✓   7 [chromium] › sqa-evidence\tests\route-guard.spec.ts:10:3 › FE93-FE100 route guard › FE94 redirects normal user from /admin to /admin/login (2.5s)
+  ✓   8 [chromium] › sqa-evidence\tests\responsive.spec.ts:11:3 › Responsive UI smoke › login page renders on desktop viewport (2.6s)
+  ✓  10 [chromium] › sqa-evidence\tests\sqa-dashboard.spec.ts:3:3 › SQA evidence dashboard › renders full FE01-FE124 checklist summary (2.8s)
+  ✓  11 [chromium] › sqa-evidence\tests\auth-validation.spec.ts:20:3 › FE01-FE24 Auth and OTP validation › FE21-FE24 forgot password email step validates required email before OTP flow (3.2s)
+  ✓   9 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:13:3 › FE110-FE124 admin UI › admin dashboard renders mocked overview stats (3.6s)
+  ✓  13 [chromium] › sqa-evidence\tests\route-guard.spec.ts:16:3 › FE93-FE100 route guard › FE96 allows authenticated user route after token verification (3.5s)
+  ✓  14 [chromium] › sqa-evidence\tests\user-pages.spec.ts:5:3 › FE101-FE109 profile and messages UI › profile page renders profile, settings, and password panels (3.5s)
+  ✓  12 [chromium] › sqa-evidence\tests\review-streak.spec.ts:28:3 › FE83-FE89 review and streak UI › streak marker can trigger celebration after review submit (6.3s)
+  ✓  15 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:23:3 › FE110-FE124 admin UI › admin users tab renders mocked user table (3.8s)
+  ✓  16 [chromium] › sqa-evidence\tests\user-pages.spec.ts:16:3 › FE101-FE109 profile and messages UI › messages page renders friend sidebar and empty chat state (2.0s)
+
+  16 passed (14.8s)
+
+
+STDERR:
+(empty)

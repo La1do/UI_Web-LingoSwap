@@ -1,0 +1,30 @@
+$ npm.cmd run build
+Started: 2026-05-24T07:07:51.291Z
+Finished: 2026-05-24T07:08:01.324Z
+Duration: 10033ms
+Exit code: 0
+
+STDOUT:
+
+> ui-lingoswap@0.0.0 build
+> tsc -b && vite build
+
+[36mvite v8.0.8 [32mbuilding client environment for production...[36m[39m
+[2Ktransforming...✓ 748 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                     0.46 kB │ gzip:   0.30 kB
+dist/assets/logo-BAkt7ZKc.png      70.21 kB
+dist/assets/logo-CSdG3Sn4.ico     432.25 kB
+dist/assets/index-CIvA4089.css     46.87 kB │ gzip:   5.87 kB
+dist/assets/index-DDQ0sdNM.js   1,009.17 kB │ gzip: 286.93 kB
+
+[32m✓ built in 1.11s[39m
+
+
+STDERR:
+[33m[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m

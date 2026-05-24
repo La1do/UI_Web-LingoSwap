@@ -1,0 +1,44 @@
+{
+  "title": "LingoSwap Frontend Check Summary",
+  "startedAt": "2026-05-24T07:07:36.317Z",
+  "finishedAt": "2026-05-24T07:08:01.325Z",
+  "total": 3,
+  "passed": 2,
+  "failed": 1,
+  "status": "FAIL",
+  "results": [
+    {
+      "id": "tsc",
+      "tool": "TypeScript",
+      "command": "npx.cmd tsc --noEmit",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 1697,
+      "output": "data/tsc-output.txt",
+      "startedAt": "2026-05-24T07:07:36.318Z",
+      "finishedAt": "2026-05-24T07:07:38.015Z"
+    },
+    {
+      "id": "eslint",
+      "tool": "ESLint",
+      "command": "npx.cmd eslint src",
+      "status": "FAIL",
+      "exitCode": 1,
+      "durationMs": 13272,
+      "output": "data/eslint-output.txt",
+      "startedAt": "2026-05-24T07:07:38.017Z",
+      "finishedAt": "2026-05-24T07:07:51.289Z"
+    },
+    {
+      "id": "build",
+      "tool": "Vite Build",
+      "command": "npm.cmd run build",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 10033,
+      "output": "data/build-output.txt",
+      "startedAt": "2026-05-24T07:07:51.291Z",
+      "finishedAt": "2026-05-24T07:08:01.324Z"
+    }
+  ]
+}
