@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
+import { useToast } from "../../context/ToastContext";
 import { socketService } from "../../services/socket.service";
 
 // ─── Types ───────────────────────────────────────────────────
@@ -26,9 +27,11 @@ const getTime = () =>
 export default function ChatPanel({ partnerId, sessionId }: ChatPanelProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
+  const toast = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
+  const pendingTextRef = useRef<{ text: string; time: string }[]>([]);
 
   useEffect(() => {
     // Lắng nghe tin nhắn từ partner
@@ -43,16 +46,37 @@ export default function ChatPanel({ partnerId, sessionId }: ChatPanelProps) {
 
     // Xác nhận tin nhắn đã gửi thành công — cập nhật pending → confirmed
     socketService.onMessageSentSuccess((msg) => {
-      setMessages((prev) =>
-        prev.map((m) => m.id === `pending-${msg._id}` || m.pending
-          ? { ...m, id: msg._id, pending: false }
-          : m
-        )
-      );
+      const pendingIndex = pendingTextRef.current.findIndex((pending) => pending.text === msg.content);
+      if (pendingIndex === -1) return;
+
+      const [pending] = pendingTextRef.current.splice(pendingIndex, 1);
+      setMessages((prev) => {
+        if (prev.find((m) => m.id === msg._id)) return prev;
+        return [...prev, {
+          id: msg._id,
+          sender: "me",
+          text: msg.content,
+          time: msg.createdAt
+            ? new Date(msg.createdAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })
+            : pending.time,
+        }];
+      });
     });
 
-    return () => socketService.offChatEvents();
-  }, []);
+    const errorHandler = () => {
+      if (pendingTextRef.current.length === 0) return;
+      pendingTextRef.current.shift();
+      toast.error(t.chat.forbiddenMessage);
+    };
+
+    const socket = socketService.getSocket();
+    socket?.on("error", errorHandler);
+
+    return () => {
+      socketService.offChatEvents();
+      socket?.off("error", errorHandler);
+    };
+  }, [t.chat.forbiddenMessage, toast]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -62,17 +86,13 @@ export default function ChatPanel({ partnerId, sessionId }: ChatPanelProps) {
     const text = input.trim();
     if (!text || !partnerId) return;
 
-    const tempId = `pending-${Date.now()}`;
+    const socket = socketService.getSocket();
+    if (!socket?.connected) {
+      toast.error(t.chat.failed);
+      return;
+    }
 
-    // Optimistic update — hiện ngay trước khi server confirm
-    setMessages((prev) => [...prev, {
-      id: tempId,
-      sender: "me",
-      text,
-      time: getTime(),
-      pending: true,
-    }]);
-
+    pendingTextRef.current.push({ text, time: getTime() });
     socketService.sendMessage({
       partnerId,
       content: text,

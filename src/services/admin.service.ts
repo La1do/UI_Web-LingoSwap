@@ -34,6 +34,33 @@ export interface Appeal {
   createdAt: string;
 }
 
+export interface BlacklistKeywordCreator {
+  _id: string;
+  profile?: { fullName?: string };
+  email?: string;
+}
+
+export interface BlacklistKeyword {
+  _id: string;
+  keyword: string;
+  createdBy: string | BlacklistKeywordCreator;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface BlacklistKeywordListResponse {
+  total: number;
+  page: number;
+  limit: number;
+  keywords: BlacklistKeyword[];
+}
+
+export interface CreateBlacklistKeywordResponse {
+  message: string;
+  keyword: BlacklistKeyword;
+}
+
 // ─── Service ─────────────────────────────────────────────────
 
 export const adminService = {
@@ -84,5 +111,22 @@ export const adminService = {
     method: "PATCH",
     url: `/api/admin/reports/${id}/status`,
     data,
+  }),
+
+  getBlacklistKeywords: (params?: { search?: string; page?: number; limit?: number }): AxiosRequestConfig => ({
+    method: "GET",
+    url: "/api/admin/blacklist-keywords",
+    params,
+  }),
+
+  createBlacklistKeyword: (keyword: string): AxiosRequestConfig => ({
+    method: "POST",
+    url: "/api/admin/blacklist-keywords",
+    data: { keyword },
+  }),
+
+  deleteBlacklistKeyword: (id: string): AxiosRequestConfig => ({
+    method: "DELETE",
+    url: `/api/admin/blacklist-keywords/${id}`,
   }),
 };

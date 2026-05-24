@@ -13,14 +13,26 @@ import AdminDashboardCharts from "./component/AdminDashboardCharts";
 import UserTable, { type AdminUser } from "./component/UserTable";
 import ReportList, { type Report, type ResolvePayload, type ApiReport, mapApiReport } from "./component/ReportList";
 import AppealList from "./component/AppealList";
-import { adminService, type DashboardStats, type Appeal } from "../../services/admin.service";
+import BlacklistKeywordList from "./component/BlacklistKeywordList";
+import {
+  adminService,
+  type DashboardStats,
+  type Appeal,
+  type BlacklistKeyword,
+  type BlacklistKeywordListResponse,
+  type CreateBlacklistKeywordResponse,
+} from "../../services/admin.service";
 
 // ─── Nav ─────────────────────────────────────────────────────
 
-type AdminSection = "dashboard" | "users" | "reports" | "appeals";
+type AdminSection = "dashboard" | "users" | "reports" | "appeals" | "blacklistKeywords";
 type LoadedSections = Record<AdminSection, boolean>;
 
-const NAV_ITEMS: { id: AdminSection; labelKey: "dashboardSection" | "usersSection" | "reportsSection" | "appealsSection"; icon: React.ReactNode }[] = [
+const NAV_ITEMS: {
+  id: AdminSection;
+  labelKey: "dashboardSection" | "usersSection" | "reportsSection" | "appealsSection" | "blacklistKeywordsSection";
+  icon: React.ReactNode;
+}[] = [
   {
     id: "dashboard",
     labelKey: "dashboardSection",
@@ -64,6 +76,16 @@ const NAV_ITEMS: { id: AdminSection; labelKey: "dashboardSection" | "usersSectio
       </svg>
     ),
   },
+  {
+    id: "blacklistKeywords",
+    labelKey: "blacklistKeywordsSection",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-4 h-4">
+        <path d="M12 3l8 4v5c0 5-3.4 8.7-8 9-4.6-.3-8-4-8-9V7l8-4z" />
+        <path d="M9 12h6" />
+      </svg>
+    ),
+  },
 ];
 
 // ─── Page ─────────────────────────────────────────────────────
@@ -80,12 +102,18 @@ export default function AdminPage() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [reports, setReports] = useState<Report[]>([]);
   const [appeals, setAppeals] = useState<Appeal[]>([]);
+  const [blacklistKeywords, setBlacklistKeywords] = useState<BlacklistKeyword[]>([]);
+  const [blacklistTotal, setBlacklistTotal] = useState(0);
+  const [blacklistPage, setBlacklistPage] = useState(1);
+  const [blacklistLimit] = useState(20);
+  const [blacklistSearch, setBlacklistSearch] = useState("");
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
   const [loadedSections, setLoadedSections] = useState<LoadedSections>({
     dashboard: false,
     users: false,
     reports: false,
     appeals: false,
+    blacklistKeywords: false,
   });
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
@@ -94,6 +122,9 @@ export default function AdminPage() {
   const { execute: fetchDashboard, isLoading: loadingDashboard, isError: isDashboardError, error: dashboardError } = useApi<DashboardStats>();
   const { execute: fetchAppeals, isLoading: loadingAppeals, isError: isAppealsError, error: appealsError } = useApi<Appeal[]>();
   const { execute: fetchReports, isLoading: loadingReports, isError: isReportsError, error: reportsError } = useApi<ApiReport[]>();
+  const { execute: fetchBlacklistKeywords, isLoading: loadingBlacklistKeywords, isError: isBlacklistKeywordsError, error: blacklistKeywordsError } = useApi<BlacklistKeywordListResponse>();
+  const { execute: createBlacklistKeywordExec, isLoading: creatingBlacklistKeyword } = useApi<CreateBlacklistKeywordResponse>();
+  const { execute: deleteBlacklistKeywordExec } = useApi<{ message: string }>();
   const { execute: resolveReportExec } = useApi();
   const { execute: resolveAppealExec } = useApi();
   const { execute: banExec } = useApi();
@@ -135,6 +166,24 @@ export default function AdminPage() {
     }
   };
 
+  const loadBlacklistKeywords = async (options?: { search?: string; page?: number }) => {
+    const nextSearch = options?.search ?? blacklistSearch;
+    const nextPage = options?.page ?? blacklistPage;
+    const data = await fetchBlacklistKeywords(adminService.getBlacklistKeywords({
+      search: nextSearch || undefined,
+      page: nextPage,
+      limit: blacklistLimit,
+    }));
+
+    if (data) {
+      setBlacklistKeywords(data.keywords);
+      setBlacklistTotal(data.total);
+      setBlacklistPage(data.page);
+      setBlacklistSearch(nextSearch);
+      markLoaded("blacklistKeywords");
+    }
+  };
+
   // Fetch on section change
   useEffect(() => {
     if (loadedSections[activeSection]) return;
@@ -143,6 +192,7 @@ export default function AdminPage() {
     if (activeSection === "users") void loadUsers();
     if (activeSection === "appeals") void loadAppeals();
     if (activeSection === "reports") void loadReports();
+    if (activeSection === "blacklistKeywords") void loadBlacklistKeywords();
   }, [activeSection, loadedSections]);
 
   // Stats — từ dashboard API hoặc tính từ users
@@ -226,11 +276,51 @@ export default function AdminPage() {
     return true;
   };
 
+  const handleBlacklistSearch = (search: string) => {
+    setBlacklistSearch(search);
+    setBlacklistPage(1);
+    void loadBlacklistKeywords({ search, page: 1 });
+  };
+
+  const handleBlacklistPageChange = (page: number) => {
+    setBlacklistPage(page);
+    void loadBlacklistKeywords({ page });
+  };
+
+  const handleAddBlacklistKeyword = async (keyword: string): Promise<boolean> => {
+    const result = await createBlacklistKeywordExec(adminService.createBlacklistKeyword(keyword));
+    if (result === null) {
+      toast.error(t.admin.toast.actionFailed);
+      return false;
+    }
+
+    toast.success(t.admin.toast.blacklistKeywordAdded);
+    setBlacklistPage(1);
+    void loadBlacklistKeywords({ page: 1 });
+    return true;
+  };
+
+  const handleDeleteBlacklistKeyword = async (keyword: BlacklistKeyword): Promise<boolean> => {
+    setActionLoading(`blacklist:${keyword._id}`);
+    const result = await deleteBlacklistKeywordExec(adminService.deleteBlacklistKeyword(keyword._id));
+    setActionLoading(null);
+    if (result === null) {
+      toast.error(t.admin.toast.actionFailed);
+      return false;
+    }
+
+    toast.success(t.admin.toast.blacklistKeywordDeleted);
+    const nextPage = blacklistKeywords.length === 1 && blacklistPage > 1 ? blacklistPage - 1 : blacklistPage;
+    void loadBlacklistKeywords({ page: nextPage });
+    return true;
+  };
+
   const sectionLabel: Record<AdminSection, string> = {
     dashboard: t.admin.dashboardSection,
     users: t.admin.usersSection,
     reports: t.admin.reportsSection,
     appeals: t.admin.appealsSection,
+    blacklistKeywords: t.admin.blacklistKeywordsSection,
   };
 
   const pendingAppeals = appeals.filter((a) => a.status === "pending").length;
@@ -244,6 +334,7 @@ export default function AdminPage() {
     if (activeSection === "users") void loadUsers();
     if (activeSection === "appeals") void loadAppeals();
     if (activeSection === "reports") void loadReports();
+    if (activeSection === "blacklistKeywords") void loadBlacklistKeywords();
   };
 
   if (isInitialAdminLoading) {
@@ -435,6 +526,32 @@ export default function AdminPage() {
                   <AdminErrorState message={appealsError} />
                 ) : (
                   <AppealList appeals={appeals} onResolve={handleResolveAppeal} />
+                )}
+              </section>
+            )}
+
+            {/* Blacklist keywords */}
+            {activeSection === "blacklistKeywords" && (
+              <section className="rounded-2xl p-6 flex flex-col gap-4"
+                style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}>
+                {loadingBlacklistKeywords ? (
+                  <AdminLoadingState />
+                ) : isBlacklistKeywordsError ? (
+                  <AdminErrorState message={blacklistKeywordsError} />
+                ) : (
+                  <BlacklistKeywordList
+                    keywords={blacklistKeywords}
+                    total={blacklistTotal}
+                    page={blacklistPage}
+                    limit={blacklistLimit}
+                    search={blacklistSearch}
+                    onSearchChange={handleBlacklistSearch}
+                    onPageChange={handleBlacklistPageChange}
+                    onAdd={handleAddBlacklistKeyword}
+                    onDelete={handleDeleteBlacklistKeyword}
+                    isAdding={creatingBlacklistKeyword}
+                    deletingId={actionLoading?.startsWith("blacklist:") ? actionLoading.replace("blacklist:", "") : null}
+                  />
                 )}
               </section>
             )}
