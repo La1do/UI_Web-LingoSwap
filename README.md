@@ -224,6 +224,164 @@ Máy khác truy cập `https://192.168.x.x:5173` (chấp nhận self-signed cert
 
 ---
 
+## SQA Test Evidence
+
+Phần này chỉ dùng cho branch test evidence, ví dụ `sqa/test-evidence`. Không merge các artifact test này về `main` nếu project không yêu cầu.
+
+Bộ script test nằm trong:
+
+```text
+sqa-evidence/
+```
+
+Lưu ý: thư mục `sqa-evidence/` đang nằm trong `.gitignore`. Nếu muốn thầy/các máy khác checkout branch này và chạy được script, cần force-add thư mục này trên branch test evidence:
+
+```bash
+git add -f sqa-evidence
+git add package.json package-lock.json README.md
+git commit -m "Add SQA frontend test evidence"
+git push origin sqa/test-evidence
+```
+
+Không tạo PR/MR merge branch này vào `main` nếu chỉ muốn giữ bộ test evidence riêng cho demo/báo cáo.
+
+### Cài đặt để chạy test
+
+Tại frontend repo:
+
+```bash
+npm install
+npm install -D @playwright/test
+npx playwright install chromium
+```
+
+Nếu dùng Windows PowerShell, chạy trong đúng thư mục frontend:
+
+```powershell
+Set-Location D:\UI-LingoSwap
+```
+
+Không chạy các lệnh SQA trong backend repo.
+
+### Mở dashboard evidence
+
+Dashboard chỉ là trang xem báo cáo test:
+
+```powershell
+python -m http.server 8088 --directory D:\UI-LingoSwap\sqa-evidence
+```
+
+Mở trình duyệt:
+
+```text
+http://localhost:8088/index.html
+```
+
+Nếu port `8088` bận:
+
+```powershell
+python -m http.server 8090 --directory D:\UI-LingoSwap\sqa-evidence
+```
+
+Mở:
+
+```text
+http://localhost:8090/index.html
+```
+
+### Chạy frontend checks
+
+```powershell
+node sqa-evidence\scripts\run-frontend-checks.mjs
+```
+
+Lệnh này chạy:
+
+- TypeScript: `npx.cmd tsc --noEmit`
+- ESLint: `npx.cmd eslint src`
+- Vite build: `npm.cmd run build`
+
+Kết quả lưu tại:
+
+```text
+sqa-evidence\data\frontend-check-summary.json
+sqa-evidence\data\tsc-output.txt
+sqa-evidence\data\eslint-output.txt
+sqa-evidence\data\build-output.txt
+```
+
+### Chạy Playwright UI tests
+
+Chạy nhanh, không mở browser:
+
+```powershell
+node sqa-evidence\scripts\run-playwright-ui.mjs
+```
+
+Chạy trực quan, có browser, video và trace:
+
+```powershell
+node sqa-evidence\scripts\run-playwright-ui.mjs --headed --record --slow
+```
+
+Kết quả lưu tại:
+
+```text
+sqa-evidence\data\playwright-ui-summary.json
+sqa-evidence\data\playwright-tests.json
+sqa-evidence\data\playwright-report\index.html
+```
+
+### Chạy tất cả bằng một lệnh
+
+```powershell
+node sqa-evidence\scripts\run-all-checks.mjs
+```
+
+Lệnh này chạy cả:
+
+1. Frontend static/build checks
+2. Playwright UI tests
+
+Kết quả tổng hợp:
+
+```text
+sqa-evidence\data\full-run-summary.json
+```
+
+### Cách đọc kết quả hiện tại
+
+Dashboard hiển thị:
+
+- `Tool Evidence`: trạng thái TypeScript, ESLint, Build, Manual, Playwright.
+- `Playwright Run Summary`: từng Playwright test đã chạy, pass/fail/skipped, thời gian chạy.
+- `Frontend Test Case Checklist`: FE test case nào chạy bằng Playwright, case nào còn manual.
+- `Artifacts`: link đến JSON, TXT và HTML report.
+
+Số liệu hiện tại của bộ SQA evidence:
+
+- Tổng FE test case: `124`
+- FE case có Playwright evidence: `69`
+- FE case manual: `55`
+- Playwright test scripts: `16`
+- Playwright gần nhất: `16 passed, 0 failed, 0 skipped`
+
+Nếu `run-all-checks` báo `FAIL` do ESLint, xem chi tiết tại:
+
+```text
+sqa-evidence\data\eslint-output.txt
+```
+
+Tại thời điểm tạo bộ evidence này, TypeScript và Build pass, Playwright pass; ESLint có thể fail do các lỗi lint hiện có trong source.
+
+Hướng dẫn chi tiết hơn nằm tại:
+
+```text
+sqa-evidence\HUONG-DAN-TEST-SQA.md
+```
+
+---
+
 ## Conventions
 
 - **NO hardcoded strings** — dùng `useI18n()` → `t.section.key`
