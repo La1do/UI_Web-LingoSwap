@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -11,14 +11,28 @@ const isWin = process.platform === "win32";
 const playwrightInstalled = existsSync(path.join(root, "node_modules/@playwright/test"));
 const cliFlags = new Set(process.argv.slice(2));
 const headedMode = cliFlags.has("--headed");
-const recordMode = cliFlags.has("--record");
+const recordMode = !cliFlags.has("--no-record");
 const slowMode = cliFlags.has("--slow");
 const slowMo = slowMode ? "1500" : "0";
-const runMode = headedMode || recordMode || slowMode ? "visual" : "headless";
+const runMode = headedMode || slowMode ? "visual" : recordMode ? "headless-recorded" : "headless";
 
 await mkdir(outDir, { recursive: true });
 
 if (!playwrightInstalled) {
+  const evidence = {
+    title: "LingoSwap Playwright Evidence Artifacts",
+    generatedAt: new Date().toISOString(),
+    command: "npx.cmd playwright test --config sqa-evidence/playwright.config.ts",
+    record: false,
+    root: "sqa-evidence/data",
+    summary: {
+      videos: 0,
+      traces: 0,
+      screenshots: 0,
+      total: 0,
+    },
+    artifacts: [],
+  };
   const summary = {
     title: "LingoSwap Playwright UI Summary",
     status: "SKIPPED",
@@ -32,8 +46,15 @@ if (!playwrightInstalled) {
     passed: 0,
     failed: 0,
     skipped: 1,
+    evidence: {
+      manifest: "data/playwright-evidence.json",
+      videos: 0,
+      traces: 0,
+      screenshots: 0,
+    },
     finishedAt: new Date().toISOString(),
   };
+  await writeFile(path.join(outDir, "playwright-evidence.json"), JSON.stringify(evidence, null, 2), "utf8");
   await writeFile(path.join(outDir, "playwright-ui-summary.json"), JSON.stringify(summary, null, 2), "utf8");
   await writeFile(path.join(outDir, "playwright-output.txt"), `${summary.status}: ${summary.reason}\n${summary.installHint}\n`, "utf8");
   console.log("Playwright UI checks skipped: @playwright/test is not installed");
@@ -94,7 +115,7 @@ const result = await new Promise((resolve) => {
       title: "LingoSwap Playwright UI Summary",
       status: code === 0 ? "PASS" : "FAIL",
       command: `${command} ${args.join(" ")}`,
-      runnerCommand: `node sqa-evidence\\scripts\\run-playwright-ui.mjs${headedMode ? " --headed" : ""}${recordMode ? " --record" : ""}${slowMode ? " --slow" : ""}`,
+      runnerCommand: `node sqa-evidence\\scripts\\run-playwright-ui.mjs${headedMode ? " --headed" : ""}${recordMode ? "" : " --no-record"}${slowMode ? " --slow" : ""}`,
       mode: runMode,
       headed: headedMode,
       record: recordMode,
@@ -136,11 +157,57 @@ function collectSpecs(suites, bucket = []) {
   return bucket;
 }
 
+async function collectEvidenceFiles(directory, bucket = []) {
+  if (!existsSync(directory)) return bucket;
+
+  const entries = await readdir(directory, { withFileTypes: true });
+  for (const entry of entries) {
+    const absolutePath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      await collectEvidenceFiles(absolutePath, bucket);
+      continue;
+    }
+
+    const extension = path.extname(entry.name).toLowerCase();
+    const type = extension === ".webm"
+      ? "video"
+      : extension === ".zip"
+        ? "trace"
+        : extension === ".png"
+          ? "screenshot"
+          : null;
+
+    if (!type) continue;
+    bucket.push({
+      type,
+      name: entry.name,
+      path: path.relative(outDir, absolutePath).replaceAll("\\", "/"),
+    });
+  }
+
+  return bucket;
+}
+
 try {
   const rawReport = await readFile(path.join(outDir, "playwright-summary.json"), "utf8");
   const report = JSON.parse(rawReport);
   const stats = report.stats ?? {};
   const tests = collectSpecs(report.suites);
+  const evidenceFiles = await collectEvidenceFiles(path.join(outDir, "playwright-results"));
+  const evidence = {
+    title: "LingoSwap Playwright Evidence Artifacts",
+    generatedAt: new Date().toISOString(),
+    command: result.runnerCommand,
+    record: result.record,
+    root: "sqa-evidence/data",
+    summary: {
+      videos: evidenceFiles.filter((item) => item.type === "video").length,
+      traces: evidenceFiles.filter((item) => item.type === "trace").length,
+      screenshots: evidenceFiles.filter((item) => item.type === "screenshot").length,
+      total: evidenceFiles.length,
+    },
+    artifacts: evidenceFiles,
+  };
   result.total = (stats.expected ?? 0) + (stats.unexpected ?? 0) + (stats.flaky ?? 0) + (stats.skipped ?? 0);
   result.passed = stats.expected ?? 0;
   result.failed = stats.unexpected ?? 0;
@@ -148,6 +215,13 @@ try {
   result.skipped = stats.skipped ?? 0;
   result.durationMs = stats.duration ?? null;
   result.tests = tests;
+  result.evidence = {
+    manifest: "data/playwright-evidence.json",
+    videos: evidence.summary.videos,
+    traces: evidence.summary.traces,
+    screenshots: evidence.summary.screenshots,
+  };
+  await writeFile(path.join(outDir, "playwright-evidence.json"), JSON.stringify(evidence, null, 2), "utf8");
   await writeFile(path.join(outDir, "playwright-tests.json"), JSON.stringify({
     title: "LingoSwap Playwright Test Results",
     generatedAt: new Date().toISOString(),
@@ -164,6 +238,20 @@ try {
     tests,
   }, null, 2), "utf8");
 } catch {
+  const evidence = {
+    title: "LingoSwap Playwright Evidence Artifacts",
+    generatedAt: new Date().toISOString(),
+    command: result.runnerCommand,
+    record: result.record,
+    root: "sqa-evidence/data",
+    summary: {
+      videos: 0,
+      traces: 0,
+      screenshots: 0,
+      total: 0,
+    },
+    artifacts: [],
+  };
   result.total = null;
   result.passed = null;
   result.failed = null;
@@ -171,6 +259,13 @@ try {
   result.skipped = null;
   result.durationMs = null;
   result.tests = [];
+  result.evidence = {
+    manifest: "data/playwright-evidence.json",
+    videos: 0,
+    traces: 0,
+    screenshots: 0,
+  };
+  await writeFile(path.join(outDir, "playwright-evidence.json"), JSON.stringify(evidence, null, 2), "utf8");
 }
 
 await writeFile(path.join(outDir, "playwright-ui-summary.json"), JSON.stringify(result, null, 2), "utf8");
@@ -185,6 +280,9 @@ console.log(`Passed: ${result.passed ?? 0}`);
 console.log(`Failed: ${result.failed ?? 0}`);
 console.log(`Skipped: ${result.skipped ?? 0}`);
 console.log(`Duration: ${result.durationMs ? `${(result.durationMs / 1000).toFixed(1)}s` : "-"}`);
+console.log(`Videos: ${result.evidence?.videos ?? 0}`);
+console.log(`Traces: ${result.evidence?.traces ?? 0}`);
+console.log(`Screenshots: ${result.evidence?.screenshots ?? 0}`);
 
 if (Array.isArray(result.tests) && result.tests.length > 0) {
   console.log("");
@@ -198,5 +296,6 @@ if (Array.isArray(result.tests) && result.tests.length > 0) {
 
 console.log("");
 console.log(`HTML report: sqa-evidence\\data\\playwright-report\\index.html`);
+console.log(`Evidence manifest: sqa-evidence\\data\\playwright-evidence.json`);
 console.log(`JSON summary: sqa-evidence\\data\\playwright-ui-summary.json`);
 process.exit(result.status === "PASS" ? 0 : 1);

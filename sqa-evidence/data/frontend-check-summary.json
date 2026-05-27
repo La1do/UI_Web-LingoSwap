@@ -1,7 +1,7 @@
 {
   "title": "LingoSwap Frontend Check Summary",
-  "startedAt": "2026-05-24T07:07:36.317Z",
-  "finishedAt": "2026-05-24T07:08:01.325Z",
+  "startedAt": "2026-05-27T15:19:39.444Z",
+  "finishedAt": "2026-05-27T15:20:16.652Z",
   "total": 3,
   "passed": 2,
   "failed": 1,
@@ -13,10 +13,10 @@
       "command": "npx.cmd tsc --noEmit",
       "status": "PASS",
       "exitCode": 0,
-      "durationMs": 1697,
+      "durationMs": 1387,
       "output": "data/tsc-output.txt",
-      "startedAt": "2026-05-24T07:07:36.318Z",
-      "finishedAt": "2026-05-24T07:07:38.015Z"
+      "startedAt": "2026-05-27T15:19:39.444Z",
+      "finishedAt": "2026-05-27T15:19:40.831Z"
     },
     {
       "id": "eslint",
@@ -24,10 +24,10 @@
       "command": "npx.cmd eslint src",
       "status": "FAIL",
       "exitCode": 1,
-      "durationMs": 13272,
+      "durationMs": 21923,
       "output": "data/eslint-output.txt",
-      "startedAt": "2026-05-24T07:07:38.017Z",
-      "finishedAt": "2026-05-24T07:07:51.289Z"
+      "startedAt": "2026-05-27T15:19:40.834Z",
+      "finishedAt": "2026-05-27T15:20:02.757Z"
     },
     {
       "id": "build",
@@ -35,10 +35,10 @@
       "command": "npm.cmd run build",
       "status": "PASS",
       "exitCode": 0,
-      "durationMs": 10033,
+      "durationMs": 13893,
       "output": "data/build-output.txt",
-      "startedAt": "2026-05-24T07:07:51.291Z",
-      "finishedAt": "2026-05-24T07:08:01.324Z"
+      "startedAt": "2026-05-27T15:20:02.758Z",
+      "finishedAt": "2026-05-27T15:20:16.651Z"
     }
   ]
 }

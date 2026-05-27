@@ -99,14 +99,30 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4120,
+                      "duration": 5711,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:05.590Z",
+                      "startTime": "2026-05-27T15:39:50.453Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-2f388-lidates-missing-credentials-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-2f388-lidates-missing-credentials-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-2f388-lidates-missing-credentials-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -133,14 +149,30 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3586,
+                      "duration": 5337,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:10.071Z",
+                      "startTime": "2026-05-27T15:39:57.245Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-f2801-nders-mocked-overview-stats-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-f2801-nders-mocked-overview-stats-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-f2801-nders-mocked-overview-stats-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -167,14 +199,30 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3761,
+                      "duration": 3386,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:13.687Z",
+                      "startTime": "2026-05-27T15:40:02.887Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-74975-b-renders-mocked-user-table-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-74975-b-renders-mocked-user-table-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-74975-b-renders-mocked-user-table-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -218,14 +266,30 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 4327,
+                      "duration": 6013,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:05.667Z",
+                      "startTime": "2026-05-27T15:39:50.520Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\auth-validation-FE01-FE24--0570c-locks-empty-and-weak-inputs-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\auth-validation-FE01-FE24--0570c-locks-empty-and-weak-inputs-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\auth-validation-FE01-FE24--0570c-locks-empty-and-weak-inputs-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -252,14 +316,30 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3172,
+                      "duration": 4153,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:10.486Z",
+                      "startTime": "2026-05-27T15:39:57.744Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\auth-validation-FE01-FE24--961d4-uired-email-before-OTP-flow-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\auth-validation-FE01-FE24--961d4-uired-email-before-OTP-flow-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\auth-validation-FE01-FE24--961d4-uired-email-before-OTP-flow-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -303,14 +383,30 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 4237,
+                      "duration": 6100,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:05.632Z",
+                      "startTime": "2026-05-27T15:39:50.451Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\notification-ui-FE65-FE70--0f328-tion-and-supports-mark-read-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\notification-ui-FE65-FE70--0f328-tion-and-supports-mark-read-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\notification-ui-FE65-FE70--0f328-tion-and-supports-mark-read-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -354,14 +450,30 @@
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 4180,
+                      "duration": 5944,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:05.573Z",
+                      "startTime": "2026-05-27T15:39:50.567Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\responsive-Responsive-UI-s-1912e--renders-on-mobile-viewport-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\responsive-Responsive-UI-s-1912e--renders-on-mobile-viewport-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\responsive-Responsive-UI-s-1912e--renders-on-mobile-viewport-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -388,14 +500,30 @@
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 2617,
+                      "duration": 4554,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:10.061Z",
+                      "startTime": "2026-05-27T15:39:57.412Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\responsive-Responsive-UI-s-8eaa2-renders-on-desktop-viewport-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\responsive-Responsive-UI-s-8eaa2-renders-on-desktop-viewport-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\responsive-Responsive-UI-s-8eaa2-renders-on-desktop-viewport-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -439,14 +567,30 @@
                       "workerIndex": 4,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 4072,
+                      "duration": 5626,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:05.590Z",
+                      "startTime": "2026-05-27T15:39:50.617Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE83-FE89-re-a9d22-ed-until-rating-is-selected-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE83-FE89-re-a9d22-ed-until-rating-is-selected-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE83-FE89-re-a9d22-ed-until-rating-is-selected-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -473,14 +617,30 @@
                       "workerIndex": 4,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 6287,
+                      "duration": 6305,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:10.621Z",
+                      "startTime": "2026-05-27T15:39:57.190Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE83-FE89-re-1b140-bration-after-review-submit-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE83-FE89-re-1b140-bration-after-review-submit-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE83-FE89-re-1b140-bration-after-review-submit-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -524,14 +684,30 @@
                       "workerIndex": 5,
                       "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 4105,
+                      "duration": 5822,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:05.616Z",
+                      "startTime": "2026-05-27T15:39:50.522Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\route-guard-FE93-FE100-rou-b115d-ous-user-from-home-to-login-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\route-guard-FE93-FE100-rou-b115d-ous-user-from-home-to-login-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\route-guard-FE93-FE100-rou-b115d-ous-user-from-home-to-login-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -558,14 +734,30 @@
                       "workerIndex": 5,
                       "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 2523,
+                      "duration": 4483,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:10.056Z",
+                      "startTime": "2026-05-27T15:39:57.445Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\route-guard-FE93-FE100-rou-7101d-r-from-admin-to-admin-login-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\route-guard-FE93-FE100-rou-7101d-r-from-admin-to-admin-login-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\route-guard-FE93-FE100-rou-7101d-r-from-admin-to-admin-login-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -592,14 +784,30 @@
                       "workerIndex": 5,
                       "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 3459,
+                      "duration": 2418,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:12.611Z",
+                      "startTime": "2026-05-27T15:40:02.114Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\route-guard-FE93-FE100-rou-2c9d3-te-after-token-verification-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\route-guard-FE93-FE100-rou-2c9d3-te-after-token-verification-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\route-guard-FE93-FE100-rou-2c9d3-te-after-token-verification-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -643,14 +851,30 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 2786,
+                      "duration": 4494,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:10.355Z",
+                      "startTime": "2026-05-27T15:39:57.600Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\sqa-dashboard-SQA-evidence-45d5f-E01-FE124-checklist-summary-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\sqa-dashboard-SQA-evidence-45d5f-E01-FE124-checklist-summary-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\sqa-dashboard-SQA-evidence-45d5f-E01-FE124-checklist-summary-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -691,17 +915,33 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3496,
+                      "duration": 2572,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:12.791Z",
+                      "startTime": "2026-05-27T15:40:02.129Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\user-pages-FE101-FE109-pro-d91d1-ettings-and-password-panels-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\user-pages-FE101-FE109-pro-d91d1-ettings-and-password-panels-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\user-pages-FE101-FE109-pro-d91d1-ettings-and-password-panels-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -725,17 +965,33 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1998,
+                      "duration": 1654,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-24T07:08:16.318Z",
+                      "startTime": "2026-05-27T15:40:04.823Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\user-pages-FE101-FE109-pro-32d93-idebar-and-empty-chat-state-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\user-pages-FE101-FE109-pro-32d93-idebar-and-empty-chat-state-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\user-pages-FE101-FE109-pro-32d93-idebar-and-empty-chat-state-chromium\\trace.zip"
+                        }
+                      ]
                     }
                   ],
                   "status": "expected"
@@ -753,8 +1009,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-05-24T07:08:03.774Z",
-    "duration": 14774.238,
+    "startTime": "2026-05-27T15:39:45.370Z",
+    "duration": 21710.430999999997,
     "expected": 16,
     "skipped": 0,
     "unexpected": 0,

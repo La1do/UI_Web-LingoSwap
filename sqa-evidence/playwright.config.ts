@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const recordMode = process.env.SQA_PLAYWRIGHT_RECORD === "1";
+const recordMode = process.env.SQA_PLAYWRIGHT_RECORD !== "0";
 const headedMode = process.env.SQA_PLAYWRIGHT_HEADED === "1";
 const slowMo = Number(process.env.SQA_PLAYWRIGHT_SLOWMO ?? 0);
 

@@ -93,6 +93,7 @@ const summary = {
     passed: playwrightSummary.passed,
     failed: playwrightSummary.failed,
     skipped: playwrightSummary.skipped,
+    evidence: playwrightSummary.evidence ?? null,
   } : null,
 };
 
@@ -107,6 +108,9 @@ if (summary.frontend) {
 }
 if (summary.playwright) {
   console.log(`Playwright UI: ${summary.playwright.status} (${summary.playwright.passed}/${summary.playwright.total} passed, ${summary.playwright.failed} failed, ${summary.playwright.skipped} skipped)`);
+  if (summary.playwright.evidence) {
+    console.log(`Playwright evidence: ${summary.playwright.evidence.videos} videos, ${summary.playwright.evidence.traces} traces, ${summary.playwright.evidence.screenshots} screenshots`);
+  }
 }
 console.log("Summary: sqa-evidence\\data\\full-run-summary.json");
 

@@ -3,15 +3,15 @@
   "status": "PASS",
   "command": "npx.cmd playwright test --config sqa-evidence/playwright.config.ts",
   "runnerCommand": "node sqa-evidence\\scripts\\run-playwright-ui.mjs",
-  "mode": "headless",
+  "mode": "headless-recorded",
   "headed": false,
-  "record": false,
+  "record": true,
   "slowMo": 0,
   "appUnderTest": "http://127.0.0.1:5173",
   "evidenceDashboard": "http://localhost:8088",
   "exitCode": 0,
-  "startedAt": "2026-05-24T07:08:01.441Z",
-  "finishedAt": "2026-05-24T07:08:18.670Z",
+  "startedAt": "2026-05-27T15:39:42.353Z",
+  "finishedAt": "2026-05-27T15:40:07.387Z",
   "report": "data/playwright-report/index.html",
   "output": "data/playwright-output.txt",
   "total": 16,
@@ -19,7 +19,7 @@
   "failed": 0,
   "flaky": 0,
   "skipped": 0,
-  "durationMs": 14774.238,
+  "durationMs": 21710.430999999997,
   "tests": [
     {
       "file": "admin-ui.spec.ts",
@@ -27,10 +27,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 4120,
-      "startedAt": "2026-05-24T07:08:05.590Z",
+      "durationMs": 5711,
+      "startedAt": "2026-05-27T15:39:50.453Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-2f388-lidates-missing-credentials-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-2f388-lidates-missing-credentials-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-2f388-lidates-missing-credentials-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "admin-ui.spec.ts",
@@ -38,10 +54,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 3586,
-      "startedAt": "2026-05-24T07:08:10.071Z",
+      "durationMs": 5337,
+      "startedAt": "2026-05-27T15:39:57.245Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-f2801-nders-mocked-overview-stats-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-f2801-nders-mocked-overview-stats-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-f2801-nders-mocked-overview-stats-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "admin-ui.spec.ts",
@@ -49,10 +81,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 3761,
-      "startedAt": "2026-05-24T07:08:13.687Z",
+      "durationMs": 3386,
+      "startedAt": "2026-05-27T15:40:02.887Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-74975-b-renders-mocked-user-table-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-74975-b-renders-mocked-user-table-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-74975-b-renders-mocked-user-table-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "auth-validation.spec.ts",
@@ -60,10 +108,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 4327,
-      "startedAt": "2026-05-24T07:08:05.667Z",
+      "durationMs": 6013,
+      "startedAt": "2026-05-27T15:39:50.520Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/auth-validation-FE01-FE24--0570c-locks-empty-and-weak-inputs-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/auth-validation-FE01-FE24--0570c-locks-empty-and-weak-inputs-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/auth-validation-FE01-FE24--0570c-locks-empty-and-weak-inputs-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "auth-validation.spec.ts",
@@ -71,10 +135,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 3172,
-      "startedAt": "2026-05-24T07:08:10.486Z",
+      "durationMs": 4153,
+      "startedAt": "2026-05-27T15:39:57.744Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/auth-validation-FE01-FE24--961d4-uired-email-before-OTP-flow-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/auth-validation-FE01-FE24--961d4-uired-email-before-OTP-flow-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/auth-validation-FE01-FE24--961d4-uired-email-before-OTP-flow-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "notification-ui.spec.ts",
@@ -82,10 +162,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 4237,
-      "startedAt": "2026-05-24T07:08:05.632Z",
+      "durationMs": 6100,
+      "startedAt": "2026-05-27T15:39:50.451Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/notification-ui-FE65-FE70--0f328-tion-and-supports-mark-read-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/notification-ui-FE65-FE70--0f328-tion-and-supports-mark-read-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/notification-ui-FE65-FE70--0f328-tion-and-supports-mark-read-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "responsive.spec.ts",
@@ -93,10 +189,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 4180,
-      "startedAt": "2026-05-24T07:08:05.573Z",
+      "durationMs": 5944,
+      "startedAt": "2026-05-27T15:39:50.567Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/responsive-Responsive-UI-s-1912e--renders-on-mobile-viewport-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/responsive-Responsive-UI-s-1912e--renders-on-mobile-viewport-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/responsive-Responsive-UI-s-1912e--renders-on-mobile-viewport-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "responsive.spec.ts",
@@ -104,10 +216,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 2617,
-      "startedAt": "2026-05-24T07:08:10.061Z",
+      "durationMs": 4554,
+      "startedAt": "2026-05-27T15:39:57.412Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/responsive-Responsive-UI-s-8eaa2-renders-on-desktop-viewport-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/responsive-Responsive-UI-s-8eaa2-renders-on-desktop-viewport-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/responsive-Responsive-UI-s-8eaa2-renders-on-desktop-viewport-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "review-streak.spec.ts",
@@ -115,10 +243,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 4072,
-      "startedAt": "2026-05-24T07:08:05.590Z",
+      "durationMs": 5626,
+      "startedAt": "2026-05-27T15:39:50.617Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/review-streak-FE83-FE89-re-a9d22-ed-until-rating-is-selected-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/review-streak-FE83-FE89-re-a9d22-ed-until-rating-is-selected-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/review-streak-FE83-FE89-re-a9d22-ed-until-rating-is-selected-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "review-streak.spec.ts",
@@ -126,10 +270,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 6287,
-      "startedAt": "2026-05-24T07:08:10.621Z",
+      "durationMs": 6305,
+      "startedAt": "2026-05-27T15:39:57.190Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/review-streak-FE83-FE89-re-1b140-bration-after-review-submit-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/review-streak-FE83-FE89-re-1b140-bration-after-review-submit-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/review-streak-FE83-FE89-re-1b140-bration-after-review-submit-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "route-guard.spec.ts",
@@ -137,10 +297,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 4105,
-      "startedAt": "2026-05-24T07:08:05.616Z",
+      "durationMs": 5822,
+      "startedAt": "2026-05-27T15:39:50.522Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/route-guard-FE93-FE100-rou-b115d-ous-user-from-home-to-login-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/route-guard-FE93-FE100-rou-b115d-ous-user-from-home-to-login-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/route-guard-FE93-FE100-rou-b115d-ous-user-from-home-to-login-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "route-guard.spec.ts",
@@ -148,10 +324,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 2523,
-      "startedAt": "2026-05-24T07:08:10.056Z",
+      "durationMs": 4483,
+      "startedAt": "2026-05-27T15:39:57.445Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/route-guard-FE93-FE100-rou-7101d-r-from-admin-to-admin-login-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/route-guard-FE93-FE100-rou-7101d-r-from-admin-to-admin-login-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/route-guard-FE93-FE100-rou-7101d-r-from-admin-to-admin-login-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "route-guard.spec.ts",
@@ -159,10 +351,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 3459,
-      "startedAt": "2026-05-24T07:08:12.611Z",
+      "durationMs": 2418,
+      "startedAt": "2026-05-27T15:40:02.114Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/route-guard-FE93-FE100-rou-2c9d3-te-after-token-verification-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/route-guard-FE93-FE100-rou-2c9d3-te-after-token-verification-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/route-guard-FE93-FE100-rou-2c9d3-te-after-token-verification-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "sqa-dashboard.spec.ts",
@@ -170,10 +378,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 2786,
-      "startedAt": "2026-05-24T07:08:10.355Z",
+      "durationMs": 4494,
+      "startedAt": "2026-05-27T15:39:57.600Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/sqa-dashboard-SQA-evidence-45d5f-E01-FE124-checklist-summary-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/sqa-dashboard-SQA-evidence-45d5f-E01-FE124-checklist-summary-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/sqa-dashboard-SQA-evidence-45d5f-E01-FE124-checklist-summary-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "user-pages.spec.ts",
@@ -181,10 +405,26 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 3496,
-      "startedAt": "2026-05-24T07:08:12.791Z",
+      "durationMs": 2572,
+      "startedAt": "2026-05-27T15:40:02.129Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/user-pages-FE101-FE109-pro-d91d1-ettings-and-password-panels-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/user-pages-FE101-FE109-pro-d91d1-ettings-and-password-panels-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/user-pages-FE101-FE109-pro-d91d1-ettings-and-password-panels-chromium/trace.zip"
+        }
+      ]
     },
     {
       "file": "user-pages.spec.ts",
@@ -192,10 +432,32 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 1998,
-      "startedAt": "2026-05-24T07:08:16.318Z",
+      "durationMs": 1654,
+      "startedAt": "2026-05-27T15:40:04.823Z",
       "retry": 0,
-      "attachments": []
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/user-pages-FE101-FE109-pro-32d93-idebar-and-empty-chat-state-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/user-pages-FE101-FE109-pro-32d93-idebar-and-empty-chat-state-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/user-pages-FE101-FE109-pro-32d93-idebar-and-empty-chat-state-chromium/trace.zip"
+        }
+      ]
     }
-  ]
+  ],
+  "evidence": {
+    "manifest": "data/playwright-evidence.json",
+    "videos": 16,
+    "traces": 16,
+    "screenshots": 16
+  }
 }
