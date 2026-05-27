@@ -60,11 +60,11 @@ export const authService = {
     data,
   }),
 
-  // Gửi idToken từ Google lên backend
-  googleLogin: (idToken: string): AxiosRequestConfig => ({
+  // Gui accessToken tu Google popup flow len backend
+  googleLogin: (accessToken: string): AxiosRequestConfig => ({
     method: "POST",
     url: "/api/auth/google",
-    data: { idToken },
+    data: { accessToken },
   }),
 
   // Đổi authorization code lấy token (dùng với auth-code flow redirect)
