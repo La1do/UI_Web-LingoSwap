@@ -44,26 +44,28 @@ export default function GoogleSignInButton({ intent }: GoogleSignInButtonProps) 
   };
 
   const loginWithGoogle = useGoogleLogin({
-    flow: "auth-code",
-    onSuccess: async ({ code }) => {
-      if (!code) {
+    onSuccess: async (tokenResponse) => {
+      const accessToken = tokenResponse.access_token;
+      if (!accessToken) {
         setIsAuthorizing(false);
         return;
       }
 
       try {
-        const result = await execute(authService.googleCallback(code));
+        const result = await execute(authService.googleLogin(accessToken));
         await handleLoginResult(result);
+      } catch (error) {
+        console.error("Google backend login failed", error);
       } finally {
         setIsAuthorizing(false);
       }
     },
-    onError: () => {
-      console.error("Google login failed");
+    onError: (errorResponse) => {
+      console.error("Google login failed", errorResponse);
       setIsAuthorizing(false);
     },
-    onNonOAuthError: () => {
-      console.error("Google login popup failed");
+    onNonOAuthError: (errorResponse) => {
+      console.error("Google login popup failed", errorResponse);
       setIsAuthorizing(false);
     },
   });
