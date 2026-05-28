@@ -77,6 +77,7 @@ export interface Translation {
     login: string;
     loginSuccess: string;
     logoutSuccess: string;
+    invalidCredentials: string;
     loggingIn: string;
     forgotPassword: string;
     noAccount: string;
@@ -102,6 +103,7 @@ export interface Translation {
     passwordLabel: string;
     googleSignIn: string;
     googleSignUp: string;
+    googleUnavailable: string;
 
     fullNameLabel: string;
     fullNamePlaceholder: string;

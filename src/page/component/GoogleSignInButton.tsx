@@ -9,12 +9,62 @@ import type { MeResponse } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { socketService } from "../../services/socket.service";
+import { useToast } from "../../context/ToastContext";
 
 interface GoogleSignInButtonProps {
   intent: "signin" | "signup";
 }
 
 export default function GoogleSignInButton({ intent }: GoogleSignInButtonProps) {
+  const hasGoogleClientId = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID);
+
+  if (!hasGoogleClientId) return <GoogleSignInButtonFallback intent={intent} />;
+
+  return <GoogleSignInButtonInner intent={intent} />;
+}
+
+function GoogleSignInButtonFallback({ intent }: GoogleSignInButtonProps) {
+  const { theme } = useTheme();
+  const { t } = useI18n();
+  const toast = useToast();
+  const [isHovered, setIsHovered] = useState(false);
+  const label = intent === "signup" ? t.auth.googleSignUp : t.auth.googleSignIn;
+
+  return (
+    <button
+      type="button"
+      onClick={() => toast.error(t.auth.googleUnavailable)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      aria-label={label}
+      className="w-full h-10 rounded-md flex items-center justify-center gap-3 text-sm font-medium transition-all"
+      style={{
+        background: isHovered ? theme.background.input : theme.background.card,
+        border: `1px solid ${isHovered ? theme.border.focused : theme.border.default}`,
+        boxShadow: isHovered ? theme.shadow.input : "none",
+        color: isHovered ? theme.text.accent : theme.text.primary,
+        cursor: "pointer",
+        opacity: 1,
+        transform: isHovered ? "translateY(-1px)" : "translateY(0)",
+      }}
+    >
+      <span
+        className="h-5 w-5 flex items-center justify-center rounded-full text-xs font-semibold"
+        aria-hidden="true"
+        style={{
+          border: `1px solid ${isHovered ? theme.border.focused : theme.border.default}`,
+          color: theme.text.accent,
+          pointerEvents: "none",
+        }}
+      >
+        G
+      </span>
+      <span style={{ pointerEvents: "none" }}>{label}</span>
+    </button>
+  );
+}
+
+function GoogleSignInButtonInner({ intent }: GoogleSignInButtonProps) {
   const { theme, setMode } = useTheme();
   const { t } = useI18n();
   const navigate = useNavigate();

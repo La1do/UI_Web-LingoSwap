@@ -127,6 +127,7 @@ export const en: Translation = {
     login: "Sign in",
     loginSuccess: "Signed in successfully!",
     logoutSuccess: "Signed out.",
+    invalidCredentials: "Account does not exist or the password is incorrect.",
     loggingIn: "Signing in…",
     forgotPassword: "Forgot password?",
     noAccount: "Don't have an account?",
@@ -152,6 +153,7 @@ export const en: Translation = {
     passwordLabel: "Password",
     googleSignIn: "Continue with Google",
     googleSignUp: "Sign up with Google",
+    googleUnavailable: "Google sign-in is not configured yet.",
 
     fullNameLabel: "Full name",
     fullNamePlaceholder: "Your full name",

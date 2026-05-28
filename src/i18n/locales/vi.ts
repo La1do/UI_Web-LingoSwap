@@ -127,6 +127,7 @@ export const vi: Translation = {
     login: "Đăng nhập",
     loginSuccess: "Đăng nhập thành công!",
     logoutSuccess: "Đã đăng xuất.",
+    invalidCredentials: "Tài khoản không tồn tại hoặc mật khẩu không đúng.",
     loggingIn: "Đang xử lý…",
     forgotPassword: "Quên mật khẩu?",
     noAccount: "Chưa có tài khoản?",
@@ -152,6 +153,7 @@ export const vi: Translation = {
     passwordLabel: "Mật khẩu",
     googleSignIn: "Đăng nhập bằng Google",
     googleSignUp: "Đăng ký bằng Google",
+    googleUnavailable: "Đăng nhập Google chưa được cấu hình.",
 
     fullNameLabel: "Họ và tên",
     fullNamePlaceholder: "Nhập họ và tên",
