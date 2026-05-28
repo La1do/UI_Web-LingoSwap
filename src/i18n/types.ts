@@ -124,6 +124,24 @@ export interface Translation {
     };
   };
 
+  // Policy pages
+  policy: {
+    terms: {
+      title: string;
+      subtitle: string;
+      updated: string;
+      sections: { title: string; body: string }[];
+    };
+    privacy: {
+      title: string;
+      subtitle: string;
+      updated: string;
+      sections: { title: string; body: string }[];
+    };
+    back: string;
+    backToRegister: string;
+  };
+
   // Forgot password
   forgotPassword: {
     title: string;

@@ -174,6 +174,65 @@ export const en: Translation = {
     },
   },
 
+  policy: {
+    terms: {
+      title: "Terms of Service",
+      subtitle: "The rules for using LingoSwap so language practice stays clear, fair, and safe.",
+      updated: "Last updated: May 28, 2026",
+      sections: [
+        {
+          title: "User accounts",
+          body: "You are responsible for your registration details, account security, and all activity that happens through your account.",
+        },
+        {
+          title: "Platform use",
+          body: "LingoSwap is built for language practice, video calls, messaging, and learning connections. Do not use it for spam, scams, harassment, or harmful behavior.",
+        },
+        {
+          title: "Prohibited content and behavior",
+          body: "Do not share hateful, threatening, sexual, privacy-violating, or illegal content. Accounts that violate these rules may be restricted, banned, or removed.",
+        },
+        {
+          title: "Reports and moderation",
+          body: "Users can report inappropriate behavior. Admins may review reports, take action, and support appeals when needed.",
+        },
+        {
+          title: "Service changes",
+          body: "We may update features, policies, or terms to improve the product. By continuing to use LingoSwap, you agree to valid updates.",
+        },
+      ],
+    },
+    privacy: {
+      title: "Privacy Policy",
+      subtitle: "How LingoSwap collects, uses, and protects data to support your learning experience.",
+      updated: "Last updated: May 28, 2026",
+      sections: [
+        {
+          title: "Data we collect",
+          body: "We may collect account details, email, learning profile data, connection status, match history, messages, and information needed to operate app features.",
+        },
+        {
+          title: "How data is used",
+          body: "Data is used for authentication, learner matching, call sessions, messaging, safety management, report handling, and service quality improvements.",
+        },
+        {
+          title: "Security and storage",
+          body: "We use reasonable technical measures to protect data. However, no online system can guarantee absolute security.",
+        },
+        {
+          title: "Cookies and local storage",
+          body: "The app may use tokens, local storage, or similar mechanisms to keep you signed in, remember interface settings, and support the user experience.",
+        },
+        {
+          title: "Your rights",
+          body: "You can update profile information, sign out, request account support, or submit an appeal if you believe account action was taken by mistake.",
+        },
+      ],
+    },
+    back: "Go back",
+    backToRegister: "Back to sign up",
+  },
+
   forgotPassword: {
     title: "Forgot password",
     subtitle: "Enter your email to receive an OTP",

@@ -3,7 +3,7 @@
 // ============================================================
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
 import { AuthInput } from "./AuthInput";
@@ -334,9 +334,9 @@ export default function RegisterPage() {
 
               <p className="text-xs fade-up fade-up-5" style={{ color: theme.text.placeholder }}>
                 {t.auth.termsText}{" "}
-                <a href="/terms" className="hover:opacity-80" style={{ color: theme.text.accent }}>{t.auth.termsLink}</a>{" "}
+                <Link to="/terms" className="hover:opacity-80" style={{ color: theme.text.accent }}>{t.auth.termsLink}</Link>{" "}
                 {t.auth.termsAnd}{" "}
-                <a href="/privacy" className="hover:opacity-80" style={{ color: theme.text.accent }}>{t.auth.privacyLink}</a>.
+                <Link to="/privacy" className="hover:opacity-80" style={{ color: theme.text.accent }}>{t.auth.privacyLink}</Link>.
               </p>
 
               <button

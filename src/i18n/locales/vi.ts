@@ -174,6 +174,65 @@ export const vi: Translation = {
     },
   },
 
+  policy: {
+    terms: {
+      title: "Điều khoản dịch vụ",
+      subtitle: "Các nguyên tắc sử dụng LingoSwap để giữ trải nghiệm học ngôn ngữ rõ ràng, công bằng và an toàn.",
+      updated: "Cập nhật gần nhất: 28/05/2026",
+      sections: [
+        {
+          title: "Tài khoản người dùng",
+          body: "Bạn chịu trách nhiệm về thông tin đăng ký, bảo mật tài khoản và mọi hoạt động diễn ra từ tài khoản của mình.",
+        },
+        {
+          title: "Cách sử dụng nền tảng",
+          body: "LingoSwap được xây dựng cho việc luyện ngôn ngữ, gọi video, nhắn tin và kết nối học tập. Không sử dụng nền tảng cho spam, lừa đảo, quấy rối hoặc hành vi gây hại.",
+        },
+        {
+          title: "Nội dung và hành vi bị cấm",
+          body: "Không chia sẻ nội dung thù ghét, đe dọa, khiêu dâm, vi phạm quyền riêng tư hoặc nội dung bất hợp pháp. Tài khoản vi phạm có thể bị giới hạn, khóa hoặc xóa.",
+        },
+        {
+          title: "Báo cáo và kiểm duyệt",
+          body: "Người dùng có thể báo cáo hành vi không phù hợp. Đội ngũ quản trị có thể xem xét báo cáo, áp dụng biện pháp xử lý và hỗ trợ kháng cáo khi cần.",
+        },
+        {
+          title: "Thay đổi dịch vụ",
+          body: "Chúng tôi có thể cập nhật tính năng, chính sách hoặc điều khoản để cải thiện sản phẩm. Khi tiếp tục sử dụng LingoSwap, bạn đồng ý với các cập nhật hợp lệ.",
+        },
+      ],
+    },
+    privacy: {
+      title: "Chính sách bảo mật",
+      subtitle: "Cách LingoSwap thu thập, sử dụng và bảo vệ dữ liệu để hỗ trợ trải nghiệm học tập của bạn.",
+      updated: "Cập nhật gần nhất: 28/05/2026",
+      sections: [
+        {
+          title: "Dữ liệu chúng tôi thu thập",
+          body: "Chúng tôi có thể thu thập thông tin tài khoản, email, hồ sơ học tập, trạng thái kết nối, lịch sử ghép cặp, tin nhắn và dữ liệu cần thiết để vận hành tính năng.",
+        },
+        {
+          title: "Cách sử dụng dữ liệu",
+          body: "Dữ liệu được dùng để xác thực, ghép cặp người học, duy trì phiên gọi, nhắn tin, quản lý an toàn, xử lý báo cáo và cải thiện chất lượng dịch vụ.",
+        },
+        {
+          title: "Bảo mật và lưu trữ",
+          body: "Chúng tôi áp dụng các biện pháp kỹ thuật hợp lý để bảo vệ dữ liệu. Tuy nhiên, không hệ thống trực tuyến nào có thể đảm bảo an toàn tuyệt đối.",
+        },
+        {
+          title: "Cookie và lưu trữ cục bộ",
+          body: "Ứng dụng có thể dùng token, local storage hoặc cơ chế tương tự để duy trì đăng nhập, cài đặt giao diện và trải nghiệm sử dụng.",
+        },
+        {
+          title: "Quyền của bạn",
+          body: "Bạn có thể cập nhật thông tin hồ sơ, đăng xuất, yêu cầu hỗ trợ về tài khoản hoặc gửi kháng cáo nếu cho rằng tài khoản bị xử lý nhầm.",
+        },
+      ],
+    },
+    back: "Quay lại",
+    backToRegister: "Về trang đăng ký",
+  },
+
   forgotPassword: {
     title: "Quên mật khẩu",
     subtitle: "Nhập email để nhận mã OTP",
