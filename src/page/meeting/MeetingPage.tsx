@@ -10,12 +10,21 @@ import LocalVideo from "./LocalVideo";
 import ChatPanel from "./ChatPanel";
 import { socketService, type StreakUpdatePayload } from "../../services/socket.service";
 import { useWebRTC } from "../../hook/useWebRTC";
+import { useApi } from "../../hook/useApi";
+import { userService } from "../../services/user.service";
 import ReportModal from "../review/component/ReportModal";
 import AppLoader from "../component/AppLoader";
 
 type CallConfig = {
   sessionId: string;
   isCaller: boolean;
+};
+
+type PublicProfile = {
+  _id: string;
+  email: string;
+  profile: { fullName: string; avatar: string };
+  role: string;
 };
 
 export default function MeetingPage() {
@@ -26,6 +35,8 @@ export default function MeetingPage() {
   const [searchParams] = useSearchParams();
   const [isChatOpen, setIsChatOpen] = useState(true);
   const [showReport, setShowReport] = useState(false);
+  const [partner, setPartner] = useState<PublicProfile | null>(null);
+  const { execute: fetchPartnerProfile } = useApi<PublicProfile>();
 
   const sessionId = searchParams.get("session");
   const partnerId = searchParams.get("partner");
@@ -44,6 +55,17 @@ export default function MeetingPage() {
   }, [partnerId, sessionId, user?.id]);
 
   const isCaller = callConfig?.isCaller ?? false;
+
+  useEffect(() => {
+    if (!partnerId) {
+      setPartner(null);
+      return;
+    }
+
+    fetchPartnerProfile(userService.getPublicProfile(partnerId)).then((data) => {
+      setPartner(data);
+    });
+  }, [fetchPartnerProfile, partnerId]);
 
   console.log(`[Meeting] userId=${user?.id} | partnerId=${partnerId} | isCaller=${isCaller}`);
 
@@ -113,7 +135,7 @@ export default function MeetingPage() {
     <>
     <PageShell controlsPosition="top-right" hideLanguage>
     <div
-      className="min-h-screen flex flex-col"
+      className="h-screen max-h-screen flex flex-col overflow-hidden"
       style={{ background: theme.background.page, fontFamily: "'DM Sans', sans-serif" }}
     >
       {/* Permission banner */}
@@ -129,23 +151,29 @@ export default function MeetingPage() {
         </div>
       )}
       {/* Main content */}
-      <div className="flex flex-1 gap-3 p-4 overflow-hidden" style={{ minHeight: 0 }}>
+      <div className="flex flex-1 min-h-0 gap-3 p-4 overflow-hidden">
 
         {/* Video area */}
-        <div className="flex-1 flex flex-col gap-3 min-w-0">
+        <div className="flex-1 flex flex-col gap-3 min-w-0 min-h-0 overflow-hidden">
           {/* Remote video — full area */}
-          <div className="flex-1 relative" style={{ minHeight: 0 }}>
-            <RemoteVideo isConnected={isConnected} participantName={partnerId ?? t.meeting.waitingForConnection} stream={remoteStream} trackCount={remoteTrackCount} />
+          <div className="flex-1 relative min-h-0 overflow-hidden">
+            <RemoteVideo
+              isConnected={isConnected}
+              participantName={partner?.profile.fullName ?? partnerId ?? t.meeting.waitingForConnection}
+              participantAvatar={partner?.profile.avatar}
+              stream={remoteStream}
+              trackCount={remoteTrackCount}
+            />
 
             {/* Local video — picture-in-picture */}
-            <div className="absolute bottom-4 right-4">
+            <div className="absolute bottom-4 right-4 z-10">
               <LocalVideo isMuted={isMuted} isCameraOff={isCameraOff} stream={localStream} />
             </div>
           </div>
 
           {/* Controls bar */}
           <div
-            className="flex items-center justify-center gap-3 py-3 px-4 rounded-2xl"
+            className="shrink-0 flex flex-wrap items-center justify-center gap-3 py-3 px-4 rounded-2xl"
             style={{
               background: theme.background.card,
               border: `1px solid ${theme.border.default}`,
@@ -241,8 +269,8 @@ export default function MeetingPage() {
 
         {/* Chat panel */}
         {isChatOpen && (
-          <div className="w-72 shrink-0" style={{ minHeight: 0 }}>
-            <div className="h-full" style={{ minHeight: "500px" }}>
+          <div className="w-72 shrink-0 min-h-0 overflow-hidden">
+            <div className="h-full min-h-0 overflow-hidden">
               <ChatPanel partnerId={partnerId ?? ""} sessionId={sessionId ?? ""} />
             </div>
           </div>
@@ -253,7 +281,7 @@ export default function MeetingPage() {
       {showReport && partnerId && (
         <ReportModal
           reportedUserId={partnerId}
-          reportedUserName={partnerId}
+          reportedUserName={partner?.profile.fullName ?? partnerId}
           matchSessionId={sessionId}
           onClose={() => setShowReport(false)}
         />

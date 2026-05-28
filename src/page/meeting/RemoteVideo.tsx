@@ -6,6 +6,7 @@ import { useI18n } from "../../context/I18nContext";
 interface RemoteVideoProps {
   stream?: MediaStream | null;
   participantName?: string;
+  participantAvatar?: string;
   isConnected?: boolean;
   trackCount?: number; // tăng mỗi khi có track mới → trigger re-check
 }
@@ -13,6 +14,7 @@ interface RemoteVideoProps {
 export default function RemoteVideo({
   stream,
   participantName = "Đối phương",
+  participantAvatar,
   isConnected = false,
   trackCount = 0,
 }: RemoteVideoProps) {
@@ -47,14 +49,16 @@ export default function RemoteVideo({
   }, [stream, trackCount]);
 
   const showVideo = !!stream && hasVideoTrack;
+  const validAvatar = participantAvatar && participantAvatar !== "default_avatar.png"
+    ? participantAvatar
+    : undefined;
 
   return (
     <div
-      className="relative w-full h-full rounded-2xl overflow-hidden flex items-center justify-center"
+      className="relative w-full h-full min-h-0 rounded-2xl overflow-hidden flex items-center justify-center"
       style={{
         background: theme.background.card,
         border: `1px solid ${theme.border.default}`,
-        minHeight: "360px",
       }}
     >
       {/* Video luôn mount */}
@@ -69,12 +73,21 @@ export default function RemoteVideo({
       {/* Placeholder */}
       {!showVideo && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-          <div
-            className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-semibold"
-            style={{ background: theme.button.bg, color: theme.button.text }}
-          >
-            {participantName.charAt(0).toUpperCase()}
-          </div>
+          {validAvatar ? (
+            <img
+              src={validAvatar}
+              alt={participantName}
+              className="w-20 h-20 rounded-full object-cover"
+              style={{ border: `2px solid ${theme.button.bg}` }}
+            />
+          ) : (
+            <div
+              className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-semibold"
+              style={{ background: theme.button.bg, color: theme.button.text }}
+            >
+              {participantName.charAt(0).toUpperCase()}
+            </div>
+          )}
           <p className="text-sm" style={{ color: theme.text.secondary }}>
             {isConnected ? `${participantName} ${t.meeting.cameraOff}` : t.meeting.waitingForConnection}
           </p>

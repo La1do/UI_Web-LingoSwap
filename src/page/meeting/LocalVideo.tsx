@@ -45,6 +45,9 @@ export default function LocalVideo({
   }, [stream]);
 
   const hasVideo = hasStream && !isCameraOff;
+  const validAvatar = user?.avatar && user.avatar !== "default_avatar.png"
+    ? user.avatar
+    : undefined;
 
   return (
     <div
@@ -52,8 +55,8 @@ export default function LocalVideo({
       style={{
         background: theme.background.input,
         border: `1px solid ${theme.border.default}`,
-        width: "180px",
-        height: "120px",
+        width: "clamp(112px, 18vw, 180px)",
+        aspectRatio: "3 / 2",
       }}
     >
       {/* Video luôn mount để srcObject hoạt động, ẩn khi không cần */}
@@ -69,12 +72,21 @@ export default function LocalVideo({
       {/* Placeholder khi không có stream hoặc camera tắt */}
       {!hasVideo && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}
-            className="w-8 h-8" style={{ color: theme.text.placeholder }}>
-            <path d="M23 7l-7 5 7 5V7z" />
-            <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-            {isCameraOff && <line x1="1" y1="1" x2="23" y2="23" />}
-          </svg>
+          {validAvatar ? (
+            <img
+              src={validAvatar}
+              alt={user?.fullName ?? t.meeting.you}
+              className="w-12 h-12 rounded-full object-cover"
+              style={{ border: `2px solid ${theme.border.default}` }}
+            />
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}
+              className="w-8 h-8" style={{ color: theme.text.placeholder }}>
+              <path d="M23 7l-7 5 7 5V7z" />
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+              {isCameraOff && <line x1="1" y1="1" x2="23" y2="23" />}
+            </svg>
+          )}
           <span className="text-[10px]" style={{ color: theme.text.placeholder }}>
             {isCameraOff ? t.meeting.cameraOffLocal : t.meeting.noCameraLabel}
           </span>

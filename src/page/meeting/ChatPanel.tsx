@@ -104,12 +104,12 @@ export default function ChatPanel({ partnerId, sessionId }: ChatPanelProps) {
 
   return (
     <div
-      className="flex flex-col h-full rounded-2xl overflow-hidden"
+      className="flex h-full min-h-0 flex-col rounded-2xl overflow-hidden"
       style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}
     >
       {/* Header */}
       <div
-        className="px-4 py-3 text-sm font-semibold flex items-center gap-2"
+        className="shrink-0 px-4 py-3 text-sm font-semibold flex items-center gap-2"
         style={{ borderBottom: `1px solid ${theme.border.default}`, color: theme.text.primary }}
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-4 h-4"
@@ -120,10 +120,10 @@ export default function ChatPanel({ partnerId, sessionId }: ChatPanelProps) {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-3 py-3 flex flex-col gap-2" style={{ minHeight: 0 }}>
+      <div className="flex-1 min-h-0 overflow-y-auto px-3 py-3 flex flex-col gap-2">
         {messages.length === 0 && (
           <p className="text-xs text-center mt-4" style={{ color: theme.text.placeholder }}>
-            {t.common.or === "or" ? "No messages yet" : "Chưa có tin nhắn"}
+            {t.chat.noMessages}
           </p>
         )}
         {messages.map((msg) => (
@@ -152,7 +152,7 @@ export default function ChatPanel({ partnerId, sessionId }: ChatPanelProps) {
 
       {/* Input */}
       <div
-        className="px-3 py-3 flex items-center gap-2"
+        className="shrink-0 px-3 py-3 flex items-center gap-2"
         style={{ borderTop: `1px solid ${theme.border.default}` }}
       >
         <input
@@ -177,7 +177,7 @@ export default function ChatPanel({ partnerId, sessionId }: ChatPanelProps) {
             background: input.trim() ? theme.button.bg : theme.button.bgDisabled,
             color: theme.button.text,
           }}
-          aria-label="Gửi"
+          aria-label={t.chat.typeMessage}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
             <line x1="22" y1="2" x2="11" y2="13" />
