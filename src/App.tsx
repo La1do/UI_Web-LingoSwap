@@ -10,6 +10,7 @@ import { router } from "./router/routes";
 import { useAuth } from "./context/AuthContext";
 import AppLoader from "./page/component/AppLoader";
 import ToastContainer from "./page/component/ToastContainer";
+import AuthSocketBanListener from "./page/component/AuthSocketBanListener";
 
 function AppContent() {
   const { isInitializing } = useAuth();
@@ -45,6 +46,7 @@ export default function App() {
           <FriendProvider>
             <ToastProvider>
               <AppContent />
+              <AuthSocketBanListener />
               <ToastContainer />
             </ToastProvider>
           </FriendProvider>

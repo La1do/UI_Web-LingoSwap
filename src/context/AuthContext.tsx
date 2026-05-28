@@ -74,6 +74,7 @@ interface AuthContextValue {
   }) => void;
   setUserFromMe: (data: MeResponse) => void;
   updateUser: (partial: Partial<AuthUser>) => void;
+  clearSession: () => void;
   logout: () => void;
 }
 
@@ -86,6 +87,7 @@ const AuthContext = createContext<AuthContextValue>({
   setUserFromResponse: () => {},
   setUserFromMe: () => {},
   updateUser: () => {},
+  clearSession: () => {},
   logout: () => {},
 });
 
@@ -221,6 +223,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
+  const clearSession = useCallback(() => {
+    socketService.disconnect();
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+    setUser(null);
+  }, []);
+
   const logout = useCallback(() => {
     // Gọi API logout (fire-and-forget — không block UI)
     axiosInstance.post("/api/auth/logout").catch(() => {});
@@ -233,7 +242,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isInitializing, setUserFromResponse, setUserFromMe, updateUser, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isInitializing, setUserFromResponse, setUserFromMe, updateUser, clearSession, logout }}>
       {children}
     </AuthContext.Provider>
   );

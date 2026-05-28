@@ -29,6 +29,10 @@ export interface StreakUpdatePayload {
   streak: number;
 }
 
+export interface BannedPayload {
+  message?: string;
+}
+
 // ─── Singleton socket instance ───────────────────────────────
 
 let socket: Socket | null = null;
@@ -69,6 +73,13 @@ export const socketService = {
 
   getSocket(): Socket | null {
     return socket;
+  },
+
+  onBanned(cb: (payload?: BannedPayload) => void): () => void {
+    socket?.on("banned", cb);
+    return () => {
+      socket?.off("banned", cb);
+    };
   },
 
   // Chạy callback ngay nếu socket đã connected, hoặc chờ connect event
