@@ -96,7 +96,7 @@ export default function LoginPage() {
         // Chặn admin đăng nhập vào trang user
         if (me.role === "admin") {
           logout();
-          setErrors({ email: "Tài khoản admin không thể đăng nhập tại đây. Vui lòng dùng trang Admin Portal." });
+          setErrors({ email: t.auth.invalidCredentials });
           return;
         }
         setUserFromMe(me);

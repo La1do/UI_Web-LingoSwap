@@ -15,6 +15,7 @@ import ForgotPasswordPage from "../page/forgot-password/ForgotPasswordPage";
 import MessagesPage from "../page/messages/MessagesPage";
 import AppealPage from "../page/appeal/AppealPage";
 import LandingPage from "../page/landing/LandingPage";
+import PolicyPage from "../page/policy/PolicyPage";
 import ProtectedRoute from "./ProtectedRoute";
 import NotFoundPage from "../page/error/NotFoundPage";
 import ErrorPage from "../page/error/ErrorPage";
@@ -44,6 +45,8 @@ export const router = createBrowserRouter([
       { path: "forgot-password",  element: <ForgotPasswordPage /> },
       { path: "auth/callback",    element: <GoogleCallbackPage /> },
       { path: "appeal",           element: <AppealPage /> },
+      { path: "terms",            element: <PolicyPage variant="terms" /> },
+      { path: "privacy",          element: <PolicyPage variant="privacy" /> },
 
       // ── Admin public ──────────────────────────────────────
       { path: "admin/login",      element: <AdminLoginPage /> },

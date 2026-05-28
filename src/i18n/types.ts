@@ -77,6 +77,7 @@ export interface Translation {
     login: string;
     loginSuccess: string;
     logoutSuccess: string;
+    invalidCredentials: string;
     loggingIn: string;
     forgotPassword: string;
     noAccount: string;
@@ -102,6 +103,7 @@ export interface Translation {
     passwordLabel: string;
     googleSignIn: string;
     googleSignUp: string;
+    googleUnavailable: string;
 
     fullNameLabel: string;
     fullNamePlaceholder: string;
@@ -120,6 +122,24 @@ export interface Translation {
         special: string;
       };
     };
+  };
+
+  // Policy pages
+  policy: {
+    terms: {
+      title: string;
+      subtitle: string;
+      updated: string;
+      sections: { title: string; body: string }[];
+    };
+    privacy: {
+      title: string;
+      subtitle: string;
+      updated: string;
+      sections: { title: string; body: string }[];
+    };
+    back: string;
+    backToRegister: string;
   };
 
   // Forgot password

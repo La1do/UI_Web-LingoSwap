@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
     if (!result) return;
 
     if (result.role !== "admin") {
-      setError(t.admin.login.forbidden);
+      setError(t.auth.invalidCredentials);
       return;
     }
 
