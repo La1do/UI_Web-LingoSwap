@@ -169,7 +169,14 @@ export default function LandingPage() {
   useEffect(() => {
     const headerOffset = 80;
     const scrollSections = Array.from(document.querySelectorAll<HTMLElement>(".landing-scroll-section"));
-    let isSnapping = false;
+    let isSettling = false;
+    let gestureStartIndex: number | null = null;
+    let gestureStartTop = 0;
+    let gestureDirection = 0;
+    let wheelIntent = 0;
+    let wheelTimer = 0;
+    const sectionPassRatio = 0.42;
+    const wheelSettleDelay = 150;
 
     const sectionTop = (section: HTMLElement) => {
       return Math.max(0, section.getBoundingClientRect().top + window.scrollY - headerOffset);
@@ -184,36 +191,87 @@ export default function LandingPage() {
         return nextDistance < closestDistance ? index : closestIndex;
       }, 0);
     };
-    const snapToSection = (index: number) => {
+    const snapToSection = (index: number, replayAnimation: boolean, duration: number, onDone?: () => void) => {
       const target = scrollSections[Math.max(0, Math.min(index, scrollSections.length - 1))];
       if (!target) return;
 
-      isSnapping = true;
-      animateScrollTo(sectionTop(target), prefersReducedMotion() ? 0 : 950, () => {
-        window.dispatchEvent(new Event("landing:render-animations"));
-        window.setTimeout(() => {
-          isSnapping = false;
-        }, 120);
+      animateScrollTo(sectionTop(target), prefersReducedMotion() ? 0 : duration, () => {
+        if (replayAnimation) {
+          window.dispatchEvent(new Event("landing:render-animations"));
+        }
+        onDone?.();
       });
+    };
+    const settleWheelIntent = () => {
+      if (gestureStartIndex === null) return;
+
+      const startIndex = gestureStartIndex;
+      const direction = gestureDirection || (wheelIntent > 0 ? 1 : -1);
+      const targetIndex = Math.max(0, Math.min(startIndex + direction, scrollSections.length - 1));
+      const targetTop = sectionTop(scrollSections[targetIndex]);
+      const travelDistance = Math.abs(targetTop - gestureStartTop);
+      const currentTravel = Math.abs(window.scrollY - gestureStartTop);
+      const passedEnough = targetIndex !== startIndex && travelDistance > 0 && currentTravel / travelDistance >= sectionPassRatio;
+
+      isSettling = true;
+      if (passedEnough) {
+        snapToSection(targetIndex, true, 780, () => {
+          isSettling = false;
+        });
+      } else {
+        snapToSection(startIndex, false, 500, () => {
+          isSettling = false;
+        });
+      }
+
+      wheelIntent = 0;
+      wheelTimer = 0;
+      gestureStartIndex = null;
+      gestureDirection = 0;
     };
     const onWheel = (event: WheelEvent) => {
       if (window.innerWidth < 768) return;
-      if (Math.abs(event.deltaY) < 18) return;
       if (event.ctrlKey || event.metaKey || event.shiftKey) return;
 
-      event.preventDefault();
-      if (isSnapping) return;
+      if (activeScrollFrame) {
+        window.cancelAnimationFrame(activeScrollFrame);
+        activeScrollFrame = 0;
+      }
 
-      const direction = event.deltaY > 0 ? 1 : -1;
-      snapToSection(currentSectionIndex() + direction);
+      if (isSettling) {
+        isSettling = false;
+        wheelIntent = 0;
+        gestureStartIndex = null;
+        gestureDirection = 0;
+      }
+
+      if (gestureStartIndex === null) {
+        gestureStartIndex = currentSectionIndex();
+        gestureStartTop = sectionTop(scrollSections[gestureStartIndex]);
+      }
+
+      const clampedDelta = Math.max(-120, Math.min(120, event.deltaY));
+      wheelIntent += clampedDelta;
+      if (Math.abs(clampedDelta) > 1) {
+        gestureDirection = clampedDelta > 0 ? 1 : -1;
+      }
+
+      if (wheelTimer) {
+        window.clearTimeout(wheelTimer);
+      }
+
+      wheelTimer = window.setTimeout(settleWheelIntent, wheelSettleDelay);
     };
 
-    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("wheel", onWheel, { passive: true });
 
     return () => {
       if (activeSnapFrame) {
         window.cancelAnimationFrame(activeSnapFrame);
         activeSnapFrame = 0;
+      }
+      if (wheelTimer) {
+        window.clearTimeout(wheelTimer);
       }
       window.removeEventListener("wheel", onWheel);
     };
