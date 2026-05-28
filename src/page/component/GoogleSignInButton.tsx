@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { AxiosError } from "axios";
 import { useGoogleLogin, useGoogleOAuth } from "@react-oauth/google";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
@@ -10,9 +11,31 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { socketService } from "../../services/socket.service";
 import { useToast } from "../../context/ToastContext";
+import { clearAuthSession } from "../../library/authSession";
+import { isBannedAuthError } from "../../library/authError";
+import instance from "../../library/axios.customize";
 
 interface GoogleSignInButtonProps {
   intent: "signin" | "signup";
+}
+
+type AuthErrorResponse = {
+  message?: string;
+  error?: string;
+  errors?: string[];
+};
+
+function getAuthErrorMessage(error: unknown): string | null {
+  const axiosError = error as AxiosError<AuthErrorResponse>;
+  const data = axiosError.response?.data;
+
+  return (
+    data?.message ??
+    data?.error ??
+    (Array.isArray(data?.errors) && data.errors.length > 0 ? data.errors[0] : null) ??
+    axiosError.message ??
+    null
+  );
 }
 
 export default function GoogleSignInButton({ intent }: GoogleSignInButtonProps) {
@@ -68,14 +91,14 @@ function GoogleSignInButtonInner({ intent }: GoogleSignInButtonProps) {
   const { theme, setMode } = useTheme();
   const { t } = useI18n();
   const navigate = useNavigate();
-  const { execute, isLoading } = useApi<LoginResponse>();
   const { execute: executeMe } = useApi<MeResponse>();
   const { setUserFromResponse, setUserFromMe } = useAuth();
+  const toast = useToast();
   const { scriptLoadedSuccessfully } = useGoogleOAuth();
   const [isAuthorizing, setIsAuthorizing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const label = intent === "signup" ? t.auth.googleSignUp : t.auth.googleSignIn;
-  const disabled = isAuthorizing || isLoading || !scriptLoadedSuccessfully;
+  const disabled = isAuthorizing || !scriptLoadedSuccessfully;
   const isInteractiveHover = isHovered && !disabled;
 
   const handleLoginResult = async (result: LoginResponse | null) => {
@@ -83,6 +106,12 @@ function GoogleSignInButtonInner({ intent }: GoogleSignInButtonProps) {
       setUserFromResponse(result);
       const me = await executeMe(userService.getMe());
       if (me) {
+        if (me.statusAccount === "banned") {
+          clearAuthSession();
+          toast.error(t.auth.accountBanned);
+          return;
+        }
+
         setUserFromMe(me);
         if (me.settings?.theme === "light" || me.settings?.theme === "dark") {
           setMode(me.settings.theme);
@@ -94,6 +123,7 @@ function GoogleSignInButtonInner({ intent }: GoogleSignInButtonProps) {
   };
 
   const loginWithGoogle = useGoogleLogin({
+    prompt: "select_account",
     onSuccess: async (tokenResponse) => {
       const accessToken = tokenResponse.access_token;
       if (!accessToken) {
@@ -102,10 +132,15 @@ function GoogleSignInButtonInner({ intent }: GoogleSignInButtonProps) {
       }
 
       try {
-        const result = await execute(authService.googleLogin(accessToken));
-        await handleLoginResult(result);
+        const response = await instance.request<LoginResponse>(authService.googleLogin(accessToken));
+        await handleLoginResult(response.data);
       } catch (error) {
-        console.error("Google backend login failed", error);
+        const message = getAuthErrorMessage(error);
+        if (isBannedAuthError(message)) {
+          toast.error(t.auth.accountBanned);
+        } else {
+          console.error("Google backend login failed", error);
+        }
       } finally {
         setIsAuthorizing(false);
       }
@@ -157,7 +192,7 @@ function GoogleSignInButtonInner({ intent }: GoogleSignInButtonProps) {
         G
       </span>
       <span style={{ pointerEvents: "none" }}>
-        {isAuthorizing || isLoading || !scriptLoadedSuccessfully ? t.common.loading : label}
+        {isAuthorizing || !scriptLoadedSuccessfully ? t.common.loading : label}
       </span>
     </button>
   );

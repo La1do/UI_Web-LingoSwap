@@ -126,6 +126,7 @@ export const vi: Translation = {
     welcomeBack: "Chào mừng trở lại",
     login: "Đăng nhập",
     loginSuccess: "Đăng nhập thành công!",
+    accountBanned: "Tài khoản của bạn đã bị khóa. Vui lòng kiểm tra email để gửi kháng cáo nếu bạn cho rằng đây là nhầm lẫn.",
     logoutSuccess: "Đã đăng xuất.",
     invalidCredentials: "Tài khoản không tồn tại hoặc mật khẩu không đúng.",
     loggingIn: "Đang xử lý…",
@@ -317,6 +318,24 @@ export const vi: Translation = {
     cameraOffLocal: "Camera tắt",
     permissionDenied: "Quyền truy cập camera/mic bị từ chối. Vui lòng cấp quyền trong cài đặt trình duyệt và tải lại trang.",
     permissionUnavailable: "Camera/mic không khả dụng. Trang cần chạy trên HTTPS hoặc localhost.",
+  },
+
+  preJoin: {
+    matchedTitle: "Bạn đã được ghép cặp",
+    matchedSubtitle: "Kiểm tra camera và micro trước khi vào phòng.",
+    cameraPreview: "Xem trước camera",
+    micTest: "Kiểm tra micro",
+    cameraOn: "Tắt camera",
+    cameraOff: "Bật camera",
+    micOn: "Tắt mic",
+    micOff: "Bật mic",
+    ready: "Vào phòng",
+    waitingPartner: "Đang chờ đối phương sẵn sàng...",
+    cancel: "Huỷ",
+    permissionDenied: "Quyền truy cập camera/mic bị từ chối. Bạn vẫn có thể vào phòng với avatar.",
+    permissionUnavailable: "Camera/mic không khả dụng. Trang cần chạy trên HTTPS hoặc localhost.",
+    noCamera: "Không có camera",
+    partnerLeft: "Đối phương đã rời phiên ghép. Đang quay về trang chủ...",
   },
 
   home: {

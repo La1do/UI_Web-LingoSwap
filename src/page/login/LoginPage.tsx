@@ -15,6 +15,8 @@ import { authService, type LoginResponse } from "../../services/auth.service";
 import { userService } from "../../services/user.service";
 import type { MeResponse } from "../../context/AuthContext";
 import { socketService } from "../../services/socket.service";
+import { isBannedAuthError } from "../../library/authError";
+import { clearAuthSession } from "../../library/authSession";
 import {
   validateForm,
   emailRules,
@@ -53,6 +55,7 @@ export default function LoginPage() {
   const [values, setValues] = useState<LoginFields>({ email: "", password: "" });
   const [errors, setErrors] = useState<FormErrors<LoginFields>>({});
   const [submitted, setSubmitted] = useState(false);
+  const lastBannedErrorRef = React.useRef<string | null>(null);
 
   const fieldRules = {
     email: emailRules("Email", t.validation),
@@ -70,7 +73,16 @@ export default function LoginPage() {
     }
   }, [locale]);
 
+  useEffect(() => {
+    if (!isError || !apiError || !isBannedAuthError(apiError)) return;
+    if (lastBannedErrorRef.current === apiError) return;
+
+    lastBannedErrorRef.current = apiError;
+    toast.error(t.auth.accountBanned);
+  }, [apiError, isError, t.auth.accountBanned]);
+
   const handleChange = (field: keyof LoginFields) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    lastBannedErrorRef.current = null;
     const next = { ...values, [field]: e.target.value };
     setValues(next);
     if (submitted) {
@@ -93,6 +105,12 @@ export default function LoginPage() {
       // Fetch full profile từ /api/users/me
       const me = await executeMe(userService.getMe());
       if (me) {
+        if (me.statusAccount === "banned") {
+          clearAuthSession();
+          toast.error(t.auth.accountBanned);
+          return;
+        }
+
         // Chặn admin đăng nhập vào trang user
         if (me.role === "admin") {
           logout();

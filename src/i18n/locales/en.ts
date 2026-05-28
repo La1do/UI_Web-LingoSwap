@@ -126,6 +126,7 @@ export const en: Translation = {
     welcomeBack: "Welcome back",
     login: "Sign in",
     loginSuccess: "Signed in successfully!",
+    accountBanned: "Your account has been banned. Please check your email to submit an appeal if you believe this is a mistake.",
     logoutSuccess: "Signed out.",
     invalidCredentials: "Account does not exist or the password is incorrect.",
     loggingIn: "Signing in…",
@@ -317,6 +318,24 @@ export const en: Translation = {
     cameraOffLocal: "Camera off",
     permissionDenied: "Camera/mic access denied. Please grant permission in browser settings and reload.",
     permissionUnavailable: "Camera/mic unavailable. The page must run on HTTPS or localhost.",
+  },
+
+  preJoin: {
+    matchedTitle: "You matched",
+    matchedSubtitle: "Check your camera and microphone before joining.",
+    cameraPreview: "Camera preview",
+    micTest: "Microphone test",
+    cameraOn: "Turn camera off",
+    cameraOff: "Turn camera on",
+    micOn: "Mute mic",
+    micOff: "Unmute mic",
+    ready: "Join room",
+    waitingPartner: "Waiting for your partner...",
+    cancel: "Cancel",
+    permissionDenied: "Camera/mic access was denied. You can still join with your avatar.",
+    permissionUnavailable: "Camera/mic unavailable. The page must run on HTTPS or localhost.",
+    noCamera: "No camera",
+    partnerLeft: "Your partner left the match. Returning home...",
   },
 
   home: {

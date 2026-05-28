@@ -76,6 +76,7 @@ export interface Translation {
     welcomeBack: string;
     login: string;
     loginSuccess: string;
+    accountBanned: string;
     logoutSuccess: string;
     invalidCredentials: string;
     loggingIn: string;
@@ -229,6 +230,25 @@ export interface Translation {
     cameraOffLocal: string;
     permissionDenied: string;
     permissionUnavailable: string;
+  };
+
+  // Pre-join device check
+  preJoin: {
+    matchedTitle: string;
+    matchedSubtitle: string;
+    cameraPreview: string;
+    micTest: string;
+    cameraOn: string;
+    cameraOff: string;
+    micOn: string;
+    micOff: string;
+    ready: string;
+    waitingPartner: string;
+    cancel: string;
+    permissionDenied: string;
+    permissionUnavailable: string;
+    noCamera: string;
+    partnerLeft: string;
   };
 
   // Home

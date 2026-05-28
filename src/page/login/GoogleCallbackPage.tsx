@@ -6,20 +6,25 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
+import { useI18n } from "../../context/I18nContext";
 import { useApi } from "../../hook/useApi";
 import { authService, type LoginResponse } from "../../services/auth.service";
 import { userService } from "../../services/user.service";
 import type { MeResponse } from "../../context/AuthContext";
 import { useAuth } from "../../context/AuthContext";
 import { socketService } from "../../services/socket.service";
+import { useToast } from "../../context/ToastContext";
+import { clearAuthSession } from "../../library/authSession";
 
 export default function GoogleCallbackPage() {
   const { theme, setMode } = useTheme();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { execute } = useApi<LoginResponse>();
   const { execute: executeMe } = useApi<MeResponse>();
   const { setUserFromResponse, setUserFromMe } = useAuth();
+  const toast = useToast();
 
   useEffect(() => {
     const handleLogin = async (result: LoginResponse | null | undefined) => {
@@ -27,6 +32,15 @@ export default function GoogleCallbackPage() {
       setUserFromResponse(result);
       const me = await executeMe(userService.getMe());
       if (me) {
+        if (me.statusAccount === "banned") {
+          clearAuthSession();
+          toast.error(t.auth.accountBanned);
+          window.setTimeout(() => {
+            navigate("/login", { replace: true });
+          }, 900);
+          return;
+        }
+
         setUserFromMe(me);
         if (me.settings?.theme === "light" || me.settings?.theme === "dark") {
           setMode(me.settings.theme);
@@ -48,7 +62,11 @@ export default function GoogleCallbackPage() {
     // 2. auth-code flow: ?code=xxx
     const code = searchParams.get("code");
     if (code) {
-      execute(authService.googleCallback(code)).then(handleLogin);
+      execute(authService.googleCallback(code)).then((result) => {
+        if (result) {
+          void handleLogin(result);
+        }
+      });
       return;
     }
 
@@ -57,7 +75,11 @@ export default function GoogleCallbackPage() {
     const hashParams = new URLSearchParams(hash);
     const accessToken = hashParams.get("access_token");
     if (accessToken) {
-      execute(authService.googleLogin(accessToken)).then(handleLogin);
+      execute(authService.googleLogin(accessToken)).then((result) => {
+        if (result) {
+          void handleLogin(result);
+        }
+      });
       return;
     }
 
@@ -76,7 +98,7 @@ export default function GoogleCallbackPage() {
           style={{ borderColor: theme.button.bg, borderTopColor: "transparent" }}
         />
         <p className="text-sm" style={{ color: theme.text.secondary }}>
-          Signing in...
+          {t.auth.loggingIn}
         </p>
       </div>
     </div>
