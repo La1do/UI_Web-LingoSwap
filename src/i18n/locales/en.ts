@@ -1,6 +1,112 @@
 import type { Translation } from "../types";
 
 export const en: Translation = {
+  landing: {
+    brand: "LingoSwap",
+    logoAlt: "LingoSwap logo",
+    nav: {
+      features: "Features",
+      steps: "How it works",
+      safety: "Safety",
+      login: "Sign in",
+      register: "Get started",
+    },
+    hero: {
+      badge: "Practice languages with real people",
+      title: "Meet new study partners through random video calls",
+      subtitle: "LingoSwap connects you with people who share your learning goals so you can speak, chat, and build a daily practice habit.",
+      primaryCta: "Create account",
+      secondaryCta: "Sign in",
+      stats: [
+        { value: "1:1", label: "Video calls" },
+        { value: "24/7", label: "Partner search" },
+        { value: "2", label: "Languages" },
+      ],
+    },
+    preview: {
+      liveLabel: "Live call",
+      minutesLabel: "12 min",
+      nativeSpeaker: "Native speaker",
+      nativeLanguage: "English",
+      learner: "You",
+      learningLanguage: "Speaking practice",
+      message: "Send messages, share images, and keep in touch after the call.",
+      streakLabel: "Streak +1",
+    },
+    features: {
+      title: "Everything you need for a speaking session",
+      subtitle: "The landing page highlights the product features that already exist so users understand the core value quickly.",
+      items: [
+        {
+          badge: "Match",
+          title: "Language-based matching",
+          description: "Choose the language you want to practice and join the queue to find a suitable partner.",
+        },
+        {
+          badge: "Call",
+          title: "P2P video calls",
+          description: "Talk directly with camera and microphone in a focused call interface.",
+        },
+        {
+          badge: "Chat",
+          title: "Realtime messaging",
+          description: "Chat during calls or continue conversations with friends afterward.",
+        },
+        {
+          badge: "Streak",
+          title: "Daily habit tracking",
+          description: "Track streaks and your learning calendar to make speaking practice consistent.",
+        },
+      ],
+    },
+    steps: {
+      title: "Start in a few steps",
+      subtitle: "The user flow is intentionally short so learners can get into practice quickly.",
+      items: [
+        {
+          title: "Choose a language",
+          description: "Pick the language you want to practice and get ready for a conversation.",
+        },
+        {
+          title: "Find a partner",
+          description: "The app matches you with someone who wants to practice at the same time.",
+        },
+        {
+          title: "Call and review",
+          description: "End each call with a review, a friend request, or a report when needed.",
+        },
+      ],
+    },
+    safety: {
+      title: "A more controlled practice space",
+      subtitle: "Safety features are built into the user flow to reduce risk when meeting new people.",
+      items: [
+        {
+          title: "User reports",
+          description: "Users can report issues from chat, meeting, review, or recent matches.",
+        },
+        {
+          title: "Post-call reviews",
+          description: "Feedback after each session helps improve the quality of the experience.",
+        },
+        {
+          title: "Friend controls",
+          description: "Add friends, message them, and start direct calls with suitable partners.",
+        },
+        {
+          title: "Account appeals",
+          description: "Users have a dedicated appeal flow if they believe an account ban was incorrect.",
+        },
+      ],
+    },
+    cta: {
+      title: "Ready to practice today?",
+      subtitle: "Create an account and start finding your first language practice partner.",
+      primary: "Sign up for free",
+      secondary: "I already have an account",
+    },
+  },
+
   common: {
     or: "or",
     loading: "Processing…",

@@ -1,6 +1,6 @@
 $ npx.cmd playwright test --config sqa-evidence/playwright.config.ts
-Started: 2026-05-27T15:39:42.353Z
-Finished: 2026-05-27T15:40:07.387Z
+Started: 2026-05-28T03:06:57.288Z
+Finished: 2026-05-28T03:07:34.117Z
 Mode: headless-recorded
 Headed: false
 Record: true
@@ -11,60 +11,38 @@ Exit code: 0
 
 STDOUT:
 
-Running 16 tests using 6 workers
+Running 27 tests using 6 workers
 
-  ok  6 [chromium] › sqa-evidence\tests\review-streak.spec.ts:5:3 › FE83-FE89 review and streak UI › submit button is disabled until rating is selected (5.6s)
-  ok  2 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:5:3 › FE110-FE124 admin UI › admin login page validates missing credentials (5.7s)
-  ok  5 [chromium] › sqa-evidence\tests\responsive.spec.ts:4:3 › Responsive UI smoke › login page renders on mobile viewport (5.9s)
-  ok  4 [chromium] › sqa-evidence\tests\route-guard.spec.ts:5:3 › FE93-FE100 route guard › FE93 redirects anonymous user from /home to /login (5.8s)
-  ok  1 [chromium] › sqa-evidence\tests\notification-ui.spec.ts:5:3 › FE65-FE70 notification UI › notification dropdown renders unread notification and supports mark read (6.1s)
-  ok  3 [chromium] › sqa-evidence\tests\auth-validation.spec.ts:4:3 › FE01-FE24 Auth and OTP validation › FE01-FE20 register form blocks empty and weak inputs (6.0s)
-  ok 12 [chromium] › sqa-evidence\tests\auth-validation.spec.ts:20:3 › FE01-FE24 Auth and OTP validation › FE21-FE24 forgot password email step validates required email before OTP flow (4.2s)
-  ok 10 [chromium] › sqa-evidence\tests\route-guard.spec.ts:10:3 › FE93-FE100 route guard › FE94 redirects normal user from /admin to /admin/login (4.5s)
-  ok  9 [chromium] › sqa-evidence\tests\responsive.spec.ts:11:3 › Responsive UI smoke › login page renders on desktop viewport (4.6s)
-  ok 11 [chromium] › sqa-evidence\tests\sqa-dashboard.spec.ts:3:3 › SQA evidence dashboard › renders full FE01-FE124 checklist summary (4.5s)
-  ok  8 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:13:3 › FE110-FE124 admin UI › admin dashboard renders mocked overview stats (5.3s)
-  ok  7 [chromium] › sqa-evidence\tests\review-streak.spec.ts:28:3 › FE83-FE89 review and streak UI › streak marker can trigger celebration after review submit (6.3s)
+  ok  2 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:5:3 › FE110-FE124 admin UI › admin login page validates missing credentials (4.2s)
+  ok  5 [chromium] › sqa-evidence\tests\review-streak.spec.ts:40:3 › FE83-FE89 review and streak UI › submit button is disabled until rating is selected (4.2s)
+  ok  6 [chromium] › sqa-evidence\tests\route-guard.spec.ts:5:3 › FE93-FE100 route guard › FE93 redirects anonymous user from /home to /login (4.1s)
+  ok  1 [chromium] › sqa-evidence\tests\notification-ui.spec.ts:5:3 › FE65-FE70 notification UI › notification dropdown renders unread notification and supports mark read (4.3s)
+  ok  4 [chromium] › sqa-evidence\tests\responsive.spec.ts:4:3 › Responsive UI smoke › login page renders on mobile viewport (4.4s)
+  ok  3 [chromium] › sqa-evidence\tests\auth-validation.spec.ts:4:3 › FE01-FE24 Auth and OTP validation › FE01-FE20 register form blocks empty and weak inputs (4.7s)
+  ok  9 [chromium] › sqa-evidence\tests\route-guard.spec.ts:10:3 › FE93-FE100 route guard › FE94 redirects normal user from /admin to /admin/login (3.5s)
+  ok  7 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:13:3 › FE110-FE124 admin UI › admin dashboard renders mocked overview stats (3.6s)
+  ok 11 [chromium] › sqa-evidence\tests\responsive.spec.ts:11:3 › Responsive UI smoke › login page renders on desktop viewport (3.3s)
+  ok 10 [chromium] › sqa-evidence\tests\sqa-dashboard.spec.ts:3:3 › SQA evidence dashboard › renders full FE01-FE124 checklist summary (3.4s)
+  ok 12 [chromium] › sqa-evidence\tests\auth-validation.spec.ts:20:3 › FE01-FE24 Auth and OTP validation › FE21-FE24 forgot password email step validates required email before OTP flow (3.3s)
+  ok  8 [chromium] › sqa-evidence\tests\review-streak.spec.ts:63:3 › FE83-FE89 review and streak UI › streak marker can trigger celebration after review submit (4.0s)
+  ok 15 [chromium] › sqa-evidence\tests\user-pages.spec.ts:5:3 › FE101-FE109 profile and messages UI › profile page renders profile, settings, and password panels (2.4s)
   ok 13 [chromium] › sqa-evidence\tests\route-guard.spec.ts:16:3 › FE93-FE100 route guard › FE96 allows authenticated user route after token verification (2.4s)
-  ok 14 [chromium] › sqa-evidence\tests\user-pages.spec.ts:5:3 › FE101-FE109 profile and messages UI › profile page renders profile, settings, and password panels (2.6s)
-  ok 15 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:23:3 › FE110-FE124 admin UI › admin users tab renders mocked user table (3.4s)
-  ok 16 [chromium] › sqa-evidence\tests\user-pages.spec.ts:16:3 › FE101-FE109 profile and messages UI › messages page renders friend sidebar and empty chat state (1.7s)
+  ok 14 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:23:3 › FE110-FE124 admin UI › admin users tab renders mocked user table (3.0s)
+  ok 17 [chromium] › sqa-evidence\tests\user-pages.spec.ts:16:3 › FE101-FE109 profile and messages UI › messages page renders friend sidebar and empty chat state (1.1s)
+  ok 18 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:33:3 › FE110-FE124 admin UI › FE41-FE43 manages blacklist keywords (2.1s)
+  ok 16 [chromium] › sqa-evidence\tests\review-streak.spec.ts:100:3 › FE32-FE40 friend, review, and report UI › FE32 sends friend request from review partner card (5.4s)
+  ok 20 [chromium] › sqa-evidence\tests\review-streak.spec.ts:110:3 › FE32-FE40 friend, review, and report UI › FE33 hides add friend button when request is already pending (1.2s)
+  ok 19 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:53:3 › FE110-FE124 admin UI › FE46-FE47 reads and resolves a user report (2.2s)
+  ok 21 [chromium] › sqa-evidence\tests\review-streak.spec.ts:118:3 › FE32-FE40 friend, review, and report UI › FE38 submits a valid review and shows normal success (1.3s)
+  ok 22 [chromium] › sqa-evidence\tests\admin-ui.spec.ts:73:3 › FE110-FE124 admin UI › FE48 bans a user account from the users table (2.1s)
+  ok 23 [chromium] › sqa-evidence\tests\review-streak.spec.ts:134:3 › FE32-FE40 friend, review, and report UI › FE39 reports the reviewed user successfully (1.5s)
+  ok 24 [chromium] › sqa-evidence\tests\review-streak.spec.ts:145:3 › FE32-FE40 friend, review, and report UI › FE40 validates missing custom report reason (1.2s)
+  ok 25 [chromium] › sqa-evidence\tests\review-streak.spec.ts:159:3 › FE90-FE92 streak calendar normalization › FE90 renders streak celebration when learningCalendar is an array (2.9s)
+  ok 26 [chromium] › sqa-evidence\tests\review-streak.spec.ts:178:3 › FE90-FE92 streak calendar normalization › FE91 renders streak celebration when learningCalendar is an object (2.9s)
+  ok 27 [chromium] › sqa-evidence\tests\review-streak.spec.ts:197:3 › FE90-FE92 streak calendar normalization › FE92 keeps streak celebration usable across Monday week transition (4.0s)
 
-  16 passed (21.7s)
+  27 passed (34.4s)
 
 
 STDERR:
-[WebServer] [2m10:40:00 PM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mCannot update a component (`AuthProvider`) while rendering a different component (`ProtectedRoute`). To locate the bad setState() call inside `ProtectedRoute`, follow the stack trace as described in https://react.dev/link/setstate-in-render
-[WebServer] [2m10:40:01 PM[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mThe width(-1) and height(-1) of chart should be greater than 0,
-[WebServer]        please check the style of container, or the props width(100%) and height(100%),
-[WebServer]        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-[WebServer]        height and width.
-[WebServer] [2m10:40:01 PM[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mThe width(-1) and height(-1) of chart should be greater than 0,
-[WebServer]        please check the style of container, or the props width(100%) and height(100%),
-[WebServer]        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-[WebServer]        height and width.
-[WebServer] [2m10:40:01 PM[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mThe width(-1) and height(-1) of chart should be greater than 0,
-[WebServer]        please check the style of container, or the props width(100%) and height(100%),
-[WebServer]        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-[WebServer]        height and width.
-[WebServer] [2m10:40:01 PM[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mThe width(-1) and height(-1) of chart should be greater than 0,
-[WebServer]        please check the style of container, or the props width(100%) and height(100%),
-[WebServer]        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-[WebServer]        height and width.
-[WebServer] [2m10:40:02 PM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[Socket] Connection error: websocket error
-[WebServer] [2m10:40:04 PM[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mThe width(-1) and height(-1) of chart should be greater than 0,
-[WebServer]        please check the style of container, or the props width(100%) and height(100%),
-[WebServer]        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-[WebServer]        height and width.
-[WebServer] [2m10:40:04 PM[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mThe width(-1) and height(-1) of chart should be greater than 0,
-[WebServer]        please check the style of container, or the props width(100%) and height(100%),
-[WebServer]        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-[WebServer]        height and width.
-[WebServer] [2m10:40:04 PM[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mThe width(-1) and height(-1) of chart should be greater than 0,
-[WebServer]        please check the style of container, or the props width(100%) and height(100%),
-[WebServer]        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-[WebServer]        height and width.
-[WebServer] [2m10:40:04 PM[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mThe width(-1) and height(-1) of chart should be greater than 0,
-[WebServer]        please check the style of container, or the props width(100%) and height(100%),
-[WebServer]        or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
-[WebServer]        height and width.
+(empty)

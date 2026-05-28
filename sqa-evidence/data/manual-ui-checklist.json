@@ -330,18 +330,24 @@
     {
       "id": "FE32",
       "feature": "Friend / Review / Report",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Gửi lời mời kết bạn",
       "expected": "Hiện trạng thái đã gửi",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE32-FE40 friend, review, and report UI"
     },
     {
       "id": "FE33",
       "feature": "Friend / Review / Report",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Gửi lời mời khi đã gửi trước đó",
       "expected": "Báo đã gửi trước đó hoặc giữ trạng thái pending",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE32-FE40 friend, review, and report UI"
     },
     {
       "id": "FE34",
@@ -378,50 +384,68 @@
     {
       "id": "FE38",
       "feature": "Friend / Review / Report",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Đánh giá user",
       "expected": "Submit review thành công",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE32-FE40 friend, review, and report UI"
     },
     {
       "id": "FE39",
       "feature": "Friend / Review / Report",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Report user",
       "expected": "Hiện thông báo report thành công",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE32-FE40 friend, review, and report UI"
     },
     {
       "id": "FE40",
       "feature": "Friend / Review / Report",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Report thiếu lý do",
       "expected": "Báo lỗi validation",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE32-FE40 friend, review, and report UI"
     },
     {
       "id": "FE41",
       "feature": "Admin UI",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Thêm từ khóa nhạy cảm",
       "expected": "Hiện keyword trong blacklist",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE41-FE43 blacklist keyword admin UI"
     },
     {
       "id": "FE42",
       "feature": "Admin UI",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Xóa từ khóa",
       "expected": "Keyword biến mất",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE41-FE43 blacklist keyword admin UI"
     },
     {
       "id": "FE43",
       "feature": "Admin UI",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Thêm keyword rỗng",
       "expected": "Báo lỗi validation",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE41-FE43 blacklist keyword admin UI"
     },
     {
       "id": "FE44",
@@ -442,26 +466,35 @@
     {
       "id": "FE46",
       "feature": "Admin UI",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Đọc báo cáo user",
       "expected": "Hiện chi tiết tố cáo",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE46-FE47 report moderation admin UI"
     },
     {
       "id": "FE47",
       "feature": "Admin UI",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Ra quyết định xử lý",
       "expected": "Cập nhật trạng thái xử lý",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE46-FE47 report moderation admin UI"
     },
     {
       "id": "FE48",
       "feature": "Admin UI",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Khóa tài khoản",
       "expected": "Hiện status suspended/banned",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "admin-ui.spec.ts",
+      "playwrightTest": "FE48 user ban admin UI"
     },
     {
       "id": "FE49",
@@ -833,26 +866,35 @@
     {
       "id": "FE90",
       "feature": "Review / Streak",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "learningCalendar dạng array",
       "expected": "Normalize đúng và render calendar",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE90-FE92 streak calendar normalization"
     },
     {
       "id": "FE91",
       "feature": "Review / Streak",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "learningCalendar dạng object",
       "expected": "Render đúng calendar",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE90-FE92 streak calendar normalization"
     },
     {
       "id": "FE92",
       "feature": "Review / Streak",
-      "tool": "Manual UI Testing",
+      "tool": "Playwright UI Smoke",
       "case": "Streak Monday slide",
       "expected": "Animation chuyển tuần đúng",
-      "status": "PASS"
+      "status": "PASS",
+      "automation": "Playwright",
+      "specFile": "review-streak.spec.ts",
+      "playwrightTest": "FE90-FE92 streak calendar normalization"
     },
     {
       "id": "FE93",

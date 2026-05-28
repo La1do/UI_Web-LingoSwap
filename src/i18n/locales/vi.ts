@@ -1,6 +1,112 @@
 import type { Translation } from "../types";
 
 export const vi: Translation = {
+  landing: {
+    brand: "LingoSwap",
+    logoAlt: "Logo LingoSwap",
+    nav: {
+      features: "Tính năng",
+      steps: "Cách hoạt động",
+      safety: "An toàn",
+      login: "Đăng nhập",
+      register: "Bắt đầu",
+    },
+    hero: {
+      badge: "Luyện ngôn ngữ với người thật",
+      title: "Gặp bạn học mới qua video call ngẫu nhiên",
+      subtitle: "LingoSwap kết nối bạn với người cùng mục tiêu học tập để luyện nói, nhắn tin và duy trì thói quen học mỗi ngày.",
+      primaryCta: "Tạo tài khoản",
+      secondaryCta: "Đăng nhập",
+      stats: [
+        { value: "1:1", label: "Video call" },
+        { value: "24/7", label: "Tìm partner" },
+        { value: "2", label: "Ngôn ngữ" },
+      ],
+    },
+    preview: {
+      liveLabel: "Đang gọi",
+      minutesLabel: "12 phút",
+      nativeSpeaker: "Người bản xứ",
+      nativeLanguage: "Tiếng Anh",
+      learner: "Bạn",
+      learningLanguage: "Đang luyện nói",
+      message: "Gửi tin nhắn, chia sẻ ảnh và tiếp tục kết nối sau buổi gọi.",
+      streakLabel: "Streak +1",
+    },
+    features: {
+      title: "Mọi thứ cần thiết cho một buổi luyện nói",
+      subtitle: "Landing page tập trung đúng các tính năng đã có trong ứng dụng để người dùng hiểu nhanh giá trị cốt lõi.",
+      items: [
+        {
+          badge: "Match",
+          title: "Ghép cặp theo ngôn ngữ",
+          description: "Chọn ngôn ngữ muốn luyện và vào hàng chờ để tìm người phù hợp.",
+        },
+        {
+          badge: "Call",
+          title: "Video call P2P",
+          description: "Trò chuyện trực tiếp bằng camera và micro với giao diện gọi rõ ràng.",
+        },
+        {
+          badge: "Chat",
+          title: "Nhắn tin realtime",
+          description: "Trao đổi trong lúc gọi hoặc tiếp tục nhắn tin với bạn bè sau đó.",
+        },
+        {
+          badge: "Streak",
+          title: "Duy trì thói quen",
+          description: "Theo dõi streak và lịch học để biến luyện nói thành việc hằng ngày.",
+        },
+      ],
+    },
+    steps: {
+      title: "Bắt đầu trong vài bước",
+      subtitle: "Luồng sử dụng được thiết kế ngắn gọn để người học đi thẳng vào buổi luyện tập.",
+      items: [
+        {
+          title: "Chọn ngôn ngữ",
+          description: "Chọn ngôn ngữ bạn muốn luyện và chuẩn bị cho cuộc trò chuyện.",
+        },
+        {
+          title: "Tìm partner",
+          description: "Ứng dụng ghép bạn với người đang có cùng nhu cầu luyện tập.",
+        },
+        {
+          title: "Gọi và đánh giá",
+          description: "Kết thúc buổi gọi bằng đánh giá, kết bạn hoặc báo cáo khi cần.",
+        },
+      ],
+    },
+    safety: {
+      title: "Không gian luyện tập có kiểm soát",
+      subtitle: "Các tính năng an toàn được đặt ngay trong luồng sử dụng để giảm rủi ro khi gặp người lạ.",
+      items: [
+        {
+          title: "Báo cáo vi phạm",
+          description: "Người dùng có thể báo cáo từ chat, meeting, review hoặc lịch sử ghép cặp.",
+        },
+        {
+          title: "Đánh giá sau cuộc gọi",
+          description: "Feedback sau mỗi buổi giúp cải thiện chất lượng trải nghiệm.",
+        },
+        {
+          title: "Quản lý bạn bè",
+          description: "Kết bạn, nhắn tin và gọi trực tiếp với những partner phù hợp.",
+        },
+        {
+          title: "Kháng cáo tài khoản",
+          description: "Người dùng có luồng kháng cáo riêng nếu cho rằng tài khoản bị khóa nhầm.",
+        },
+      ],
+    },
+    cta: {
+      title: "Sẵn sàng luyện nói hôm nay?",
+      subtitle: "Tạo tài khoản và bắt đầu tìm partner luyện ngôn ngữ đầu tiên của bạn.",
+      primary: "Đăng ký miễn phí",
+      secondary: "Tôi đã có tài khoản",
+    },
+  },
+
   common: {
     or: "hoặc",
     loading: "Đang xử lý…",

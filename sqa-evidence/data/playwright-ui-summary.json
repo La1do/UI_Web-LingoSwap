@@ -10,16 +10,16 @@
   "appUnderTest": "http://127.0.0.1:5173",
   "evidenceDashboard": "http://localhost:8088",
   "exitCode": 0,
-  "startedAt": "2026-05-27T15:39:42.353Z",
-  "finishedAt": "2026-05-27T15:40:07.387Z",
+  "startedAt": "2026-05-28T03:06:57.288Z",
+  "finishedAt": "2026-05-28T03:07:34.117Z",
   "report": "data/playwright-report/index.html",
   "output": "data/playwright-output.txt",
-  "total": 16,
-  "passed": 16,
+  "total": 27,
+  "passed": 27,
   "failed": 0,
   "flaky": 0,
   "skipped": 0,
-  "durationMs": 21710.430999999997,
+  "durationMs": 34399.630999999994,
   "tests": [
     {
       "file": "admin-ui.spec.ts",
@@ -27,8 +27,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 5711,
-      "startedAt": "2026-05-27T15:39:50.453Z",
+      "durationMs": 4177,
+      "startedAt": "2026-05-28T03:07:02.983Z",
       "retry": 0,
       "attachments": [
         {
@@ -54,8 +54,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 5337,
-      "startedAt": "2026-05-27T15:39:57.245Z",
+      "durationMs": 3570,
+      "startedAt": "2026-05-28T03:07:07.516Z",
       "retry": 0,
       "attachments": [
         {
@@ -81,8 +81,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 3386,
-      "startedAt": "2026-05-27T15:40:02.887Z",
+      "durationMs": 2968,
+      "startedAt": "2026-05-28T03:07:11.357Z",
       "retry": 0,
       "attachments": [
         {
@@ -103,13 +103,94 @@
       ]
     },
     {
+      "file": "admin-ui.spec.ts",
+      "title": "FE41-FE43 manages blacklist keywords",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "ok": true,
+      "durationMs": 2100,
+      "startedAt": "2026-05-28T03:07:14.495Z",
+      "retry": 0,
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-e710c--manages-blacklist-keywords-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-e710c--manages-blacklist-keywords-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-e710c--manages-blacklist-keywords-chromium/trace.zip"
+        }
+      ]
+    },
+    {
+      "file": "admin-ui.spec.ts",
+      "title": "FE46-FE47 reads and resolves a user report",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "ok": true,
+      "durationMs": 2181,
+      "startedAt": "2026-05-28T03:07:16.787Z",
+      "retry": 0,
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-d6783--and-resolves-a-user-report-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-d6783--and-resolves-a-user-report-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-d6783--and-resolves-a-user-report-chromium/trace.zip"
+        }
+      ]
+    },
+    {
+      "file": "admin-ui.spec.ts",
+      "title": "FE48 bans a user account from the users table",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "ok": true,
+      "durationMs": 2052,
+      "startedAt": "2026-05-28T03:07:19.172Z",
+      "retry": 0,
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-92d8e-ccount-from-the-users-table-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-92d8e-ccount-from-the-users-table-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/admin-ui-FE110-FE124-admin-92d8e-ccount-from-the-users-table-chromium/trace.zip"
+        }
+      ]
+    },
+    {
       "file": "auth-validation.spec.ts",
       "title": "FE01-FE20 register form blocks empty and weak inputs",
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 6013,
-      "startedAt": "2026-05-27T15:39:50.520Z",
+      "durationMs": 4736,
+      "startedAt": "2026-05-28T03:07:02.984Z",
       "retry": 0,
       "attachments": [
         {
@@ -135,8 +216,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 4153,
-      "startedAt": "2026-05-27T15:39:57.744Z",
+      "durationMs": 3293,
+      "startedAt": "2026-05-28T03:07:08.312Z",
       "retry": 0,
       "attachments": [
         {
@@ -162,8 +243,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 6100,
-      "startedAt": "2026-05-27T15:39:50.451Z",
+      "durationMs": 4294,
+      "startedAt": "2026-05-28T03:07:02.969Z",
       "retry": 0,
       "attachments": [
         {
@@ -189,8 +270,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 5944,
-      "startedAt": "2026-05-27T15:39:50.567Z",
+      "durationMs": 4415,
+      "startedAt": "2026-05-28T03:07:02.984Z",
       "retry": 0,
       "attachments": [
         {
@@ -216,8 +297,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 4554,
-      "startedAt": "2026-05-27T15:39:57.412Z",
+      "durationMs": 3343,
+      "startedAt": "2026-05-28T03:07:07.939Z",
       "retry": 0,
       "attachments": [
         {
@@ -243,8 +324,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 5626,
-      "startedAt": "2026-05-27T15:39:50.617Z",
+      "durationMs": 4193,
+      "startedAt": "2026-05-28T03:07:03.006Z",
       "retry": 0,
       "attachments": [
         {
@@ -270,8 +351,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 6305,
-      "startedAt": "2026-05-27T15:39:57.190Z",
+      "durationMs": 3990,
+      "startedAt": "2026-05-28T03:07:07.594Z",
       "retry": 0,
       "attachments": [
         {
@@ -292,13 +373,229 @@
       ]
     },
     {
+      "file": "review-streak.spec.ts",
+      "title": "FE32 sends friend request from review partner card",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "ok": true,
+      "durationMs": 5426,
+      "startedAt": "2026-05-28T03:07:11.877Z",
+      "retry": 0,
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-d8b94-st-from-review-partner-card-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-d8b94-st-from-review-partner-card-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-d8b94-st-from-review-partner-card-chromium/trace.zip"
+        }
+      ]
+    },
+    {
+      "file": "review-streak.spec.ts",
+      "title": "FE33 hides add friend button when request is already pending",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "ok": true,
+      "durationMs": 1187,
+      "startedAt": "2026-05-28T03:07:17.455Z",
+      "retry": 0,
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-a683d--request-is-already-pending-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-a683d--request-is-already-pending-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-a683d--request-is-already-pending-chromium/trace.zip"
+        }
+      ]
+    },
+    {
+      "file": "review-streak.spec.ts",
+      "title": "FE38 submits a valid review and shows normal success",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "ok": true,
+      "durationMs": 1268,
+      "startedAt": "2026-05-28T03:07:18.712Z",
+      "retry": 0,
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-7703b-ew-and-shows-normal-success-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-7703b-ew-and-shows-normal-success-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-7703b-ew-and-shows-normal-success-chromium/trace.zip"
+        }
+      ]
+    },
+    {
+      "file": "review-streak.spec.ts",
+      "title": "FE39 reports the reviewed user successfully",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "ok": true,
+      "durationMs": 1512,
+      "startedAt": "2026-05-28T03:07:20.082Z",
+      "retry": 0,
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-ffd35--reviewed-user-successfully-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-ffd35--reviewed-user-successfully-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-ffd35--reviewed-user-successfully-chromium/trace.zip"
+        }
+      ]
+    },
+    {
+      "file": "review-streak.spec.ts",
+      "title": "FE40 validates missing custom report reason",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "ok": true,
+      "durationMs": 1249,
+      "startedAt": "2026-05-28T03:07:21.691Z",
+      "retry": 0,
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-460ef-issing-custom-report-reason-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-460ef-issing-custom-report-reason-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/review-streak-FE32-FE40-fr-460ef-issing-custom-report-reason-chromium/trace.zip"
+        }
+      ]
+    },
+    {
+      "file": "review-streak.spec.ts",
+      "title": "FE90 renders streak celebration when learningCalendar is an array",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "ok": true,
+      "durationMs": 2866,
+      "startedAt": "2026-05-28T03:07:23.041Z",
+      "retry": 0,
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/review-streak-FE90-FE92-st-4a323-earningCalendar-is-an-array-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/review-streak-FE90-FE92-st-4a323-earningCalendar-is-an-array-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/review-streak-FE90-FE92-st-4a323-earningCalendar-is-an-array-chromium/trace.zip"
+        }
+      ]
+    },
+    {
+      "file": "review-streak.spec.ts",
+      "title": "FE91 renders streak celebration when learningCalendar is an object",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "ok": true,
+      "durationMs": 2888,
+      "startedAt": "2026-05-28T03:07:26.121Z",
+      "retry": 0,
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/review-streak-FE90-FE92-st-7aeba-arningCalendar-is-an-object-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/review-streak-FE90-FE92-st-7aeba-arningCalendar-is-an-object-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/review-streak-FE90-FE92-st-7aeba-arningCalendar-is-an-object-chromium/trace.zip"
+        }
+      ]
+    },
+    {
+      "file": "review-streak.spec.ts",
+      "title": "FE92 keeps streak celebration usable across Monday week transition",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "ok": true,
+      "durationMs": 3988,
+      "startedAt": "2026-05-28T03:07:29.205Z",
+      "retry": 0,
+      "attachments": [
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "playwright-results/review-streak-FE90-FE92-st-dc4bd-ross-Monday-week-transition-chromium/test-finished-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "playwright-results/review-streak-FE90-FE92-st-dc4bd-ross-Monday-week-transition-chromium/video.webm"
+        },
+        {
+          "name": "trace",
+          "contentType": "application/zip",
+          "path": "playwright-results/review-streak-FE90-FE92-st-dc4bd-ross-Monday-week-transition-chromium/trace.zip"
+        }
+      ]
+    },
+    {
       "file": "route-guard.spec.ts",
       "title": "FE93 redirects anonymous user from /home to /login",
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 5822,
-      "startedAt": "2026-05-27T15:39:50.522Z",
+      "durationMs": 4140,
+      "startedAt": "2026-05-28T03:07:03.020Z",
       "retry": 0,
       "attachments": [
         {
@@ -324,8 +621,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 4483,
-      "startedAt": "2026-05-27T15:39:57.445Z",
+      "durationMs": 3452,
+      "startedAt": "2026-05-28T03:07:07.784Z",
       "retry": 0,
       "attachments": [
         {
@@ -351,8 +648,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 2418,
-      "startedAt": "2026-05-27T15:40:02.114Z",
+      "durationMs": 2446,
+      "startedAt": "2026-05-28T03:07:11.349Z",
       "retry": 0,
       "attachments": [
         {
@@ -378,8 +675,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 4494,
-      "startedAt": "2026-05-27T15:39:57.600Z",
+      "durationMs": 3433,
+      "startedAt": "2026-05-28T03:07:07.889Z",
       "retry": 0,
       "attachments": [
         {
@@ -405,8 +702,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 2572,
-      "startedAt": "2026-05-27T15:40:02.129Z",
+      "durationMs": 2381,
+      "startedAt": "2026-05-28T03:07:11.493Z",
       "retry": 0,
       "attachments": [
         {
@@ -432,8 +729,8 @@
       "status": "passed",
       "expectedStatus": "passed",
       "ok": true,
-      "durationMs": 1654,
-      "startedAt": "2026-05-27T15:40:04.823Z",
+      "durationMs": 1097,
+      "startedAt": "2026-05-28T03:07:13.984Z",
       "retry": 0,
       "attachments": [
         {
@@ -456,8 +753,8 @@
   ],
   "evidence": {
     "manifest": "data/playwright-evidence.json",
-    "videos": 16,
-    "traces": 16,
-    "screenshots": 16
+    "videos": 27,
+    "traces": 27,
+    "screenshots": 27
   }
 }

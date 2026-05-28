@@ -1,7 +1,7 @@
 $ npx.cmd eslint src
-Started: 2026-05-27T15:19:40.834Z
-Finished: 2026-05-27T15:20:02.757Z
-Duration: 21923ms
+Started: 2026-05-28T03:06:29.000Z
+Finished: 2026-05-28T03:06:45.612Z
+Duration: 16612ms
 Exit code: 1
 
 STDOUT:
@@ -538,6 +538,99 @@ D:\UI-LingoSwap\src\page\home\component\NotificationDropdown.tsx:205:15
 D:\UI-LingoSwap\src\page\home\component\RecentMatches.tsx
   122:6  warning  React Hook useEffect has missing dependencies: 'checkStatus' and 'execute'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
 
+D:\UI-LingoSwap\src\page\landing\LandingPage.tsx
+  220:6   warning  React Hook useEffect has a missing dependency: 'animateScrollTo'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/exhaustive-deps
+  504:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\landing\LandingPage.tsx:504:16
+  502 |           <div className="mx-auto max-w-7xl">
+  503 |             <div className="section-heading-reveal">
+> 504 |               <SectionHeading title={t.landing.features.title} subtitle={t.landing.features.subtitle} />
+      |                ^^^^^^^^^^^^^^ This component is created during render
+  505 |             </div>
+  506 |             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  507 |               {t.landing.features.items.map((item, index) => (
+
+D:\UI-LingoSwap\src\page\landing\LandingPage.tsx:254:3
+  252 |   const cardClass = "landing-card rounded-lg border";
+  253 |
+> 254 |   function SectionHeading({
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 255 |     title,
+      | ^^^^^^^^^^
+> 256 |     subtitle,
+      …
+      | ^^^^^^^^^^
+> 270 |     );
+      | ^^^^^^^^^^
+> 271 |   }
+      | ^^^^ The component is created during render here
+  272 |
+  273 |   return (
+  274 |     <PageShell controlsPosition="bottom-right">                                         react-hooks/static-components
+  537:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\landing\LandingPage.tsx:537:16
+  535 |           <div className="mx-auto max-w-7xl">
+  536 |             <div className="section-heading-reveal">
+> 537 |               <SectionHeading title={t.landing.steps.title} subtitle={t.landing.steps.subtitle} />
+      |                ^^^^^^^^^^^^^^ This component is created during render
+  538 |             </div>
+  539 |             <div className="mt-10 grid gap-4 lg:grid-cols-3">
+  540 |               {t.landing.steps.items.map((item, index) => (
+
+D:\UI-LingoSwap\src\page\landing\LandingPage.tsx:254:3
+  252 |   const cardClass = "landing-card rounded-lg border";
+  253 |
+> 254 |   function SectionHeading({
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 255 |     title,
+      | ^^^^^^^^^^
+> 256 |     subtitle,
+      …
+      | ^^^^^^^^^^
+> 270 |     );
+      | ^^^^^^^^^^
+> 271 |   }
+      | ^^^^ The component is created during render here
+  272 |
+  273 |   return (
+  274 |     <PageShell controlsPosition="bottom-right">                                                                 react-hooks/static-components
+  581:16  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+D:\UI-LingoSwap\src\page\landing\LandingPage.tsx:581:16
+  579 |           <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+  580 |             <div className="safety-heading-reveal">
+> 581 |               <SectionHeading title={t.landing.safety.title} subtitle={t.landing.safety.subtitle} align="left" />
+      |                ^^^^^^^^^^^^^^ This component is created during render
+  582 |             </div>
+  583 |             <div className="grid gap-4 sm:grid-cols-2">
+  584 |               {t.landing.safety.items.map((item, index) => (
+
+D:\UI-LingoSwap\src\page\landing\LandingPage.tsx:254:3
+  252 |   const cardClass = "landing-card rounded-lg border";
+  253 |
+> 254 |   function SectionHeading({
+      |   ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 255 |     title,
+      | ^^^^^^^^^^
+> 256 |     subtitle,
+      …
+      | ^^^^^^^^^^
+> 270 |     );
+      | ^^^^^^^^^^
+> 271 |   }
+      | ^^^^ The component is created during render here
+  272 |
+  273 |   return (
+  274 |     <PageShell controlsPosition="bottom-right">  react-hooks/static-components
+
 D:\UI-LingoSwap\src\page\login\GoogleCallbackPage.tsx
   66:6  warning  React Hook useEffect has missing dependencies: 'execute', 'executeMe', 'navigate', 'searchParams', 'setMode', 'setUserFromMe', and 'setUserFromResponse'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
 
@@ -693,7 +786,7 @@ D:\UI-LingoSwap\src\page\waiting\WaitingPage.tsx
   45:6  warning  React Hook useEffect has missing dependencies: 'cancelMatching' and 'startMatching'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
   54:6  warning  React Hook useEffect has a missing dependency: 'navigate'. Either include it or remove the dependency array                              react-hooks/exhaustive-deps
 
-✖ 52 problems (34 errors, 18 warnings)
+✖ 56 problems (37 errors, 19 warnings)
 
 
 

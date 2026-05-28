@@ -121,6 +121,31 @@ export async function mockCommonApis(page: Page) {
 }
 
 export async function mockAdminApis(page: Page) {
+  let adminUsers = [
+    {
+      _id: "user-1",
+      email: "user@example.com",
+      role: "user",
+      statusAccount: "active",
+      createdAt: "2026-05-20T00:00:00.000Z",
+      profile: { fullName: "Test User", avatar: "default_avatar.png" },
+    },
+  ];
+  let reports = [
+    {
+      _id: "report-1",
+      reporterId: { _id: "reporter-1", email: "reporter@example.com", profile: { fullName: "Reporter One" } },
+      reportedUserId: { _id: "user-1", email: "user@example.com", profile: { fullName: "Test User" }, statusAccount: "active" },
+      reason: "Abusive language",
+      description: "User used abusive words during the call.",
+      status: "pending",
+      createdAt: "2026-05-20T00:00:00.000Z",
+    },
+  ];
+  let blacklistKeywords = [
+    { _id: "kw-1", keyword: "spam", createdBy: "admin-1", isActive: true, createdAt: "2026-05-20T00:00:00.000Z" },
+  ];
+
   await page.route("**/api/admin/dashboard", async (route) => {
     await route.fulfill({
       status: 200,
@@ -134,33 +159,76 @@ export async function mockAdminApis(page: Page) {
       }),
     });
   });
-  await page.route("**/api/admin/users", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify([
-        {
-          _id: "user-1",
-          email: "user@example.com",
-          role: "user",
-          statusAccount: "active",
-          createdAt: "2026-05-20T00:00:00.000Z",
-          profile: { fullName: "Test User", avatar: "default_avatar.png" },
-        },
-      ]),
-    });
+  await page.route("**/api/admin/users**", async (route) => {
+    const request = route.request();
+    const url = new URL(request.url());
+
+    if (request.method() === "PATCH" && url.pathname.endsWith("/status")) {
+      const userId = url.pathname.split("/").at(-2);
+      adminUsers = adminUsers.map((user) => user._id === userId ? { ...user, statusAccount: "banned" } : user);
+      await route.fulfill({ status: 200, contentType: "application/json", body: "{}" });
+      return;
+    }
+
+    if (request.method() === "DELETE") {
+      const userId = url.pathname.split("/").at(-1);
+      adminUsers = adminUsers.filter((user) => user._id !== userId);
+      await route.fulfill({ status: 200, contentType: "application/json", body: "{}" });
+      return;
+    }
+
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(adminUsers) });
   });
   await page.route("**/api/admin/reports**", async (route) => {
-    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify([]) });
+    const request = route.request();
+    const url = new URL(request.url());
+
+    if (request.method() === "PATCH" && url.pathname.endsWith("/status")) {
+      const reportId = url.pathname.split("/").at(-2);
+      const payload = request.postDataJSON() as { status: "resolved" | "dismissed"; adminNotes?: string };
+      reports = reports.map((report) => report._id === reportId ? { ...report, ...payload } : report);
+      await route.fulfill({ status: 200, contentType: "application/json", body: "{}" });
+      return;
+    }
+
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(reports) });
   });
   await page.route("**/api/admin/appeals**", async (route) => {
     await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify([]) });
   });
   await page.route("**/api/admin/blacklist-keywords**", async (route) => {
+    const request = route.request();
+    const url = new URL(request.url());
+
+    if (request.method() === "POST") {
+      const payload = request.postDataJSON() as { keyword: string };
+      const keyword = {
+        _id: `kw-${blacklistKeywords.length + 1}`,
+        keyword: payload.keyword,
+        createdBy: "admin-1",
+        isActive: true,
+        createdAt: "2026-05-21T00:00:00.000Z",
+      };
+      blacklistKeywords = [keyword, ...blacklistKeywords];
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ message: "created", keyword }),
+      });
+      return;
+    }
+
+    if (request.method() === "DELETE") {
+      const keywordId = url.pathname.split("/").at(-1);
+      blacklistKeywords = blacklistKeywords.filter((keyword) => keyword._id !== keywordId);
+      await route.fulfill({ status: 200, contentType: "application/json", body: "{}" });
+      return;
+    }
+
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify({ total: 1, page: 1, limit: 20, keywords: [{ _id: "kw-1", keyword: "spam", createdBy: "admin-1", isActive: true, createdAt: "2026-05-20T00:00:00.000Z" }] }),
+      body: JSON.stringify({ total: blacklistKeywords.length, page: 1, limit: 20, keywords: blacklistKeywords }),
     });
   });
 }

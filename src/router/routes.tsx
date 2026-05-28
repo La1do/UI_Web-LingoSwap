@@ -14,6 +14,7 @@ import CallEndedPage from "../page/call-ended/CallEndedPage";
 import ForgotPasswordPage from "../page/forgot-password/ForgotPasswordPage";
 import MessagesPage from "../page/messages/MessagesPage";
 import AppealPage from "../page/appeal/AppealPage";
+import LandingPage from "../page/landing/LandingPage";
 import ProtectedRoute from "./ProtectedRoute";
 import NotFoundPage from "../page/error/NotFoundPage";
 import ErrorPage from "../page/error/ErrorPage";
@@ -37,7 +38,7 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       // ── Public (cả 2 role) ────────────────────────────────
-      { index: true,              element: <LoginPage /> },
+      { index: true,              element: <LandingPage /> },
       { path: "login",            element: <LoginPage /> },
       { path: "register",         element: <RegisterPage /> },
       { path: "forgot-password",  element: <ForgotPasswordPage /> },

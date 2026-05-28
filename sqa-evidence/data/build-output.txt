@@ -1,7 +1,7 @@
 $ npm.cmd run build
-Started: 2026-05-27T15:20:02.758Z
-Finished: 2026-05-27T15:20:16.651Z
-Duration: 13893ms
+Started: 2026-05-28T03:06:45.614Z
+Finished: 2026-05-28T03:06:57.170Z
+Duration: 11556ms
 Exit code: 0
 
 STDOUT:
@@ -10,16 +10,16 @@ STDOUT:
 > tsc -b && vite build
 
 [36mvite v8.0.8 [32mbuilding client environment for production...[36m[39m
-[2Ktransforming...✓ 748 modules transformed.
+[2Ktransforming...✓ 750 modules transformed.
 rendering chunks...
 computing gzip size...
 dist/index.html                     0.46 kB │ gzip:   0.30 kB
 dist/assets/logo-BAkt7ZKc.png      70.21 kB
 dist/assets/logo-CSdG3Sn4.ico     432.25 kB
-dist/assets/index-CIvA4089.css     46.87 kB │ gzip:   5.87 kB
-dist/assets/index-DDQ0sdNM.js   1,009.17 kB │ gzip: 286.93 kB
+dist/assets/index-zn9o0gaW.css     60.76 kB │ gzip:   7.57 kB
+dist/assets/index-BKkhJ6J7.js   1,029.42 kB │ gzip: 292.12 kB
 
-[32m✓ built in 1.19s[39m
+[32m✓ built in 1.04s[39m
 
 
 STDERR:

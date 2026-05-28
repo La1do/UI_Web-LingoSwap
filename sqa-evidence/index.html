@@ -263,7 +263,13 @@
             <option value="OPEN">OPEN</option>
             <option value="PLANNED">PLANNED</option>
           </select>
+          <select id="automationFilter">
+            <option value="">All automation</option>
+            <option value="playwright">Playwright automated</option>
+            <option value="manual">Manual only</option>
+          </select>
         </div>
+        <p id="checklistCount"></p>
         <div id="checklist"></div>
       </section>
 
@@ -472,12 +478,20 @@
         const search = document.getElementById("search").value.toLowerCase();
         const feature = document.getElementById("featureFilter").value;
         const status = document.getElementById("statusFilter").value;
+        const automation = document.getElementById("automationFilter").value;
         const filtered = cases.filter((item) => {
-          const haystack = `${item.id} ${item.feature} ${item.tool} ${item.case} ${item.expected} ${item.specFile ?? ""} ${item.playwrightTest ?? ""}`.toLowerCase();
+          const isPlaywright = item.automation === "Playwright" || Boolean(item.specFile);
+          const haystack = `${item.id} ${item.feature} ${item.tool} ${item.automation ?? ""} ${item.case} ${item.expected} ${item.specFile ?? ""} ${item.playwrightTest ?? ""}`.toLowerCase();
           return (!search || haystack.includes(search)) &&
             (!feature || item.feature === feature) &&
-            (!status || item.status === status);
+            (!status || item.status === status) &&
+            (!automation ||
+              (automation === "playwright" && isPlaywright) ||
+              (automation === "manual" && !isPlaywright));
         });
+        const playwrightCount = filtered.filter((item) => item.automation === "Playwright" || Boolean(item.specFile)).length;
+        document.getElementById("checklistCount").textContent =
+          `Showing ${filtered.length}/${cases.length} cases (${playwrightCount} Playwright, ${filtered.length - playwrightCount} manual).`;
         document.getElementById("checklist").innerHTML = `
           <table>
             <thead><tr><th>ID</th><th>Feature</th><th>Tool</th><th>Automation Evidence</th><th>Test Case</th><th>Expected</th><th>Status</th></tr></thead>
@@ -513,7 +527,7 @@
 
         const features = [...new Set(checklist.cases.map((item) => item.feature))].sort();
         document.getElementById("featureFilter").innerHTML += features.map((f) => `<option value="${f}">${f}</option>`).join("");
-        for (const id of ["search", "featureFilter", "statusFilter"]) {
+        for (const id of ["search", "featureFilter", "statusFilter", "automationFilter"]) {
           document.getElementById(id).addEventListener("input", () => renderChecklist(checklist.cases));
         }
         renderChecklist(checklist.cases);

@@ -99,12 +99,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5711,
+                      "duration": 4177,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:50.453Z",
+                      "startTime": "2026-05-28T03:07:02.983Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -149,12 +149,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5337,
+                      "duration": 3570,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:57.245Z",
+                      "startTime": "2026-05-28T03:07:07.516Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -199,12 +199,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3386,
+                      "duration": 2968,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:40:02.887Z",
+                      "startTime": "2026-05-28T03:07:11.357Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -231,6 +231,156 @@
               "id": "ae1974e46a8834939ce0-04837fb92caa9d0f811c",
               "file": "admin-ui.spec.ts",
               "line": 23,
+              "column": 3
+            },
+            {
+              "title": "FE41-FE43 manages blacklist keywords",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2100,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T03:07:14.495Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-e710c--manages-blacklist-keywords-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-e710c--manages-blacklist-keywords-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-e710c--manages-blacklist-keywords-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ae1974e46a8834939ce0-815f01a6898f5ba0a999",
+              "file": "admin-ui.spec.ts",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "FE46-FE47 reads and resolves a user report",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2181,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T03:07:16.787Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-d6783--and-resolves-a-user-report-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-d6783--and-resolves-a-user-report-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-d6783--and-resolves-a-user-report-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ae1974e46a8834939ce0-7193afdeab4e2ff72bba",
+              "file": "admin-ui.spec.ts",
+              "line": 53,
+              "column": 3
+            },
+            {
+              "title": "FE48 bans a user account from the users table",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2052,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T03:07:19.172Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-92d8e-ccount-from-the-users-table-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-92d8e-ccount-from-the-users-table-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\admin-ui-FE110-FE124-admin-92d8e-ccount-from-the-users-table-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ae1974e46a8834939ce0-8f48bacfb982c259dac3",
+              "file": "admin-ui.spec.ts",
+              "line": 73,
               "column": 3
             }
           ]
@@ -266,12 +416,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 6013,
+                      "duration": 4736,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:50.520Z",
+                      "startTime": "2026-05-28T03:07:02.984Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -316,12 +466,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 4153,
+                      "duration": 3293,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:57.744Z",
+                      "startTime": "2026-05-28T03:07:08.312Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -383,12 +533,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 6100,
+                      "duration": 4294,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:50.451Z",
+                      "startTime": "2026-05-28T03:07:02.969Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -450,12 +600,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 5944,
+                      "duration": 4415,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:50.567Z",
+                      "startTime": "2026-05-28T03:07:02.984Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -500,12 +650,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 4554,
+                      "duration": 3343,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:57.412Z",
+                      "startTime": "2026-05-28T03:07:07.939Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -548,7 +698,7 @@
         {
           "title": "FE83-FE89 review and streak UI",
           "file": "review-streak.spec.ts",
-          "line": 4,
+          "line": 39,
           "column": 6,
           "specs": [
             {
@@ -567,12 +717,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 5626,
+                      "duration": 4193,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:50.617Z",
+                      "startTime": "2026-05-28T03:07:03.006Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -598,7 +748,7 @@
               ],
               "id": "2e021825e568e6e42730-a7c16d5b62254e814fe5",
               "file": "review-streak.spec.ts",
-              "line": 5,
+              "line": 40,
               "column": 3
             },
             {
@@ -617,12 +767,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 6305,
+                      "duration": 3990,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:57.190Z",
+                      "startTime": "2026-05-28T03:07:07.594Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -648,7 +798,423 @@
               ],
               "id": "2e021825e568e6e42730-182686846a6d4ce1fa36",
               "file": "review-streak.spec.ts",
-              "line": 28,
+              "line": 63,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "FE32-FE40 friend, review, and report UI",
+          "file": "review-streak.spec.ts",
+          "line": 99,
+          "column": 6,
+          "specs": [
+            {
+              "title": "FE32 sends friend request from review partner card",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 5426,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T03:07:11.877Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-d8b94-st-from-review-partner-card-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-d8b94-st-from-review-partner-card-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-d8b94-st-from-review-partner-card-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2e021825e568e6e42730-55f7683b83abf14e8f32",
+              "file": "review-streak.spec.ts",
+              "line": 100,
+              "column": 3
+            },
+            {
+              "title": "FE33 hides add friend button when request is already pending",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1187,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T03:07:17.455Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-a683d--request-is-already-pending-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-a683d--request-is-already-pending-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-a683d--request-is-already-pending-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2e021825e568e6e42730-1b3982f23041d5b956fc",
+              "file": "review-streak.spec.ts",
+              "line": 110,
+              "column": 3
+            },
+            {
+              "title": "FE38 submits a valid review and shows normal success",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1268,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T03:07:18.712Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-7703b-ew-and-shows-normal-success-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-7703b-ew-and-shows-normal-success-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-7703b-ew-and-shows-normal-success-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2e021825e568e6e42730-1ef0d9aa795ae0da30fe",
+              "file": "review-streak.spec.ts",
+              "line": 118,
+              "column": 3
+            },
+            {
+              "title": "FE39 reports the reviewed user successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1512,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T03:07:20.082Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-ffd35--reviewed-user-successfully-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-ffd35--reviewed-user-successfully-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-ffd35--reviewed-user-successfully-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2e021825e568e6e42730-ce9edd7e57efd17ebf35",
+              "file": "review-streak.spec.ts",
+              "line": 134,
+              "column": 3
+            },
+            {
+              "title": "FE40 validates missing custom report reason",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1249,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T03:07:21.691Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-460ef-issing-custom-report-reason-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-460ef-issing-custom-report-reason-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE32-FE40-fr-460ef-issing-custom-report-reason-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2e021825e568e6e42730-32b88fae3371024840d5",
+              "file": "review-streak.spec.ts",
+              "line": 145,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "FE90-FE92 streak calendar normalization",
+          "file": "review-streak.spec.ts",
+          "line": 158,
+          "column": 6,
+          "specs": [
+            {
+              "title": "FE90 renders streak celebration when learningCalendar is an array",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 2866,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T03:07:23.041Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE90-FE92-st-4a323-earningCalendar-is-an-array-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE90-FE92-st-4a323-earningCalendar-is-an-array-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE90-FE92-st-4a323-earningCalendar-is-an-array-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2e021825e568e6e42730-4eae29911fa5c5d26c21",
+              "file": "review-streak.spec.ts",
+              "line": 159,
+              "column": 3
+            },
+            {
+              "title": "FE91 renders streak celebration when learningCalendar is an object",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 2888,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T03:07:26.121Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE90-FE92-st-7aeba-arningCalendar-is-an-object-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE90-FE92-st-7aeba-arningCalendar-is-an-object-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE90-FE92-st-7aeba-arningCalendar-is-an-object-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2e021825e568e6e42730-201b6d3e1b5401300023",
+              "file": "review-streak.spec.ts",
+              "line": 178,
+              "column": 3
+            },
+            {
+              "title": "FE92 keeps streak celebration usable across Monday week transition",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 3988,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-05-28T03:07:29.205Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE90-FE92-st-dc4bd-ross-Monday-week-transition-chromium\\test-finished-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE90-FE92-st-dc4bd-ross-Monday-week-transition-chromium\\video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\UI-LingoSwap\\sqa-evidence\\data\\playwright-results\\review-streak-FE90-FE92-st-dc4bd-ross-Monday-week-transition-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2e021825e568e6e42730-acb941485b5bcada5804",
+              "file": "review-streak.spec.ts",
+              "line": 197,
               "column": 3
             }
           ]
@@ -684,12 +1250,12 @@
                       "workerIndex": 5,
                       "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 5822,
+                      "duration": 4140,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:50.522Z",
+                      "startTime": "2026-05-28T03:07:03.020Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -734,12 +1300,12 @@
                       "workerIndex": 5,
                       "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 4483,
+                      "duration": 3452,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:57.445Z",
+                      "startTime": "2026-05-28T03:07:07.784Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -784,12 +1350,12 @@
                       "workerIndex": 5,
                       "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 2418,
+                      "duration": 2446,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:40:02.114Z",
+                      "startTime": "2026-05-28T03:07:11.349Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -851,12 +1417,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 4494,
+                      "duration": 3433,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:39:57.600Z",
+                      "startTime": "2026-05-28T03:07:07.889Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -915,15 +1481,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 2572,
+                      "duration": 2381,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:40:02.129Z",
+                      "startTime": "2026-05-28T03:07:11.493Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -965,15 +1531,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1654,
+                      "duration": 1097,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-05-27T15:40:04.823Z",
+                      "startTime": "2026-05-28T03:07:13.984Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1009,9 +1575,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-05-27T15:39:45.370Z",
-    "duration": 21710.430999999997,
-    "expected": 16,
+    "startTime": "2026-05-28T03:06:59.387Z",
+    "duration": 34399.630999999994,
+    "expected": 27,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
