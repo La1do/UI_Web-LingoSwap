@@ -77,6 +77,9 @@ export interface Translation {
     login: string;
     loginSuccess: string;
     accountBanned: string;
+    accountBannedTitle: string;
+    accountBannedRealtime: string;
+    accountBannedOk: string;
     logoutSuccess: string;
     invalidCredentials: string;
     loggingIn: string;
