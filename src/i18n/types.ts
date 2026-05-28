@@ -8,6 +8,58 @@ export interface Translation {
     loading: string;
   };
 
+  // Landing page
+  landing: {
+    brand: string;
+    logoAlt: string;
+    nav: {
+      features: string;
+      steps: string;
+      safety: string;
+      login: string;
+      register: string;
+    };
+    hero: {
+      badge: string;
+      title: string;
+      subtitle: string;
+      primaryCta: string;
+      secondaryCta: string;
+      stats: { value: string; label: string }[];
+    };
+    preview: {
+      liveLabel: string;
+      minutesLabel: string;
+      nativeSpeaker: string;
+      nativeLanguage: string;
+      learner: string;
+      learningLanguage: string;
+      message: string;
+      streakLabel: string;
+    };
+    features: {
+      title: string;
+      subtitle: string;
+      items: { badge: string; title: string; description: string }[];
+    };
+    steps: {
+      title: string;
+      subtitle: string;
+      items: { title: string; description: string }[];
+    };
+    safety: {
+      title: string;
+      subtitle: string;
+      items: { title: string; description: string }[];
+    };
+    cta: {
+      title: string;
+      subtitle: string;
+      primary: string;
+      secondary: string;
+    };
+  };
+
   // Validation messages
   validation: {
     required: string;          // "{label} không được để trống."
