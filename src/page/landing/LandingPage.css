@@ -1,0 +1,307 @@
+.landing-reveal {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateY(72px) scale(0.96);
+  will-change: opacity, filter, transform;
+}
+
+.landing-reveal-scale {
+  transform: translateY(72px) scale(0.94);
+}
+
+.landing-reveal.is-visible {
+  animation: landingFadeSlideIn 1300ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+.landing-reveal-scale.is-visible {
+  animation-name: landingFadeScaleIn;
+  animation-duration: 1450ms;
+}
+
+.section-block-reveal {
+  opacity: 0;
+  transform: translateY(90px) scale(0.96);
+  will-change: opacity, transform;
+}
+
+.section-block-reveal.is-visible {
+  animation: sectionBlockIn 1450ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: var(--section-delay, 0ms);
+}
+
+@keyframes sectionBlockIn {
+  0% {
+    opacity: 0;
+    transform: translateY(90px) scale(0.96);
+  }
+
+  55% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes landingFadeSlideIn {
+  0% {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(72px) scale(0.96);
+  }
+
+  55% {
+    opacity: 1;
+    filter: blur(1px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes landingFadeScaleIn {
+  0% {
+    opacity: 0;
+    filter: blur(7px);
+    transform: translateY(72px) scale(0.94);
+  }
+
+  60% {
+    opacity: 1;
+    filter: blur(1px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+.section-heading-reveal,
+.feature-card-reveal,
+.step-card-reveal,
+.step-badge-reveal,
+.safety-card-reveal,
+.safety-heading-reveal,
+.cta-reveal {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.section-heading-reveal {
+  transform: translateY(36px);
+}
+
+.section-heading-reveal.is-visible {
+  animation: sectionHeadingIn 950ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+.feature-card-reveal {
+  transform: translateY(46px) scale(0.97);
+}
+
+.feature-card-reveal.is-visible {
+  animation: featureCardIn 980ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+.step-card-reveal {
+  transform: translateX(-34px) translateY(28px);
+}
+
+.step-card-reveal.is-visible {
+  animation: stepCardIn 1050ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+.step-badge-reveal {
+  transform: scale(0.52) rotate(-10deg);
+}
+
+.step-badge-reveal.is-visible {
+  animation: stepBadgePop 680ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--badge-delay, 0ms);
+}
+
+.safety-heading-reveal {
+  transform: translateX(-38px);
+}
+
+.safety-heading-reveal.is-visible {
+  animation: safetyHeadingIn 1000ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+.safety-card-reveal {
+  transform: translateX(34px) translateY(24px);
+}
+
+.safety-card-reveal.is-visible {
+  animation: safetyCardIn 980ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+.cta-reveal {
+  transform: translateY(34px) scale(0.96);
+}
+
+.cta-reveal.is-visible {
+  animation: ctaIn 1050ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+@keyframes sectionHeadingIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes featureCardIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes stepCardIn {
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+
+@keyframes stepBadgePop {
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes safetyHeadingIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes safetyCardIn {
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+
+@keyframes ctaIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.landing-nav-link {
+  position: relative;
+  transition:
+    color 760ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 760ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.landing-nav-link::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--landing-accent);
+  opacity: 0;
+  transform: scaleX(0.45);
+  transform-origin: center;
+  transition:
+    opacity 760ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 760ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.landing-nav-link:hover {
+  color: var(--landing-accent) !important;
+  opacity: 1;
+}
+
+.landing-nav-link:hover::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.landing-button {
+  transition:
+    box-shadow 760ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 760ms cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: transform;
+}
+
+.landing-button:hover {
+  transform: translateY(-3px) scale(1.012);
+}
+
+.landing-button:active {
+  transform: translateY(0) scale(0.985);
+}
+
+.landing-card {
+  transition:
+    border-color 900ms cubic-bezier(0.19, 1, 0.22, 1),
+    box-shadow 900ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 900ms cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: transform;
+}
+
+.landing-card:hover {
+  border-color: var(--landing-accent) !important;
+  box-shadow: var(--landing-card-hover-shadow);
+  transform: translateY(-6px) scale(1.012);
+}
+
+.landing-visual {
+  transition:
+    box-shadow 1000ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1000ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.landing-visual:hover {
+  transform: translateY(-6px) scale(1.008);
+}
+
+.landing-section {
+  position: relative;
+}
+
+.landing-section::before {
+  content: "";
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  width: min(220px, 48vw);
+  height: 3px;
+  border-radius: 999px;
+  background: var(--landing-accent);
+  opacity: 0;
+  transform: translateX(-50%) scaleX(0.35);
+  transition:
+    opacity 1200ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1200ms cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+}
+
+.landing-section.section-focus::before {
+  opacity: 0.5;
+  transform: translateX(-50%) scaleX(1);
+}
