@@ -522,6 +522,7 @@ export const vi: Translation = {
     online: "Đang hoạt động",
     offline: "Ngoại tuyến",
     noFriends: "Chưa có bạn bè",
+    imagePreview: "Ảnh",
   },
 
   admin: {

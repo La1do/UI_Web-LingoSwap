@@ -449,6 +449,7 @@ export interface Translation {
     online: string;
     offline: string;
     noFriends: string;
+    imagePreview: string;
   };
 
   // Admin

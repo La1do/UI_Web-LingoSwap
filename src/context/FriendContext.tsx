@@ -7,6 +7,15 @@ import { useAuth } from "./AuthContext";
 
 export type FriendStatus = "online" | "offline" | "busy" | "away";
 
+export interface FriendMessagePreview {
+  _id: string;
+  senderId: string;
+  content: string;
+  type: string;
+  createdAt: string;
+  conversationId: string;
+}
+
 export interface Friend {
   id: string;
   fullName: string;
@@ -15,6 +24,9 @@ export interface Friend {
   language?: string;
   lastSeen?: string;
   conversationId?: string | null;
+  lastMessage?: FriendMessagePreview | null;
+  lastMessageAt?: number;
+  hasUnreadMessage?: boolean;
 }
 
 interface ApiFriend {
@@ -27,14 +39,7 @@ interface ApiFriend {
   conversationId?: string | null;
 }
 
-export interface IncomingMessagePayload {
-  _id: string;
-  senderId: string;
-  content: string;
-  type: string;
-  createdAt: string;
-  conversationId: string;
-}
+export type IncomingMessagePayload = FriendMessagePreview;
 
 interface RealtimeNotificationPayload {
   type: string;
@@ -52,6 +57,8 @@ interface FriendContextValue {
   updateFriendStatus: (userId: string, status: FriendStatus) => void;
   removeFriend: (friendId: string) => void;
   updateConversationId: (friendId: string, conversationId: string) => void;
+  recordFriendMessage: (friendId: string, message: FriendMessagePreview, options?: { unread?: boolean }) => void;
+  markFriendMessagesSeen: (friendId: string) => void;
   incomingMessageFriendId: string | null;
   incomingMessage: IncomingMessagePayload | null;
   clearIncomingMessage: () => void;
@@ -75,6 +82,27 @@ function mapApiFriend(f: ApiFriend): Friend {
   };
 }
 
+function getMessageTimestamp(createdAt?: string): number {
+  const timestamp = createdAt ? Date.parse(createdAt) : NaN;
+  return Number.isFinite(timestamp) ? timestamp : Date.now();
+}
+
+function mergeRealtimeFriendState(nextFriends: Friend[], previousFriends: Friend[]): Friend[] {
+  const previousById = new Map(previousFriends.map((friend) => [friend.id, friend]));
+
+  return nextFriends.map((friend) => {
+    const previous = previousById.get(friend.id);
+    if (!previous) return friend;
+
+    return {
+      ...friend,
+      lastMessage: previous.lastMessage,
+      lastMessageAt: previous.lastMessageAt,
+      hasUnreadMessage: previous.hasUnreadMessage,
+    };
+  });
+}
+
 // ─── Context ─────────────────────────────────────────────────
 
 const FriendContext = createContext<FriendContextValue>({
@@ -84,6 +112,8 @@ const FriendContext = createContext<FriendContextValue>({
   updateFriendStatus: () => {},
   removeFriend: () => {},
   updateConversationId: () => {},
+  recordFriendMessage: () => {},
+  markFriendMessagesSeen: () => {},
   incomingMessageFriendId: null,
   incomingMessage: null,
   clearIncomingMessage: () => {},
@@ -107,15 +137,16 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
       if (id !== fetchRef.current) return;
 
       const mapped = res.data.map(mapApiFriend);
-      setFriends(mapped);
+      setFriends((prev) => mergeRealtimeFriendState(mapped, prev));
 
       // Merge online status từ API riêng
       try {
         const onlineRes = await axios.get<{ onlineFriendIds: string[] }>("/api/user/friends/online");
         const onlineSet = new Set(onlineRes.data.onlineFriendIds ?? []);
-        setFriends(mapped.map((f) =>
+        const withOnlineStatus = mapped.map((f) =>
           onlineSet.has(f.id) ? { ...f, status: "online" as FriendStatus } : f
-        ));
+        );
+        setFriends((prev) => mergeRealtimeFriendState(withOnlineStatus, prev));
       } catch {
         // online-friends API thất bại — giữ nguyên status từ friends API
       }
@@ -143,6 +174,32 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
   const updateConversationId = useCallback((friendId: string, conversationId: string) => {
     setFriends((prev) =>
       prev.map((f) => f.id === friendId ? { ...f, conversationId } : f)
+    );
+  }, []);
+
+  const recordFriendMessage = useCallback((friendId: string, message: FriendMessagePreview, options?: { unread?: boolean }) => {
+    setFriends((prev) =>
+      prev.map((f) =>
+        f.id === friendId
+          ? {
+              ...f,
+              conversationId: message.conversationId || f.conversationId,
+              lastMessage: message,
+              lastMessageAt: getMessageTimestamp(message.createdAt),
+              hasUnreadMessage: options?.unread ?? f.hasUnreadMessage,
+            }
+          : f
+      )
+    );
+  }, []);
+
+  const markFriendMessagesSeen = useCallback((friendId: string) => {
+    setFriends((prev) =>
+      prev.map((f) =>
+        f.id === friendId && f.hasUnreadMessage
+          ? { ...f, hasUnreadMessage: false }
+          : f
+      )
     );
   }, []);
 
@@ -270,6 +327,7 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
     const handler = (msg: { senderId: string; conversationId: string; _id: string; content: string; type: string; createdAt: string }) => {
       // Chỉ trigger khi là tin nhắn từ người khác gửi đến mình
       if (msg.senderId && msg.senderId !== user?.id) {
+        recordFriendMessage(msg.senderId, msg, { unread: true });
         setIncomingMessageFriendId(msg.senderId);
         setIncomingMessage(msg);
       }
@@ -294,10 +352,10 @@ export function FriendProvider({ children }: { children: React.ReactNode }) {
       s?.off("receive_message", handler);
       s?.off("connect", registerListener);
     };
-  }, [isAuthenticated, user?.id]);
+  }, [isAuthenticated, recordFriendMessage, user?.id]);
 
   return (
-    <FriendContext.Provider value={{ friends, isLoading, refetchFriends, updateFriendStatus, removeFriend, updateConversationId, incomingMessageFriendId, incomingMessage, clearIncomingMessage }}>
+    <FriendContext.Provider value={{ friends, isLoading, refetchFriends, updateFriendStatus, removeFriend, updateConversationId, recordFriendMessage, markFriendMessagesSeen, incomingMessageFriendId, incomingMessage, clearIncomingMessage }}>
       {children}
     </FriendContext.Provider>
   );

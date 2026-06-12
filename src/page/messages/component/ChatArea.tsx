@@ -50,7 +50,7 @@ export default function ChatArea({ friend }: ChatAreaProps) {
   const { user } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
-  const { updateConversationId } = useFriends();
+  const { updateConversationId, recordFriendMessage, markFriendMessagesSeen } = useFriends();
   const { execute: fetchMessages } = useApi<ChatMessage[]>();
   const { execute: uploadImageExec } = useApi<UploadImageResponse>();
 
@@ -63,14 +63,16 @@ export default function ChatArea({ friend }: ChatAreaProps) {
   const pendingTextRef = useRef<string[]>([]);
 
   useEffect(() => {
-    setMessages([]);
-    setInput("");
+    markFriendMessagesSeen(friend.id);
+  }, [friend.id, markFriendMessagesSeen]);
+
+  useEffect(() => {
     convIdRef.current = friend.conversationId ?? null;
     if (!friend.conversationId) return;
     fetchMessages(chatService.getMessages(friend.conversationId)).then((data) => {
       if (data) setMessages(data);
     });
-  }, [friend.id, friend.conversationId]);
+  }, [fetchMessages, friend.conversationId]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -126,6 +128,9 @@ export default function ChatArea({ friend }: ChatAreaProps) {
         convIdRef.current = msg.conversationId;
         updateConversationId(friend.id, msg.conversationId);
       }
+
+      recordFriendMessage(friend.id, msg, { unread: false });
+      markFriendMessagesSeen(friend.id);
     };
 
     const sentHandler = (msg: { _id: string; content: string; createdAt: string; conversationId?: string }) => {
@@ -153,6 +158,15 @@ export default function ChatArea({ friend }: ChatAreaProps) {
           },
         ];
       });
+
+      recordFriendMessage(friend.id, {
+        _id: msg._id,
+        senderId: user?.id ?? "",
+        content: msg.content,
+        type: "text",
+        createdAt: msg.createdAt,
+        conversationId: msg.conversationId ?? convIdRef.current ?? "",
+      }, { unread: false });
     };
 
     const errorHandler = () => {
@@ -169,7 +183,15 @@ export default function ChatArea({ friend }: ChatAreaProps) {
       s.off("message_sent_success", sentHandler);
       s.off("error", errorHandler);
     };
-  }, [friend.id, t.chat.forbiddenMessage, toast, updateConversationId, user?.id]);
+  }, [
+    friend.id,
+    markFriendMessagesSeen,
+    recordFriendMessage,
+    t.chat.forbiddenMessage,
+    toast,
+    updateConversationId,
+    user?.id,
+  ]);
 
   // Text: socket — check connected, không có loading state
   const handleSend = useCallback(() => {
@@ -244,6 +266,14 @@ export default function ChatArea({ friend }: ChatAreaProps) {
             convIdRef.current = res.conversationId;
             updateConversationId(friend.id, res.conversationId);
           }
+          recordFriendMessage(friend.id, {
+            _id: res._id,
+            senderId: user?.id ?? "",
+            content: res.content,
+            type: res.type,
+            createdAt: new Date().toISOString(),
+            conversationId: res.conversationId,
+          }, { unread: false });
         } else {
           setMessages((prev) =>
             prev.map((m) => m._id === tempId ? { ...m, status: "failed" } : m)

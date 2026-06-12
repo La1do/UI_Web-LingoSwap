@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
+import { useAuth } from "../../../context/AuthContext";
 import { useFriends, type Friend } from "../../../context/FriendContext";
 import AppLoader from "../../component/AppLoader";
 
@@ -12,12 +13,27 @@ interface FriendSidebarProps {
 export default function FriendSidebar({ selectedFriendId, onSelectFriend }: FriendSidebarProps) {
   const { theme } = useTheme();
   const { t } = useI18n();
+  const { user } = useAuth();
   const { friends, isLoading } = useFriends();
   const [search, setSearch] = useState("");
 
-  const filtered = friends.filter((f) =>
-    f.fullName.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = [...friends]
+    .filter((f) => f.fullName.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => (b.lastMessageAt ?? 0) - (a.lastMessageAt ?? 0));
+
+  const getPreviewText = (friend: Friend, isOnline: boolean) => {
+    if (!friend.lastMessage) {
+      return isOnline ? t.messages.online : (friend.lastSeen ?? t.messages.offline);
+    }
+
+    const content = friend.lastMessage.type === "image"
+      ? t.messages.imagePreview
+      : friend.lastMessage.content;
+
+    return friend.lastMessage.senderId === user?.id
+      ? `${t.chat.you}: ${content}`
+      : content;
+  };
 
   return (
     <div
@@ -62,6 +78,7 @@ export default function FriendSidebar({ selectedFriendId, onSelectFriend }: Frie
             const validAvatar = friend.avatarUrl && friend.avatarUrl !== "default_avatar.png"
               ? friend.avatarUrl
               : undefined;
+            const previewText = getPreviewText(friend, isOnline);
 
             return (
               <button
@@ -69,7 +86,11 @@ export default function FriendSidebar({ selectedFriendId, onSelectFriend }: Frie
                 onClick={() => onSelectFriend(friend)}
                 className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors"
                 style={{
-                  background: isSelected ? `${theme.button.bg}18` : "transparent",
+                  background: isSelected
+                    ? `${theme.button.bg}18`
+                    : friend.hasUnreadMessage
+                      ? `${theme.button.bg}10`
+                      : "transparent",
                   borderLeft: isSelected ? `3px solid ${theme.button.bg}` : "3px solid transparent",
                 }}
               >
@@ -105,10 +126,25 @@ export default function FriendSidebar({ selectedFriendId, onSelectFriend }: Frie
                   >
                     {friend.fullName}
                   </p>
-                  <p className="text-xs truncate" style={{ color: theme.text.placeholder }}>
-                    {isOnline ? t.messages.online : (friend.lastSeen ?? t.messages.offline)}
+                  <p
+                    className="text-xs truncate"
+                    style={{
+                      color: friend.lastMessage
+                        ? friend.hasUnreadMessage ? theme.text.primary : theme.text.secondary
+                        : theme.text.placeholder,
+                      fontWeight: friend.hasUnreadMessage ? 600 : 400,
+                    }}
+                  >
+                    {previewText}
                   </p>
                 </div>
+
+                {friend.hasUnreadMessage && !isSelected && (
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ background: theme.button.bg }}
+                  />
+                )}
               </button>
             );
           })

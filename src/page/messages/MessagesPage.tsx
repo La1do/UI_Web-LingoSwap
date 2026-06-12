@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
@@ -12,24 +12,42 @@ export default function MessagesPage() {
   const { t } = useI18n();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { friends } = useFriends();
+  const {
+    friends,
+    incomingMessageFriendId,
+    incomingMessage,
+    clearIncomingMessage,
+    markFriendMessagesSeen,
+  } = useFriends();
 
-  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
+  const selectedFriendId = searchParams.get("friend");
+  const selectedFriend = useMemo<Friend | null>(() => {
+    if (!selectedFriendId) return null;
+    return friends.find((f) => f.id === selectedFriendId) ?? null;
+  }, [friends, selectedFriendId]);
+  const selectedFriendIdForSeen = selectedFriend?.id;
 
-  // Đọc friendId từ query param ?friend=xxx
+  // Đánh dấu đã xem khi URL đang trỏ vào một cuộc trò chuyện.
   useEffect(() => {
-    const friendId = searchParams.get("friend");
-    if (!friendId || friends.length === 0) return;
-    const found = friends.find((f) => f.id === friendId);
-    if (found) setSelectedFriend(found);
-  }, [searchParams, friends]);
+    if (selectedFriendIdForSeen) markFriendMessagesSeen(selectedFriendIdForSeen);
+  }, [markFriendMessagesSeen, selectedFriendIdForSeen]);
 
-  // Sync selectedFriend khi friends list update (status, conversationId...)
+  // Khi đang ở message page, consume incoming popup state để tránh qua home bật popup cũ.
   useEffect(() => {
-    if (!selectedFriend) return;
-    const updated = friends.find((f) => f.id === selectedFriend.id);
-    if (updated) setSelectedFriend(updated);
-  }, [friends]);
+    if (!incomingMessageFriendId || !incomingMessage) return;
+
+    if (selectedFriend?.id === incomingMessageFriendId) {
+      markFriendMessagesSeen(incomingMessageFriendId);
+    }
+
+    clearIncomingMessage();
+  }, [
+    clearIncomingMessage,
+    incomingMessage,
+    incomingMessageFriendId,
+    markFriendMessagesSeen,
+    selectedFriend?.id,
+  ]);
 
   return (
     <PageShell controlsPosition="none">
@@ -69,7 +87,7 @@ export default function MessagesPage() {
             <FriendSidebar
               selectedFriendId={selectedFriend?.id ?? null}
               onSelectFriend={(f) => {
-                setSelectedFriend(f);
+                markFriendMessagesSeen(f.id);
                 navigate(`/messages?friend=${f.id}`, { replace: true });
               }}
             />
@@ -78,7 +96,7 @@ export default function MessagesPage() {
           {/* Chat area */}
           <div className="flex-1 overflow-hidden">
             {selectedFriend ? (
-              <ChatArea friend={selectedFriend} />
+              <ChatArea key={selectedFriend.id} friend={selectedFriend} />
             ) : (
               <div
                 className="flex flex-col items-center justify-center h-full gap-3"

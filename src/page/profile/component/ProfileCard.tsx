@@ -5,6 +5,7 @@ import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { useToast } from "../../../context/ToastContext";
 import { userService } from "../../../services/user.service";
+import AppLoader from "../../component/AppLoader";
 
 export default function ProfileCard() {
   const { theme } = useTheme();
@@ -79,6 +80,25 @@ export default function ProfileCard() {
       className="flex flex-col items-center gap-4 p-6 rounded-2xl"
       style={{ background: theme.background.card, border: `1px solid ${theme.border.default}` }}
     >
+      <style>{`
+        @keyframes profileUploadDotPulse {
+          0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+          40% { opacity: 1; transform: translateY(-1px); }
+        }
+
+        .profile-upload-dot {
+          animation: profileUploadDotPulse 1s ease-in-out infinite;
+        }
+
+        .profile-upload-dot-delay-1 {
+          animation-delay: 150ms;
+        }
+
+        .profile-upload-dot-delay-2 {
+          animation-delay: 300ms;
+        }
+      `}</style>
+
       {/* Avatar */}
       <div
         className="relative group cursor-pointer"
@@ -106,8 +126,19 @@ export default function ProfileCard() {
           </div>
         )}
 
+        {uploading && (
+          <div
+            className="absolute inset-0 rounded-full flex items-center justify-center overflow-hidden pointer-events-none"
+            style={{ background: theme.overlay.strong }}
+          >
+            <div style={{ transform: "scale(0.68)" }}>
+              <AppLoader variant="inline" minHeight="4rem" />
+            </div>
+          </div>
+        )}
+
         {/* Hover overlay — chỉ hiện khi chưa có pending */}
-        {!pendingFile && (
+        {!pendingFile && !uploading && (
           <div className="absolute inset-0 rounded-full flex flex-col items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
             style={{ background: theme.overlay.default }}>
             <svg viewBox="0 0 24 24" fill="none" stroke={theme.button.text} strokeWidth={2} className="w-5 h-5">
@@ -137,7 +168,16 @@ export default function ProfileCard() {
             className="px-4 py-1.5 rounded-xl text-xs font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
             style={{ background: theme.button.bg, color: theme.button.text }}
           >
-            {uploading ? t.profile.uploading : t.profile.updateAvatar}
+            {uploading ? (
+              <span className="inline-flex items-center justify-center gap-0.5">
+                <span>{t.profile.uploading}</span>
+                <span aria-hidden="true" className="profile-upload-dot">.</span>
+                <span aria-hidden="true" className="profile-upload-dot profile-upload-dot-delay-1">.</span>
+                <span aria-hidden="true" className="profile-upload-dot profile-upload-dot-delay-2">.</span>
+              </span>
+            ) : (
+              t.profile.updateAvatar
+            )}
           </button>
           <button
             onClick={handleCancel}

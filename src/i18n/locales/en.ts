@@ -522,6 +522,7 @@ export const en: Translation = {
     online: "Online",
     offline: "Offline",
     noFriends: "No friends yet",
+    imagePreview: "Image",
   },
 
   admin: {
