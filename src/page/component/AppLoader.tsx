@@ -6,13 +6,22 @@ import logoUrl from "../../assets/logo.png";
 // import logoUrl from "../../assets/logo.png";
 const LOGO_URL = logoUrl;
 
-export default function AppLoader() {
+type AppLoaderProps = {
+  variant?: "fullscreen" | "inline";
+  minHeight?: string;
+};
+
+export default function AppLoader({ variant = "fullscreen", minHeight = "12rem" }: AppLoaderProps) {
   const { theme } = useTheme();
+  const isFullscreen = variant === "fullscreen";
 
   return (
     <div
-      className="fixed inset-0 z-9 flex flex-col items-center justify-center gap-6"
-      style={{ background: theme.background.page }}
+      className={`${isFullscreen ? "fixed inset-0 z-9 gap-6" : "w-full gap-3 py-4"} flex flex-col items-center justify-center`}
+      style={{
+        background: isFullscreen ? theme.background.page : "transparent",
+        minHeight: isFullscreen ? undefined : minHeight,
+      }}
     >
       <style>{`
         @keyframes spinLogo {
@@ -38,13 +47,13 @@ export default function AppLoader() {
           <img
             src={LOGO_URL}
             alt="LingoSwap"
-            className="w-16 h-16 rounded-2xl object-contain"
+            className={`${isFullscreen ? "w-16 h-16 rounded-2xl" : "w-10 h-10 rounded-xl"} object-contain`}
             style={{ boxShadow: `0 8px 32px ${theme.button.bg}40` }}
           />
         ) : (
           /* Placeholder — xoá khi có logo thật */
           <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-black"
+            className={`${isFullscreen ? "w-16 h-16 rounded-2xl text-2xl" : "w-10 h-10 rounded-xl text-base"} flex items-center justify-center font-black`}
             style={{
               background: theme.button.bg,
               color: theme.button.text,
@@ -58,7 +67,7 @@ export default function AppLoader() {
 
       {/* Loading bar */}
       <div
-        className="w-24 h-1 rounded-full overflow-hidden"
+        className={`${isFullscreen ? "w-24" : "w-16"} h-1 rounded-full overflow-hidden`}
         style={{ background: `${theme.button.bg}25` }}
       >
         <div
@@ -69,7 +78,7 @@ export default function AppLoader() {
 
       {/* App name */}
       <p
-        className="text-xs font-semibold tracking-[0.25em] uppercase"
+        className={`${isFullscreen ? "text-xs" : "text-[10px]"} font-semibold tracking-[0.25em] uppercase`}
         style={{ color: theme.text.placeholder }}
       >
         LingoSwap

@@ -6,6 +6,7 @@ import { useApi } from "../../../hook/useApi";
 import { useToast } from "../../../context/ToastContext";
 import { userService } from "../../../services/user.service";
 import { useFriends, type Friend, type FriendStatus } from "../../../context/FriendContext";
+import AppLoader from "../../component/AppLoader";
 // ─── Types ───────────────────────────────────────────────────
 
 export type { FriendStatus, Friend };
@@ -88,7 +89,7 @@ export default function FriendList({ onViewProfile, onOpenChat }: FriendListProp
       {/* List */}
       <div className="flex-1 overflow-y-auto px-3 pb-3 flex flex-col gap-1">
         {isLoading ? (
-          <p className="text-xs text-center py-6" style={{ color: theme.text.placeholder }}>{t.home.loading}</p>
+          <AppLoader variant="inline" minHeight="8rem" />
         ) : displayed.length === 0 ? (
           <p className="text-xs text-center py-6" style={{ color: theme.text.placeholder }}>
             {filter === "online" ? t.home.noFriendsOnline : t.home.noFriendsYet}

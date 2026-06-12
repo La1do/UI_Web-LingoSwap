@@ -184,16 +184,14 @@ export default function AdminPage() {
     }
   };
 
-  // Fetch on section change
+  // Fetch fresh data whenever admin switches section.
   useEffect(() => {
-    if (loadedSections[activeSection]) return;
-
     if (activeSection === "dashboard") void loadDashboard();
     if (activeSection === "users") void loadUsers();
     if (activeSection === "appeals") void loadAppeals();
     if (activeSection === "reports") void loadReports();
     if (activeSection === "blacklistKeywords") void loadBlacklistKeywords();
-  }, [activeSection, loadedSections]);
+  }, [activeSection]);
 
   // Stats — từ dashboard API hoặc tính từ users
   const stats = dashboard
@@ -344,23 +342,14 @@ export default function AdminPage() {
   function AdminLoadingState() {
     return (
       <div
-        className="min-h-48 rounded-2xl flex flex-col items-center justify-center gap-3"
+        className="min-h-48 rounded-2xl"
         style={{
           background: theme.background.card,
           border: `1px solid ${theme.border.default}`,
           boxShadow: theme.shadow.card,
         }}
       >
-        <div
-          className="w-8 h-8 rounded-full border-4 animate-spin"
-          style={{
-            borderColor: theme.border.default,
-            borderTopColor: theme.button.bg,
-          }}
-        />
-        <p className="text-sm font-medium" style={{ color: theme.text.secondary }}>
-          {t.admin.loadingSection}
-        </p>
+        <AppLoader variant="inline" minHeight="12rem" />
       </div>
     );
   }

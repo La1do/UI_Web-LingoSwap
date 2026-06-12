@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useFriends, type Friend } from "../../../context/FriendContext";
+import AppLoader from "../../component/AppLoader";
 
 interface FriendSidebarProps {
   selectedFriendId: string | null;
@@ -49,9 +50,7 @@ export default function FriendSidebar({ selectedFriendId, onSelectFriend }: Frie
       {/* Friend list */}
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
-          <p className="text-xs text-center py-8" style={{ color: theme.text.placeholder }}>
-            {t.home.loading}
-          </p>
+          <AppLoader variant="inline" minHeight="8rem" />
         ) : filtered.length === 0 ? (
           <p className="text-xs text-center py-8" style={{ color: theme.text.placeholder }}>
             {friends.length === 0 ? t.messages.noFriends : t.home.noFriendsYet}

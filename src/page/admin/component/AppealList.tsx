@@ -148,7 +148,9 @@ export default function AppealList({ appeals, onResolve }: AppealListProps) {
                   <div>
                     <p className="text-[10px] uppercase tracking-wider font-semibold mb-1"
                       style={{ color: theme.text.placeholder }}>{t.admin.appeals.appealContent}</p>
-                    <p className="text-sm" style={{ color: theme.text.secondary }}>{appeal.content}</p>
+                    <p className="text-sm" style={{ color: theme.text.secondary }}>
+                      {appeal.reason ?? appeal.content}
+                    </p>
                   </div>
 
                   {appeal.adminNotes && (

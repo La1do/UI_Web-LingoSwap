@@ -15,9 +15,10 @@ import { useAuth } from "../../context/AuthContext";
 import { socketService } from "../../services/socket.service";
 import { useToast } from "../../context/ToastContext";
 import { clearAuthSession } from "../../library/authSession";
+import AppLoader from "../component/AppLoader";
 
 export default function GoogleCallbackPage() {
-  const { theme, setMode } = useTheme();
+  const { setMode } = useTheme();
   const { t } = useI18n();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -87,20 +88,5 @@ export default function GoogleCallbackPage() {
     navigate("/", { replace: true });
   }, []);
 
-  return (
-    <div
-      className="min-h-screen flex items-center justify-center"
-      style={{ background: theme.background.page }}
-    >
-      <div className="flex flex-col items-center gap-3">
-        <div
-          className="w-10 h-10 rounded-full border-2 animate-spin"
-          style={{ borderColor: theme.button.bg, borderTopColor: "transparent" }}
-        />
-        <p className="text-sm" style={{ color: theme.text.secondary }}>
-          {t.auth.loggingIn}
-        </p>
-      </div>
-    </div>
-  );
+  return <AppLoader />;
 }

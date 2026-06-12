@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { useI18n } from "../../context/I18nContext";
 import { socketService, type MatchFoundPayload } from "../../services/socket.service";
+import AppLoader from "../component/AppLoader";
 
 type CallState = "calling" | "rejected" | "error" | "timeout";
 
@@ -153,10 +154,7 @@ export default function DirectCallPage() {
 
         {/* Spinner khi đang gọi */}
         {isCalling && (
-          <div
-            className="w-8 h-8 rounded-full border-2 animate-spin"
-            style={{ borderColor: theme.button.bg, borderTopColor: "transparent" }}
-          />
+          <AppLoader variant="inline" minHeight="3rem" />
         )}
 
         {/* Actions */}

@@ -5,6 +5,7 @@ import { useApi } from "../../../hook/useApi";
 import { userService } from "../../../services/user.service";
 import { useFriends } from "../../../context/FriendContext";
 import ReportModal from "../../review/component/ReportModal";
+import AppLoader from "../../component/AppLoader";
 
 // ─── API response types ───────────────────────────────────────
 
@@ -148,9 +149,7 @@ export default function RecentMatches({ onViewProfile }: RecentMatchesProps) {
       {/* List */}
       <div className="flex-1 overflow-y-auto px-3 pb-3">
         {isLoading ? (
-          <p className="text-xs text-center py-6" style={{ color: theme.text.placeholder }}>
-            {t.home.loading}
-          </p>
+          <AppLoader variant="inline" minHeight="8rem" />
         ) : matches.length === 0 ? (
           <p className="text-xs text-center py-6" style={{ color: theme.text.placeholder }}>
             No recent matches

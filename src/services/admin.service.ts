@@ -28,7 +28,8 @@ export interface Appeal {
   _id: string;
   userId: { _id: string; email: string; profile: { fullName: string; avatar?: string } };
   banReason?: string;
-  content: string;
+  reason: string;
+  content?: string;
   status: "pending" | "approved" | "rejected";
   adminNotes?: string;
   createdAt: string;

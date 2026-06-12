@@ -7,6 +7,7 @@ import { userService } from "../../../services/user.service";
 import { notificationService, type Notification } from "../../../services/notification.service";
 import { socketService } from "../../../services/socket.service";
 import { useFriends } from "../../../context/FriendContext";
+import AppLoader from "../../component/AppLoader";
 
 // ─── Bell Icon ───────────────────────────────────────────────
 
@@ -291,9 +292,7 @@ export default function NotificationDropdown() {
         {/* Content */}
         <div className="p-3 flex flex-col gap-2 max-h-80 overflow-y-auto">
           {isLoading ? (
-            <p className="text-xs text-center py-4" style={{ color: theme.text.placeholder }}>
-              {t.home.loadingNotifications}
-            </p>
+            <AppLoader variant="inline" minHeight="7rem" />
           ) : notifications.length === 0 ? (
             <p className="text-xs text-center py-4" style={{ color: theme.text.placeholder }}>
               {t.home.noNotifications}
