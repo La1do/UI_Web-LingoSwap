@@ -4,6 +4,7 @@ import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { useToast } from "../../../context/ToastContext";
 import { userService } from "../../../services/user.service";
+import LoadingDots from "../../component/LoadingDots";
 
 interface ReportModalProps {
   reportedUserId: string;
@@ -221,7 +222,7 @@ export default function ReportModal({
                 className="flex-1 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
                 style={{ background: theme.text.error, color: theme.button.text }}
               >
-                {isLoading ? t.report.submitting : t.report.submit}
+                {isLoading ? <LoadingDots label={t.report.submitting} /> : t.report.submit}
               </button>
             </div>
           </>

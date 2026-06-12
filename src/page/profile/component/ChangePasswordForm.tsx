@@ -5,6 +5,7 @@ import { useApi } from "../../../hook/useApi";
 import { useToast } from "../../../context/ToastContext";
 import { authService } from "../../../services/auth.service";
 import { validateForm, required, minLength, mustMatch } from "../../../library/validation";
+import LoadingDots from "../../component/LoadingDots";
 
 interface ChangePasswordFields extends Record<string, string> {
   currentPassword: string;
@@ -118,7 +119,7 @@ export default function ChangePasswordForm() {
           className="px-6 py-2.5 rounded-xl text-sm font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
           style={{ background: theme.button.bg, color: theme.button.text }}
         >
-          {isLoading ? t.profile.updatingPassword : t.profile.updatePassword}
+          {isLoading ? <LoadingDots label={t.profile.updatingPassword} /> : t.profile.updatePassword}
         </button>
       </div>
     </form>

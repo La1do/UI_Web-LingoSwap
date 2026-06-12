@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import type { BlacklistKeyword, BlacklistKeywordCreator } from "../../../services/admin.service";
+import LoadingDots from "../../component/LoadingDots";
 
 interface BlacklistKeywordListProps {
   keywords: BlacklistKeyword[];
@@ -129,7 +130,7 @@ export default function BlacklistKeywordList({
                 className="px-4 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ background: theme.text.success, color: theme.button.text }}
               >
-                {isAdding ? t.admin.processing : t.admin.blacklistKeywords.add}
+                {isAdding ? <LoadingDots label={t.admin.processing} /> : t.admin.blacklistKeywords.add}
               </button>
             </div>
             {inputError && (
@@ -224,7 +225,7 @@ export default function BlacklistKeywordList({
                         className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{ background: `${theme.text.error}18`, color: theme.text.error }}
                       >
-                        {deletingId === keyword._id ? t.admin.processing : t.admin.blacklistKeywords.delete}
+                        {deletingId === keyword._id ? <LoadingDots label={t.admin.processing} /> : t.admin.blacklistKeywords.delete}
                       </button>
                     </td>
                   </tr>
@@ -296,7 +297,7 @@ export default function BlacklistKeywordList({
                 className="flex-1 py-2 rounded-xl text-sm font-semibold hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ background: theme.text.error, color: theme.button.text }}
               >
-                {deletingId === confirmDelete._id ? t.admin.processing : t.admin.blacklistKeywords.delete}
+                {deletingId === confirmDelete._id ? <LoadingDots label={t.admin.processing} /> : t.admin.blacklistKeywords.delete}
               </button>
             </div>
           </div>

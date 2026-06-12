@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
+import LoadingDots from "../../component/LoadingDots";
 
 export type ReportStatus = "pending" | "resolved" | "dismissed";
 export type BanDuration = "3_days" | "7_days" | "30_days" | "permanent";
@@ -216,7 +217,7 @@ function ResolveModal({
               background: action === "resolved" ? theme.text.success : theme.button.bg,
               color: theme.button.text,
             }}>
-            {isSubmitting ? t.admin.processing : t.admin.reports.confirm}
+            {isSubmitting ? <LoadingDots label={t.admin.processing} /> : t.admin.reports.confirm}
           </button>
         </div>
       </div>
@@ -379,7 +380,7 @@ export default function ReportList({ reports, onResolve, actionLoading }: Report
                           disabled={actionLoading !== null}
                           className="px-3 py-1.5 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                           style={{ background: theme.background.card, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}>
-                          {actionLoading === `report:${report._id}` ? t.admin.processing : t.admin.reports.dismiss}
+                          {actionLoading === `report:${report._id}` ? <LoadingDots label={t.admin.processing} /> : t.admin.reports.dismiss}
                         </button>
                       </div>
                     )}

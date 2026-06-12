@@ -14,6 +14,7 @@ import { useToast } from "../../context/ToastContext";
 import { clearAuthSession } from "../../library/authSession";
 import { isBannedAuthError } from "../../library/authError";
 import instance from "../../library/axios.customize";
+import LoadingDots from "./LoadingDots";
 
 interface GoogleSignInButtonProps {
   intent: "signin" | "signup";
@@ -192,7 +193,7 @@ function GoogleSignInButtonInner({ intent }: GoogleSignInButtonProps) {
         G
       </span>
       <span style={{ pointerEvents: "none" }}>
-        {isAuthorizing || !scriptLoadedSuccessfully ? t.common.loading : label}
+        {isAuthorizing || !scriptLoadedSuccessfully ? <LoadingDots label={t.common.loading} /> : label}
       </span>
     </button>
   );

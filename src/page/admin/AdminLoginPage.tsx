@@ -9,6 +9,7 @@ import { authService, type LoginResponse } from "../../services/auth.service";
 import { userService } from "../../services/user.service";
 import type { MeResponse } from "../../context/AuthContext";
 import { AuthInput } from "../login/AuthInput";
+import LoadingDots from "../component/LoadingDots";
 
 const MailIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-4 h-4">
@@ -128,7 +129,7 @@ export default function AdminLoginPage() {
             className="w-full py-3 rounded-xl text-sm font-semibold mt-2 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ background: theme.button.bg, color: theme.button.text }}
           >
-            {isLoading ? t.admin.login.processing : t.admin.login.submit}
+            {isLoading ? <LoadingDots label={t.admin.login.processing} /> : t.admin.login.submit}
           </button>
         </form>
       </div>

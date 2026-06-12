@@ -8,6 +8,7 @@ import { useI18n } from "../../context/I18nContext";
 import { AuthInput } from "./AuthInput";
 import PageShell from "../../layout/PageShell";
 import GoogleSignInButton from "../component/GoogleSignInButton";
+import LoadingDots from "../component/LoadingDots";
 import { useApi } from "../../hook/useApi";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
@@ -233,7 +234,7 @@ export default function LoginPage() {
               borderRadius: "0.5rem",
             }}
           >
-          {isLoading ? t.auth.loggingIn : t.auth.login}
+          {isLoading ? <LoadingDots label={t.auth.loggingIn} /> : t.auth.login}
           </button>
 
           {/* API error */}

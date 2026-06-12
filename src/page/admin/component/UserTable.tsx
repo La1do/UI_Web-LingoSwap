@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
+import LoadingDots from "../../component/LoadingDots";
 
 export interface AdminUser {
   _id: string;
@@ -132,7 +133,7 @@ export default function UserTable({ users, onBan, onDelete, actionLoading }: Use
                           disabled={actionLoading !== null}
                           className="px-2 py-1 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                           style={{ background: `${theme.text.error}18`, color: theme.text.error }}>
-                          {actionLoading === `ban:${user._id}` ? t.admin.processing : t.admin.table.ban}
+                          {actionLoading === `ban:${user._id}` ? <LoadingDots label={t.admin.processing} /> : t.admin.table.ban}
                         </button>
                       )}
                       {user.role !== "admin" && (
@@ -179,7 +180,7 @@ export default function UserTable({ users, onBan, onDelete, actionLoading }: Use
                 disabled={actionLoading !== null}
                 className="flex-1 py-2 rounded-xl text-sm font-semibold hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ background: theme.text.error, color: theme.button.text }}>
-                {actionLoading === `ban:${confirmBan._id}` ? t.admin.processing : t.admin.banDialog.confirm}
+                {actionLoading === `ban:${confirmBan._id}` ? <LoadingDots label={t.admin.processing} /> : t.admin.banDialog.confirm}
               </button>
             </div>
           </div>
@@ -212,7 +213,7 @@ export default function UserTable({ users, onBan, onDelete, actionLoading }: Use
                 disabled={actionLoading !== null}
                 className="flex-1 py-2 rounded-xl text-sm font-semibold hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ background: theme.text.error, color: theme.button.text }}>
-                {actionLoading === `delete:${confirmDelete._id}` ? t.admin.processing : t.admin.deleteDialog.confirm}
+                {actionLoading === `delete:${confirmDelete._id}` ? <LoadingDots label={t.admin.processing} /> : t.admin.deleteDialog.confirm}
               </button>
             </div>
           </div>

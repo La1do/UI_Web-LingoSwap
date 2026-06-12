@@ -8,6 +8,7 @@ import { useToast } from "../../context/ToastContext";
 import { userService } from "../../services/user.service";
 import { socketService } from "../../services/socket.service";
 import type { MeResponse } from "../../context/AuthContext";
+import LoadingDots from "../component/LoadingDots";
 import StreakCelebration from "./component/StreakCelebration";
 import ReportModal from "./component/ReportModal";
 
@@ -123,7 +124,7 @@ function PartnerCard({ partner, onAddFriend, onReport }: {
             <line x1="19" y1="8" x2="19" y2="14" />
             <line x1="22" y1="11" x2="16" y2="11" />
           </svg>
-          {sending ? "..." : t.home.sendRequest}
+          {sending ? <LoadingDots label={t.home.sendRequest} /> : t.home.sendRequest}
         </button>
       )}
       {/* Report button */}
@@ -352,7 +353,7 @@ export default function ReviewPage() {
           <button onClick={handleSubmit} disabled={overallRating === 0 || submitting}
             className="flex-1 py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
             style={{ background: theme.button.bg, color: theme.button.text }}>
-            {submitting ? "..." : t.review.submit}
+            {submitting ? <LoadingDots label={t.review.submit} /> : t.review.submit}
           </button>
         </div>
       </div>

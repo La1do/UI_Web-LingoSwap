@@ -7,6 +7,7 @@ import { useToast } from "../../../context/ToastContext";
 import { userService } from "../../../services/user.service";
 import { localeLabels, type Locale } from "../../../context/I18nContext";
 import { lightTheme, darkTheme } from "../../../theme/theme";
+import LoadingDots from "../../component/LoadingDots";
 
 const SunIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-5 h-5">
@@ -164,7 +165,7 @@ export default function SettingsForm() {
           className="px-6 py-2.5 rounded-xl text-sm font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
           style={{ background: theme.button.bg, color: theme.button.text }}
         >
-          {isLoading ? label.saving : label.save}
+          {isLoading ? <LoadingDots label={label.saving} /> : label.save}
         </button>
       </div>
     </div>

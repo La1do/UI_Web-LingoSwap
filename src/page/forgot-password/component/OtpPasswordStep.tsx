@@ -4,6 +4,7 @@ import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { authService } from "../../../services/auth.service";
 import { validateForm, minLength, mustMatch, required } from "../../../library/validation";
+import LoadingDots from "../../component/LoadingDots";
 
 const OTP_SECONDS = 5 * 60; // 5 phút
 
@@ -128,7 +129,7 @@ export default function OtpPasswordStep({ email, onSuccess }: OtpPasswordStepPro
         <button type="button" onClick={handleResend} disabled={secondsLeft > 0 || resending}
           className="text-xs font-medium hover:opacity-70 transition-opacity disabled:opacity-40"
           style={{ color: theme.text.accent }}>
-          {resending ? "…" : t.forgotPassword.resendOtp}
+          {resending ? <LoadingDots label={t.forgotPassword.resendOtp} /> : t.forgotPassword.resendOtp}
         </button>
       </div>
 
@@ -195,7 +196,7 @@ export default function OtpPasswordStep({ email, onSuccess }: OtpPasswordStepPro
       <button type="submit" disabled={isLoading || secondsLeft === 0}
         className="w-full py-3 rounded-xl text-sm font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
         style={{ background: theme.button.bg, color: theme.button.text }}>
-        {isLoading ? t.forgotPassword.submitting : t.forgotPassword.submit}
+        {isLoading ? <LoadingDots label={t.forgotPassword.submitting} /> : t.forgotPassword.submit}
       </button>
     </form>
   );

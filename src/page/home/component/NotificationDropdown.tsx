@@ -8,6 +8,7 @@ import { notificationService, type Notification } from "../../../services/notifi
 import { socketService } from "../../../services/socket.service";
 import { useFriends } from "../../../context/FriendContext";
 import AppLoader from "../../component/AppLoader";
+import LoadingDots from "../../component/LoadingDots";
 
 // ─── Bell Icon ───────────────────────────────────────────────
 
@@ -36,6 +37,7 @@ function NotificationCard({
   const { refetchFriends } = useFriends();
   const toast = useToast();
   const [done, setDone] = useState<"accept" | "reject" | null>(null);
+  const [responding, setResponding] = useState<"accept" | "reject" | null>(null);
 
   const sender = notification.senderId;
   const avatarUrl = sender?.profile?.avatar && sender.profile.avatar !== "default_avatar.png"
@@ -54,17 +56,22 @@ function NotificationCard({
   };
 
   const handleRespond = async (status: "accept" | "reject") => {
-    if (friendshipId) {
-      await respondExec(userService.respondFriendRequest(friendshipId, status));
-    }
-    await markExec(notificationService.markRead(notification._id));
-    setDone(status);
-    onRespond(notification._id, status);
-    if (status === "accept") {
-      refetchFriends();
-      toast.success(t.home.accepted);
-    } else {
-      toast.info(t.home.rejected);
+    setResponding(status);
+    try {
+      if (friendshipId) {
+        await respondExec(userService.respondFriendRequest(friendshipId, status));
+      }
+      await markExec(notificationService.markRead(notification._id));
+      setDone(status);
+      onRespond(notification._id, status);
+      if (status === "accept") {
+        refetchFriends();
+        toast.success(t.home.accepted);
+      } else {
+        toast.info(t.home.rejected);
+      }
+    } finally {
+      setResponding(null);
     }
   };
 
@@ -102,7 +109,7 @@ function NotificationCard({
                   className="text-[11px] font-medium hover:opacity-70 transition-opacity disabled:opacity-50"
                   style={{ color: theme.text.accent }}
                 >
-                  {t.home.markRead}
+                  {isMarking ? <LoadingDots label={t.home.markRead} /> : t.home.markRead}
                 </button>
               </>
             )}
@@ -113,15 +120,15 @@ function NotificationCard({
       {/* Friend request actions — chỉ ẩn khi đã trả lời, không phụ thuộc isRead */}
       {isFriendRequest && !done && (
         <div className="flex gap-2">
-          <button onClick={() => handleRespond("reject")} disabled={isLoading || isMarking}
+          <button onClick={() => handleRespond("reject")} disabled={isLoading || isMarking || responding !== null}
             className="flex-1 py-1.5 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity disabled:opacity-50"
             style={{ background: theme.background.page, color: theme.text.secondary, border: `1px solid ${theme.border.default}` }}>
-            {t.home.reject}
+            {responding === "reject" ? <LoadingDots label={t.home.reject} /> : t.home.reject}
           </button>
-          <button onClick={() => handleRespond("accept")} disabled={isLoading || isMarking}
+          <button onClick={() => handleRespond("accept")} disabled={isLoading || isMarking || responding !== null}
             className="flex-1 py-1.5 rounded-lg text-xs font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
             style={{ background: theme.button.bg, color: theme.button.text }}>
-            {isLoading ? t.common.loading : t.home.accept}
+            {responding === "accept" ? <LoadingDots label={t.common.loading} /> : t.home.accept}
           </button>
         </div>
       )}
@@ -143,7 +150,7 @@ export default function NotificationDropdown() {
   const { t } = useI18n();
   const { execute: fetchNotifs, isLoading } = useApi<Notification[]>();
   const { execute: fetchCount } = useApi<{ unreadCount: number }>();
-  const { execute: markAll } = useApi();
+  const { execute: markAll, isLoading: isMarkingAll } = useApi();
 
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -280,9 +287,10 @@ export default function NotificationDropdown() {
                   {t.home.newBadge.replace("{n}", String(unreadCount))}
                 </span>
                 <button onClick={handleMarkAllRead}
-                  className="text-[10px] hover:opacity-70 transition-opacity"
+                  disabled={isMarkingAll}
+                  className="text-[10px] hover:opacity-70 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ color: theme.text.accent }}>
-                  {t.home.markAllRead}
+                  {isMarkingAll ? <LoadingDots label={t.home.markAllRead} /> : t.home.markAllRead}
                 </button>
               </>
             )}

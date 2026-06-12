@@ -9,6 +9,7 @@ import { useI18n } from "../../context/I18nContext";
 import { AuthInput } from "./AuthInput";
 import PageShell from "../../layout/PageShell";
 import GoogleSignInButton from "../component/GoogleSignInButton";
+import LoadingDots from "../component/LoadingDots";
 import { useApi } from "../../hook/useApi";
 import { useToast } from "../../context/ToastContext";
 import { authService, type RegisterResponse } from "../../services/auth.service";
@@ -349,7 +350,7 @@ export default function RegisterPage() {
                   borderRadius: "0.5rem",
                 }}
               >
-                {isLoading ? t.auth.registering : t.auth.register}
+                {isLoading ? <LoadingDots label={t.auth.registering} /> : t.auth.register}
               </button>
 
               {isError && apiError && (

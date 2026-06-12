@@ -3,6 +3,7 @@ import { useTheme } from "../../../context/ThemeContext";
 import { useI18n } from "../../../context/I18nContext";
 import { useApi } from "../../../hook/useApi";
 import { authService } from "../../../services/auth.service";
+import LoadingDots from "../../component/LoadingDots";
 
 interface EmailStepProps {
   onSuccess: (email: string) => void;
@@ -66,7 +67,7 @@ export default function EmailStep({ onSuccess }: EmailStepProps) {
         className="w-full py-3 rounded-xl text-sm font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
         style={{ background: theme.button.bg, color: theme.button.text }}
       >
-        {isLoading ? t.forgotPassword.sendingOtp : t.forgotPassword.sendOtp}
+        {isLoading ? <LoadingDots label={t.forgotPassword.sendingOtp} /> : t.forgotPassword.sendOtp}
       </button>
     </form>
   );

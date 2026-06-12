@@ -5,6 +5,7 @@ import { useI18n } from "../../context/I18nContext";
 import { useApi } from "../../hook/useApi";
 import { userService } from "../../services/user.service";
 import PageShell from "../../layout/PageShell";
+import LoadingDots from "../component/LoadingDots";
 
 const MIN_REASON_LENGTH = 20;
 
@@ -174,7 +175,7 @@ export default function AppealPage() {
                 className="w-full py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
                 style={{ background: theme.button.bg, color: theme.button.text }}
               >
-                {isLoading ? t.appeal.submitting : t.appeal.submit}
+                {isLoading ? <LoadingDots label={t.appeal.submitting} /> : t.appeal.submit}
               </button>
 
               <button

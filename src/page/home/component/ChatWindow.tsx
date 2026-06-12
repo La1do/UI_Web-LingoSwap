@@ -8,6 +8,7 @@ import { useApi } from "../../../hook/useApi";
 import { useFriends, type Friend, type IncomingMessagePayload } from "../../../context/FriendContext";
 import { chatService, type ChatMessage, type UploadImageResponse } from "../../../services/chat.service";
 import { socketService } from "../../../services/socket.service";
+import LoadingDots from "../../component/LoadingDots";
 
 interface ChatWindowProps {
   friend: Friend;
@@ -28,7 +29,7 @@ function ImageStatus({ status, onRetry }: { status?: ChatMessage["status"]; onRe
   if (status === "sending") {
     return (
       <p className="text-[10px] mt-0.5 text-right" style={{ color: theme.text.placeholder }}>
-        {t.chat.sending}
+        <LoadingDots label={t.chat.sending} />
       </p>
     );
   }

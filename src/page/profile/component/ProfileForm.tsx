@@ -5,6 +5,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { useApi } from "../../../hook/useApi";
 import { useToast } from "../../../context/ToastContext";
 import { userService } from "../../../services/user.service";
+import LoadingDots from "../../component/LoadingDots";
 
 const COUNTRIES = [
   { code: "VN", label: "🇻🇳 Vietnam" }, { code: "US", label: "🇺🇸 United States" },
@@ -131,7 +132,7 @@ export default function ProfileForm() {
           className="px-6 py-2.5 rounded-xl text-sm font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
           style={{ background: theme.button.bg, color: theme.button.text }}
         >
-          {isLoading ? t.profile.saving : t.profile.saveChanges}
+          {isLoading ? <LoadingDots label={t.profile.saving} /> : t.profile.saveChanges}
         </button>
       </div>
     </form>
